@@ -27,6 +27,9 @@
     <ClCompile Include="Event.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Charecter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Fraemwork.h">
@@ -36,6 +39,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Event.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Charecter.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>

@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Charecter.cpp" />
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="Fraemwork.cpp" />
     <ClCompile Include="GamePlay.cpp" />
@@ -137,6 +138,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Charecter.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="Fraemwork.h" />
     <ClInclude Include="GamePlay.h" />

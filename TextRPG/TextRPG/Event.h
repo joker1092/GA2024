@@ -5,7 +5,7 @@ public:
 	Event();
 	~Event();
 	int resultEvent(int state, int select);
-	char* stateEvent(int state);
+	void stateEvent(int state);
 
 	
 private:

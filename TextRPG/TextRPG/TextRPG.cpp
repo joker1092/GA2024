@@ -1,41 +1,29 @@
 ﻿#include "Fraemwork.h"
 
-int start() {
-	int s;
-	while (1)
-	{
-		printf("Text RPG");
-		printf("숫자 입력 (1:게임 시작, 0:종료)");
-		scanf_s("%d", &s);
-		if (s == 1) {
-			return 1;
-		}
-		else if (s == 0) {
-			return 0;
-		}
-		else {
-			continue;
-		}
-	}
+void start() {
+	cout << "Text RPG" << endl;
+	cout << "숫자 입력 (1:게임 시작, 0:종료)" << endl;
 }
 
 int main()
 {
 	
-	int s = start();
-	if (s == 0) {
-		return 0;
-	}
+	start();
 
 	GamePlay* CGame = new GamePlay();
-
-	/*int a=-1;
-	char text[]="";*/
-	while (true) {
+	Charecter* NChar = new Charecter();
+	
+	int state = 0;;
+	while (state!=99) {
 		/*a=CGame->processInput(text);*/
-		CGame->update();
+		state = CGame->update();
+		system("cls");
+		NChar->statusView(state);
 		CGame->render();
 	}
+
+	delete NChar;
+	delete CGame;
 
 	return 0;
 }

@@ -6,13 +6,11 @@ public:
 	GamePlay();
 	~GamePlay();
 
-	int processInput(char text[]);
+	int processInput();
 	int update();
 	void render();
 
 private:
 	int state;
-	char* textprt;
-	//char text[100];
 };
 

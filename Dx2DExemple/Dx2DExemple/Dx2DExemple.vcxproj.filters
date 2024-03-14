@@ -18,8 +18,5 @@
     <ClCompile Include="Dx2DExemple.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="dx2dframe.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

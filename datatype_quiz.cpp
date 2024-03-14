@@ -34,20 +34,18 @@ int main(void)
 
 	// "hello" 문자열 을 변수에 담아 출력 하기 
 	char hello[6] = "hello";
-	cout << hello << endl;
+	cout << hello;
 	// 문자열 입력받아 출력하세요.
-	char chl[30];
-	cin >> chl;
-	cout << chl << endl;
+	char str[] = "";
+	cin >> str;
+	cout << str;
 
-	char st1[10];	// 크기가 10인 char형 배열을 선언
+	char st1[10];						// 크기가 10인 char형 배열을 선언
 
 	// char, unsigned char 가 표현가능한 수의 범위는 ?
-	
-
 
 	// int 자료형의 크기(바이트수)를 출력하세요. 
-	cout << sizeof(int) << endl;
+
 	// float 자료 형식의 메모리 크기(바이트 단위)를 출력하세요.
 
 	// int의 최댓값을 출력하세요.
