@@ -34,20 +34,30 @@ int main(void)
 
 	// "hello" 문자열 을 변수에 담아 출력 하기 
 	char hello[6] = "hello";
-	cout << hello;
+	cout << hello << endl;
 	// 문자열 입력받아 출력하세요.
-	char str[] = "";
-	cin >> str;
-	cout << str;
+	char chl[30];
+	cin >> chl;
+	cout << chl << endl;
 
-	char st1[10];						// 크기가 10인 char형 배열을 선언
+	char st1[10];	// 크기가 10인 char형 배열을 선언
 
 	// char, unsigned char 가 표현가능한 수의 범위는 ?
+	cout << sizeof(char) << endl;
+	cout << sizeof(unsigned char) << endl;
+
+	printf("%s\n", "char");
+	printf("%d\n", INT8_MIN);
+	printf("%d\n", INT8_MAX);
+
+	printf("%s\n", "unsigned char");
+	printf("%d\n", 0);
+	printf("%d\n", UINT8_MAX);
 
 	// int 자료형의 크기(바이트수)를 출력하세요. 
-
+	cout << sizeof(int) << endl;
 	// float 자료 형식의 메모리 크기(바이트 단위)를 출력하세요.
-
+	cout << sizeof(float) << endl;
 	// int의 최댓값을 출력하세요.
 
 	printf("%d\n", INT32_MAX);  //INT_MAX
@@ -58,7 +68,8 @@ int main(void)
 	printf("%d\n", INT32_MIN);
 
 	// 문자 'K' 의 아스키코드를 출력하세요. 
-
+	int chi = (int)'k';
+	printf("%d\n", chi);
 	// 식별자 이름을 만드는 규칙을 설명하세요.
 
 
@@ -67,28 +78,30 @@ int main(void)
 	cout << value << endl;
 
 	// 소숫점 까지 정확하게 나오도록 수정하세요
-	/*int a = 10, b = 3;
-	int c = a / b;
-	cout << c << endl;*/
+	int a = 10, b = 3;
+	double c = a / (double)b;
+	cout << c << endl;
 
 	// 상수의 자료형 // 결과는?   //0.3 되도록 수정하라.
-	//double c = 3 / 10;
-	//printf("%f", c);
+	double c = 3 / (double)10;
+	printf("%.1f\n", c);
 
 	// 오버플로우 //출력은 ?
 	int level = INT_MAX;
-	cout << level + 1 << endl;		//???
+	cout << level + 1 << endl;		//??? -2147483648
 
 	//형변환 //출력은 ?
 
 	int n = 1.2;
-	cout << n + 2 << endl;			//???
-	cout << 1 / 2 + 1 / 2 << endl;	//???
+	cout << n + 2 << endl;			//??? 3
+	cout << 1 / 2 + 1 / 2 << endl;	//??? 0
 
+	printf("%d\n", UINT32_MAX);
 	// 출력 값은? 이유는?	
-	/*unsigned int num = -1;
-	printf("%d\n", num);*/
+	unsigned int num = -1;
 
+	printf("%d\n", num);        //-1
+	//unsigned int 에서 최소값은 0이나 unsigned int에서 int로 암시적 형변환이 되었다.
 	return 0;
 }
 
