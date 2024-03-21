@@ -3,9 +3,10 @@ using namespace std;
 
 int main(void)
 {
-	int N = 0, M = 0;
+	const char* citiez[] = {"soeul","baising","tokyo"};
 
-	
+	cout << citiez[2];
+
 
 	return 0;
 }
