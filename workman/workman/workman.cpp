@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 using namespace std;
 
 int main()
@@ -129,7 +129,7 @@ int main()
 
 
 //11. 1부터 10까지 수에서 짝수 출력하기 (if나 continue 쓰지 않고 작성)      //
-
+    
     for (size_t i = 2; i <= 10; i+=2)
     {
         cout << i;
@@ -148,7 +148,7 @@ int main()
 
 
 //13. 비교 – 두 수를 입력 받아, 큰 수를 출력하세요.
-
+    
     int a = 0, b = 0;
     cin >> a >> b;
     if (a>b)
@@ -237,7 +237,7 @@ int main()
     }
 
 //20. 입력 받은 문자가, 대문자이면 소문자로, 소문자이면 대문자로 변경해서 출력하세요. ( A -> a, z -> Z )
-
+    
     //char ch1 = 'a'; //97
     //char ch2 = 'A'; //65
     char ch;
@@ -256,7 +256,7 @@ int main()
 
 
 //21. 정수를 입력하면, 각 자릿수의 숫자를 문자로 바꾸어 출력하세요. (123 -> 1, 2, 3)
-
+    
     int input=0;
     cin >> input;
     int count = 0;
