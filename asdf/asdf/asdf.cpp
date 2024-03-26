@@ -2,33 +2,36 @@
 using namespace std;
 
 int main()
-{
-    //피보나치 수열
-    char a[101][21] = {};
-    a[0][0] = 0;
-    a[1][0] = 1;
-    for (size_t i = 2; i < 101; i++)
-    {   
-        for (size_t j = 0; j < 21; j++)
-        {
-            /*if (i == 100) {
-                cout << "입" << a[i - 1][j] << a[i - 2][j] << endl;
-                cout << "출" << a[i - 1][j] + a[i - 2][j] << endl;
-            }*/
-            
-            a[i][j] = a[i][j] + a[i - 1][j] + a[i - 2][j];
-            if (a[i][j] >= 10)
-            {
-                a[i][j] = a[i][j] - 10;
-                a[i][j + 1] = a[i][j + 1]+1;
-            }
-        }
-    }
+{	
+	int N = 0;
+	cin >> N;
 
-    for (size_t k = 21; k > 0; k--)
-    {
-        cout << (int)a[100][k-1];
-    }
+	for (size_t i = 0; i < N; i++)
+	{
+		for (size_t j = 1; j < N-i; j++)
+		{
+			cout << " ";
+		}
+		for (size_t j = 0; j < 2*i+1; j++)
+		{
+			cout << "*";
+		}
+		cout << "\n";
+	}
+	for (size_t i = N - 1; i > 0 ; i--)
+	{
+		for (size_t j = 1; j < N - i+1; j++)
+		{
+			cout << " ";
+		}
+		for (size_t j = 0; j < 2 * i -1; j++)
+		{
+			cout << "*";
+		}
+		
+		cout << "\n";
+	}
 
-    return 0;
+
+	return 0;
 }
