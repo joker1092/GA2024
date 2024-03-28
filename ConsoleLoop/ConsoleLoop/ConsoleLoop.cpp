@@ -1,9 +1,6 @@
 ﻿#include <iostream>
 
-#include <winnt.h>
-#include <ktmtypes.h>
-#include <minwinbase.h>
-#include <sysinfoapi.h>
+#include <Windows.h>
 
 namespace global
 {
@@ -44,11 +41,17 @@ void ProcessInput() {
 }
 
 void FixedUpdate() {
+    static ULONGLONG Time;
 
+    Time += global::time::GetDeltaTime();
+    if (Time >= 6) {
+        global::time::fixedUpdateCount++;
+        Time = 0;
+    }
 }
 
 void Update() {
-
+    global::time::updateCount++;
 }
 
 void Render() {
@@ -56,7 +59,7 @@ void Render() {
 }
 
 bool IsGameRun() {
-
+    return true;
 }
 
 void PrintPerSecond() {
@@ -65,7 +68,7 @@ void PrintPerSecond() {
     elapsedTime += global::time::GetDeltaTime();
     if (elapsedTime >= 1000)
     {
-        printf("updateCount : %d \t fixedUpdateCount : d \n", global::time::updateCount, global::time::fixedUpdateCount);
+        printf("updateCount : %d \t fixedUpdateCount : %d \n", global::time::updateCount, global::time::fixedUpdateCount);
 
         elapsedTime = 0;
         global::time::updateCount = 0;

@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{909a3981-5838-42d4-ad02-e66a3e8a2ebd}</ProjectGuid>
-    <RootNamespace>asdf</RootNamespace>
+    <ProjectGuid>{57d3c3bd-30f6-47e3-82b1-6b70b194639a}</ProjectGuid>
+    <RootNamespace>ConsoleGame</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,11 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="asdf.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="ConsoleGame.cpp" />
+    <ClCompile Include="ConsoleRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Test.h" />
+    <ClInclude Include="ConsoleRenderer.h" />
+    <ClInclude Include="timer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
