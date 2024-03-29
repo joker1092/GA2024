@@ -1,36 +1,48 @@
 ﻿#include <iostream>
 using namespace std;
 
-int main()
-{
-    int n;
-    cin >> n;
-
-    int paper[101][101] = {};
-
-    int sum = 0;
-
-    for (int i = 0; i < n; i++)
+int Squre(int num, int s) {
+    int sum = 1;
+    for (size_t i = 0; i < s; i++)
     {
-        int x = 0;
-        int y = 0;
-        cin >> x >> y;
-        
-        for (int i = x; i < x+10; i++)
-        {
-            for (int j = y; j < y+10; j++)
-            {
-                if (paper[i][j]==0)
-                {
-                    paper[i][j] = 1;
-                    sum++;
-                }
-            }
-        }
+        sum *= num;
     }
-    
-    cout << sum;
-    
-    return 0;
+    return sum;
 }
 
+int main()
+{
+    char chNums[11];
+    int splitNums[11];
+
+    int converse;
+    cin >> chNums;
+    cin >> converse;
+
+    int count = 0;
+    while (true)
+    {
+        if (chNums[count] == '\0')
+        {
+            break;
+        }
+        if ('0'<=chNums[count] && '9' >= chNums[count])
+        {
+            splitNums[count] = chNums[count]-'0';
+        }
+        else if('A' <= chNums[count] && 'Z' >= chNums[count]) {
+            splitNums[count] = chNums[count] - 'A' + 10;
+        }
+        count++;
+    }
+    
+    int rt = 0;
+    for (int i = 0; i < count; i++)
+    {
+        rt += (int)splitNums[i] * Squre(converse, i);
+    }
+
+    cout << rt;
+
+    return 0;
+}
