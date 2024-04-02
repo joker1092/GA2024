@@ -17,6 +17,8 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+void Marker(LONG x, LONG y, HWND hwnd);
+void DrawMarker(HWND hWnd, LPARAM lParam);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -126,6 +128,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+    case WM_LBUTTONDOWN:
+        DrawMarker(hWnd, lParam);
+        break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -141,6 +146,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
+
         }
         break;
     case WM_PAINT:
@@ -189,5 +195,37 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 void Marker(LONG x, LONG y, HWND hwnd) {
+    HDC hdc;
 
+    hdc = GetDC(hwnd);
+    MoveToEx(hdc, (int)x - 10, (int)y, (LPPOINT)NULL);
+    LineTo(hdc, (int)x + 10, (int)y);
+    MoveToEx(hdc, (int)x, (int)y-10, (LPPOINT)NULL);
+    LineTo(hdc, (int)x , (int)y + 10);
+
+    ReleaseDC(hwnd, hdc);
+}
+
+void DrawMarker(HWND hWnd, LPARAM lParam) {
+    static POINT ptMouseDown[32];
+    static int index;
+
+    RECT rc;
+    HRGN hrgn;
+    POINTS ptTmp;
+
+    if (index >= 32)return;
+
+    GetClientRect(hWnd, &rc);
+    hrgn = CreateRectRgn(rc.left, rc.top, rc.right, rc.bottom);
+
+    ptTmp = MAKEPOINTS(lParam);
+    ptMouseDown[index].x = (LONG)ptTmp.x;
+    ptMouseDown[index].y = (LONG)ptTmp.y;
+
+    if (PtInRegion(hrgn, ptMouseDown[index].x, ptMouseDown[index].y)) {
+     
+        Marker(ptMouseDown[index].x, ptMouseDown[index].y, hWnd);
+        index++;
+    }
 }

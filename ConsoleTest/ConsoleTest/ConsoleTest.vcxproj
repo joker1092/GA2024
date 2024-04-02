@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{909a3981-5838-42d4-ad02-e66a3e8a2ebd}</ProjectGuid>
-    <RootNamespace>asdf</RootNamespace>
+    <ProjectGuid>{d742adb2-28bd-4682-ac08-6904fe643182}</ProjectGuid>
+    <RootNamespace>ConsoleTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,13 +127,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="asdf.cpp" />
-    <ClCompile Include="Calc.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="ConsoleRenderer.cpp" />
+    <ClCompile Include="ConsoleTest.cpp" />
+    <ClCompile Include="Frame.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Time.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Calc.h" />
-    <ClInclude Include="Test.h" />
+    <ClInclude Include="ConsoleRenderer.h" />
+    <ClInclude Include="Frame.h" />
+    <ClInclude Include="Time.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
