@@ -58,7 +58,7 @@ namespace ConsoleRenderer
 	bool ScreenSetChar(int x, int y, char ch, WORD attr);
 	bool ScreenSetString(int x, int y, const char* pStr, WORD attr);
 	bool ScreenSetAttr(WORD attr);
-	void DrawRect(int x, int y, int width, int height);
+	void DrawMovableRect();
 
 	int ScreenWidth();
 	int ScreenHeight();

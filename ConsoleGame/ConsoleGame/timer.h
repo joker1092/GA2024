@@ -1,25 +1,35 @@
 #pragma once
 #include <Windows.h>
 
-namespace timer {
-	ULONGLONG previousTime;
-	ULONGLONG currentTime;
-	ULONGLONG deltaTime;
+namespace global {
+	namespace time {
+		ULONGLONG previousTime;
+		ULONGLONG currentTime;
+		ULONGLONG deltaTime;
 
-	int updateCount;
-	int fixedUpdateCount;
+		int updateCount;
+		int fixedUpdateCount;
 
-	void InitTime() {
-		previousTime = currentTime = GetTickCount64();
-	}
+		void InitTime() {
+			currentTime = previousTime = GetTickCount64();
+		}
 
-	void UpdateTime() {
-		previousTime = currentTime;
-		currentTime = GetTickCount64();
-		deltaTime = currentTime - previousTime;
-	}
+		void UpdateTime() {
+			previousTime = currentTime;
+			currentTime = GetTickCount64();
 
-	ULONGLONG GetDeltaTime() {
-		return deltaTime;
-	}
-}
+			deltaTime = currentTime - previousTime;
+		}
+
+		ULONGLONG GetDeltaTime() {
+			return deltaTime;
+		}
+	};
+	COORD prePlayerPos;
+	COORD curPlayerPos;
+
+	SMALL_RECT consoleScreenSize;
+	SMALL_RECT playerMovableRect = { 4,4,100,20 };
+
+	const int playerMoveSpeed = 200;
+};

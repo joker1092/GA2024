@@ -43,7 +43,7 @@ namespace Frame {
 	}
 	void Render() {
 		ConsoleRenderer::ScreenClear();
-		ConsoleRenderer::DrawRect(0, 0, 100, 10);
+		ConsoleRenderer::DrawMovableRect();
 		//ConsoleRenderer::ScreenSetString(0, 0, "Hello ¾È³ç", FG_PINK_DARK);
 		//ConsoleRenderer::ScreenSetChar(g_Player.X, g_Player.Y, 'P', FG_WHITE);
 		ConsoleRenderer::ScreenFlipping();

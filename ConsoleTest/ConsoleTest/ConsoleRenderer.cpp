@@ -10,6 +10,9 @@ namespace ConsoleRenderer {
 	int screenBufferIndex = 0;
 	HANDLE screenBuffer[2];
 
+	SMALL_RECT consoleScreenSize;
+	SMALL_RECT playerMovableRect = { 4,4,100,20 };
+
 	HANDLE GetCurrentScreenBufferHandle() {
 		return screenBuffer[screenBufferIndex];
 	}
@@ -111,24 +114,40 @@ namespace ConsoleRenderer {
     }
 
 
-	void DrawRect(int x, int y, int width, int height)
+	void DrawMovableRect()
+{
+	// 위쪽 라인. Y 값이 고정 된다.
+	for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right + 1; x++)
 	{
-		
-		ScreenSetChar(x, y, char(201), FG_WHITE);
-		for (int i = 1; i < width; i++)
-		ScreenSetChar(x+i, y, char(205), FG_WHITE);
-		ScreenSetChar(x + width, y, char(187), FG_WHITE);
-		ScreenSetChar(x , height+ y, char(200), FG_WHITE);
-		for (int i = 1; i < width; i++)
-		ScreenSetChar(x + i, y, char(205), FG_WHITE);
-		ScreenSetChar(x + width, y, char(188), FG_WHITE);
-		for (int i = y + 1; i < height + y; i++)
-		{
-			ScreenSetChar(x, i, char(186), FG_WHITE);
-			ScreenSetChar(x+ width, i, char(186), FG_WHITE);
-		}
+		/*GotoXY(x, global::playerMovableRect.Top - 1);
+		putchar('#');*/
+		ConsoleRenderer::ScreenSetChar(x, playerMovableRect.Top - 1, '#', FG_WHITE);
 	}
 
+	// 아래쪽 라인. Y 값이 고정 된다.
+	for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right + 1; x++)
+	{
+		/*GotoXY(x, global::playerMovableRect.Bottom + 1);
+		putchar('#');*/
+		ConsoleRenderer::ScreenSetChar(x, playerMovableRect.Bottom + 1, '#', FG_WHITE);
+	}
+
+	// 왼쪽 라인, X 값이 고정 된다.
+	for (int y = playerMovableRect.Top - 1; y < playerMovableRect.Bottom + 1; y++)
+	{
+		/*GotoXY(global::playerMovableRect.Left - 1, y);
+		putchar('#');*/
+		ConsoleRenderer::ScreenSetChar(playerMovableRect.Left - 1, y, '#', FG_WHITE);
+	}
+
+	// 오른쪽 라인, X 값이 고정 된다.
+	for (int y = playerMovableRect.Top - 1; y < playerMovableRect.Bottom + 1; y++)
+	{
+		/*GotoXY(global::playerMovableRect.Right + 1, y);
+		putchar('#');*/
+		ConsoleRenderer::ScreenSetChar(playerMovableRect.Right + 1, y, '#', FG_WHITE);
+	}
+}
 
     int ScreenWidth()
     {
