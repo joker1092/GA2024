@@ -1,51 +1,48 @@
 #include "Frame.h";
 
 namespace Frame {
+	
+	bool g_bQuit = true;
 
 	void Init() {
 		ConsoleRenderer::ScreenInit();
 		Time::InitTime();
+		Player::setCurPosition(ConsoleRenderer::InitPosition());
 	}
 
-	int ProcessInput()
+	void ProcessInput()
 	{
 		if (GetAsyncKeyState(VK_LEFT) & 0x8000) { //왼쪽
-			return 0;
+
 		}
 		if (GetAsyncKeyState(VK_RIGHT) & 0x8000) { //오른쪽
-			return 0;
+			
 		}
 		if (GetAsyncKeyState(VK_UP) & 0x8000) { //위
-			return 0;
+			
 		}
 		if (GetAsyncKeyState(VK_DOWN) & 0x8000) { //아래
-			return 0;
+			
 		}
 		if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) { //종료
-			return 0;
+			g_bQuit = false;
 		}
-		return 1;
 	}
 
 	void FixedUpdate() {
-		static ULONGLONG futime;
-		//ULONGLONG detatime = Time::GetDeltaTime();
-		double speed = 0.2;
-		//futime += Time::GetDeltaTime();
-		if (futime > 50)
-		{
-
-		}
-
+		
 	}
+
 	void Update() {
 
 	}
+
 	void Render() {
 		ConsoleRenderer::ScreenClear();
 		ConsoleRenderer::DrawMovableRect();
-		//ConsoleRenderer::ScreenSetString(0, 0, "Hello 안녕", FG_PINK_DARK);
-		//ConsoleRenderer::ScreenSetChar(g_Player.X, g_Player.Y, 'P', FG_WHITE);
+		ConsoleRenderer::DrawMap();
+		ConsoleRenderer::ScreenSetString(100, 2, "시간", FG_PINK_DARK);
+		ConsoleRenderer::ScreenSetChar(Player::getCurPosion().X, Player::getCurPosion().Y, 'P', FG_WHITE);
 		ConsoleRenderer::ScreenFlipping();
 	}
 

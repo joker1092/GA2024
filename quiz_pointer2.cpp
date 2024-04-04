@@ -35,7 +35,7 @@ int main()
 	// 결과는?
 	char str_a[] = "abc";
 	char str_b[] = "abc";
-	printf("%d", str_a == str_b); //0;
+	printf("%d", str_a == str_b); //0  false;
 
 
 	// 정확히 9문자로 구성된 문자열을 넣을 수 있는 C++ 배열을 선언하려 한다.다음 중 어떤 것이 가장 좋은가 ? 

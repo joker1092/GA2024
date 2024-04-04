@@ -11,11 +11,13 @@ namespace ConsoleRenderer {
 	HANDLE screenBuffer[2];
 
 	SMALL_RECT consoleScreenSize;
-	SMALL_RECT playerMovableRect = { 4,4,100,20 };
-
+	SMALL_RECT playerMovableRect = { 3,2,61,20 };
+	COORD start = {3,2};
 	HANDLE GetCurrentScreenBufferHandle() {
 		return screenBuffer[screenBufferIndex];
 	}
+
+	
 
 	void ScreenInit() {
 		hConsoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -115,39 +117,56 @@ namespace ConsoleRenderer {
 
 
 	void DrawMovableRect()
-{
-	// 위쪽 라인. Y 값이 고정 된다.
-	for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right + 1; x++)
 	{
-		/*GotoXY(x, global::playerMovableRect.Top - 1);
-		putchar('#');*/
-		ConsoleRenderer::ScreenSetChar(x, playerMovableRect.Top - 1, '#', FG_WHITE);
-	}
+		
+		// 위쪽 라인. Y 값이 고정 된다.
+		for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right + 1; x++)
+		{
+			/*GotoXY(x, global::playerMovableRect.Top - 1);
+			putchar('#');*/
+			ConsoleRenderer::ScreenSetChar(x, playerMovableRect.Top - 1, '#', FG_WHITE);
+		}
 
-	// 아래쪽 라인. Y 값이 고정 된다.
-	for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right + 1; x++)
-	{
-		/*GotoXY(x, global::playerMovableRect.Bottom + 1);
-		putchar('#');*/
-		ConsoleRenderer::ScreenSetChar(x, playerMovableRect.Bottom + 1, '#', FG_WHITE);
-	}
+		// 아래쪽 라인. Y 값이 고정 된다.
+		for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right + 1; x++)
+		{
+			/*GotoXY(x, global::playerMovableRect.Bottom + 1);
+			putchar('#');*/
+			ConsoleRenderer::ScreenSetChar(x, playerMovableRect.Bottom + 1, '#', FG_WHITE);
+		}
 
-	// 왼쪽 라인, X 값이 고정 된다.
-	for (int y = playerMovableRect.Top - 1; y < playerMovableRect.Bottom + 1; y++)
-	{
-		/*GotoXY(global::playerMovableRect.Left - 1, y);
-		putchar('#');*/
-		ConsoleRenderer::ScreenSetChar(playerMovableRect.Left - 1, y, '#', FG_WHITE);
-	}
+		// 왼쪽 라인, X 값이 고정 된다.
+		for (int y = playerMovableRect.Top - 1; y < playerMovableRect.Bottom + 1; y++)
+		{
+			/*GotoXY(global::playerMovableRect.Left - 1, y);
+			putchar('#');*/
+			ConsoleRenderer::ScreenSetChar(playerMovableRect.Left - 1, y, '#', FG_WHITE);
+		}
 
-	// 오른쪽 라인, X 값이 고정 된다.
-	for (int y = playerMovableRect.Top - 1; y < playerMovableRect.Bottom + 1; y++)
-	{
-		/*GotoXY(global::playerMovableRect.Right + 1, y);
-		putchar('#');*/
-		ConsoleRenderer::ScreenSetChar(playerMovableRect.Right + 1, y, '#', FG_WHITE);
+		// 오른쪽 라인, X 값이 고정 된다.
+		for (int y = playerMovableRect.Top - 1; y < playerMovableRect.Bottom + 1; y++)
+		{
+			/*GotoXY(global::playerMovableRect.Right + 1, y);
+			putchar('#');*/
+			ConsoleRenderer::ScreenSetChar(playerMovableRect.Right + 1, y, '#', FG_WHITE);
+		}
 	}
-}
+	void DrawMap()
+	{
+		for (int i = 0; i < 19; i++)
+		{
+			for (int j = 0; j < 59; j++)
+			{
+				COORD position = { j,i };
+				char ch = ' ';
+				if (Map::PositionState(position) == 1)
+				{
+					ch = '#';
+				}
+				ConsoleRenderer::ScreenSetChar(playerMovableRect.Left +j, playerMovableRect.Top + i, ch, FG_WHITE);
+			}
+		}
+	}
 
     int ScreenWidth()
     {
@@ -157,4 +176,9 @@ namespace ConsoleRenderer {
     {
         return screenHeight;
     }
+
+	COORD InitPosition() {
+		return start;
+	}
+
 }

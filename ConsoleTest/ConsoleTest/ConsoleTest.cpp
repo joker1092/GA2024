@@ -4,12 +4,11 @@
 
 int main()
 {
-    int g_bQuit = -1;
 	Frame::Init();
 
-	while (g_bQuit!=0)
+	while (Frame::g_bQuit)
 	{
-		g_bQuit = Frame::ProcessInput();
+		Frame::ProcessInput();
 		Frame::FixedUpdate();
 		Frame::Update();
 		Frame::Render();

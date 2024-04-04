@@ -1,5 +1,24 @@
-#include <Windows.h>
+#include "player.h"
 
-COORD g_Player = { 0,0 };
-int p_Xpower = 0;
-int p_Ypower = 0;
+namespace Player {
+	COORD prePosition = { 0,0 };
+	COORD curPosition = { 0,0 };
+
+	void setPrePosition(COORD coord) {
+		prePosition.X = coord.X;
+		prePosition.Y = coord.Y;
+	}
+
+	void setCurPosition(COORD coord) {
+		curPosition.X = coord.X;
+		curPosition.Y = coord.Y;
+	}
+
+	COORD getPrePosion() {
+		return prePosition;
+	}
+
+	COORD getCurPosion() {
+		return curPosition;
+	}
+}

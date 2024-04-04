@@ -1,5 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "Map.h"
 
 // Foreground
 #define FG_BLACK		0
@@ -49,6 +50,8 @@
 
 namespace ConsoleRenderer
 {
+	extern SMALL_RECT playerMovableRect;
+
 	void ScreenInit();
 	void ScreenRelease();
 
@@ -59,7 +62,9 @@ namespace ConsoleRenderer
 	bool ScreenSetString(int x, int y, const char* pStr, WORD attr);
 	bool ScreenSetAttr(WORD attr);
 	void DrawMovableRect();
+	void DrawMap();
 
 	int ScreenWidth();
 	int ScreenHeight();
+	COORD InitPosition();
 };

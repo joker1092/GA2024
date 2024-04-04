@@ -2,10 +2,14 @@
 #include <Windows.h>
 #include "Time.h"
 #include "ConsoleRenderer.h"
+#include "player.h"
+#include "Map.h"
 
 namespace Frame {
+	extern bool g_bQuit;
+
 	void Init();
-	int ProcessInput();
+	void ProcessInput();
 	void FixedUpdate();
 	void Update();
 	void Render();
