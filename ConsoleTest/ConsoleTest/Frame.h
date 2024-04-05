@@ -4,6 +4,7 @@
 #include "ConsoleRenderer.h"
 #include "player.h"
 #include "Map.h"
+#include "InputSystem.h"
 
 namespace Frame {
 	extern bool g_bQuit;

@@ -15,6 +15,7 @@ namespace input
 	bool IsRightKeyOn();
 	bool IsUpKeyOn();
 	bool IsDownKeyOn();
+	bool IsEscapeKeyOn();
 
 	void UpdateInput();
 };
