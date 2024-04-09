@@ -128,7 +128,7 @@ namespace ConsoleRenderer {
 		}
 
 		// 아래쪽 라인. Y 값이 고정 된다.
-		for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right + 1; x++)
+		for (int x = playerMovableRect.Left - 1; x < playerMovableRect.Right; x++)
 		{
 			/*GotoXY(x, global::playerMovableRect.Bottom + 1);
 			putchar('#');*/

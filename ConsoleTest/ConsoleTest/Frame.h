@@ -6,6 +6,8 @@
 #include "Map.h"
 #include "InputSystem.h"
 
+#include <iostream>
+
 namespace Frame {
 	extern bool g_bQuit;
 
@@ -15,4 +17,7 @@ namespace Frame {
 	void Update();
 	void Render();
 	void Quit();
+
+	void setTimer(char* str);
+	bool isClear();
 }

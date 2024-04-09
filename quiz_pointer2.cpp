@@ -69,6 +69,8 @@ int main()
    (3) int Array[4][2];
    (4) int Array[4][4];
 
+   //(2)
+
 
 //2. 다음 코드의 실행 후 예상되는 결과는? *
 
@@ -80,7 +82,8 @@ int main()
 		{7, 8, 9}
 	};
 
-	cout << Array[1][2] << endl;
+	cout << Array[1][2] << endl; 
+	//6;
   }
 
 //3. ( )안에 들어갈 적당한 것을 고르시오  **
@@ -93,6 +96,8 @@ int main()
    (3) int *
    (4) int **
 
+   //(4);
+
 //4. 2차원 배열의 연산에 관한 코드입니다. 예상되는 출력은 얼마입니까? *
 
 	int main(void)
@@ -101,6 +106,8 @@ int main()
 		cout << **(arr + 1);
 		return 0;
 	}
+
+	//3;
 
 
 //5. 함수로 배열을 전달하기 위해서는 배열의 주소값을 전달하는 방식을 취한다. **
@@ -122,6 +129,7 @@ int main()
    (3) int *param, &arr
    (4) int *param, arr
 
+   //(4);
 
 //6. Call-by-value 는 값을 전달하는 형태의 함수호출,
   Call-by-reference 는 주소 값을 전달하는 형태의 함수호출을 뜻합니다.
@@ -137,6 +145,7 @@ int main()
 		int num1 = 2, num2 = 3;
 		int sum = Add(num1, num2);
 	}
+	//Call-by-value;
 
 //7. 다음 중 A, B 자리에 들어갈 값으로 적당한 것은?
 
@@ -150,6 +159,9 @@ int main()
    (3) &num, str
    (4) &num, &str
 
+   //(3);
+
+
 //8. 다음 코드에 필요한 두 변수의 값을 교환하는 swap 함수를 작성해 보세요. *
 
 	void main()
@@ -158,6 +170,14 @@ int main()
 	    int num2 = 2;
 	    swap( &num1, &num2);
 	}
+
+	//void swap(int* n1, int* n2) {
+	//int temp = *n1;
+	//	*n1 = *n2;
+	//	 *n2 = temp;
+	//}
+
+
 
 //9. 다음 코드에 필요한 두 변수의 값을 교환하는 swap 함수를 작성해 보세요. **
 
@@ -168,8 +188,29 @@ int main()
 		swap( num1, num2);
 	}
 
-//10. 절대값을 구하는 함수 작성하기  //참조, 포인터 두가지 사용
+	//void swap(int& n1, int& n2) {
+	//int temp = n1;
+	//	n1 = n2;
+	//	n2 = temp;
+	//}
 
+//10. 절대값을 구하는 함수 작성하기  //참조, 포인터 두가지 사용
+	
+	//포인터
+	//int absolute(int* n) {
+	//	if (*n < 0) {
+	//		*n = -*n;
+	//	}
+	//	return  *n;
+	//}
+
+	//참조
+	//int absolute(int &n) {
+	//	if (n < 0) {
+	//		n = -n;
+	//	}
+	//	return  n;
+	//}
 
 //-----------------------------------------------------------------
 //11. 배열을 함수의 인자로 전달하여 출력하는 함수를 만들어 보세요.
@@ -184,6 +225,13 @@ int main(void)
 	return 0;
 }
 
+	//void ShowArray(int* arr, int len) {
+	//	for (int i = 0; i < len; i++)
+	//	{
+	//		cout << *(arr + i) << endl;
+	//	}
+	//}
+
 
 //12. 포인터의 배열 //arr1 을 이용해서, 변수의 값을 아래와 같이 출력하세요.
 	//10 20 30 40
@@ -191,6 +239,10 @@ int main(void)
 	int num1 = 10, num2 = 20, num3 = 30, num4 = 40;
 	int* arr1[4] = { &num1, &num2, &num3, &num4 };   // 포인터 배열
 	
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	cout << **(arr1 + i) << " " << endl;
+	//}
 
 
 //13. 배열의 포인터 //아래와 같이 출력하세요.
@@ -200,11 +252,27 @@ int main(void)
 	int arr2d[2][4] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 	int(*parr)[4] = arr2d;							 // 배열 포인터
 
+	for (int i = 0; i < 2; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			cout << *(*(parr + i)+j) << " ";
+		}
+		cout << "\n";
+	}
+
 
 //14. 이중 포인터 //출력하는 함수를 만들어 보세요. 
 
 	#include <iostream>
 	using namespace std;
+
+	//void PrintStr(const char** str,int len) {
+	//	for (int i = 0; i < len; i++)
+	//	{
+	//		cout << *(str + i) << endl;
+	//	}
+	//}
 
 	int main(void)
 	{
@@ -214,7 +282,8 @@ int main(void)
 		printf("%s \n", strArr[2]);
 		printf("%d \n", sizeof(strArr[0]));
 
-		PrintStr(strArr);		//출력하세요.
+		//PrintStr(strArr);		//출력하세요.
+		//PrintStr(strArr,sizeof(strArr)/ sizeof(strArr[0]));
 	}
 
 
@@ -226,9 +295,17 @@ int main(void)
 		printf("%s \n", str);
 	}
 
+	//void (*fptr)(const char *)=ShowString;
+	//
+	//fptr("가나다라");
 
 
 //16. MyCompare 함수를 작성하세요. (void*, 콜백)
+
+	//int MyCompare(void const* a, void const* b)
+	//{
+	//	return *(int*)a > *(int*)b;
+	//}
 
 	int main(void)
 	{
@@ -255,5 +332,13 @@ int main(void)
 		printf("이 문자열의 길이 : %d \n", str_length(str));
 		return 0;
 	}
+
+	//int str_length(char* str) {
+	//int rt = 0;
+	//while (str[rt] != '\0') {
+	//	rt++;
+	//}
+	//return rt+1;
+}
 
 */

@@ -21,4 +21,6 @@ namespace Time {
 	ULONGLONG GetDeltaTime() {
 		return deltaTime;
 	}
+
+
 }
