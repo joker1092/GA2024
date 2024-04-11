@@ -1,9 +1,7 @@
-﻿// Win32TestProject.cpp : 애플리케이션에 대한 진입점을 정의합니다.
-//
-
-#include "framework.h"
+﻿#include "framework.h"
 #include "Win32TestProject.h"
 #include <wingdi.h>
+#include <cmath>
 
 #define MAX_LOADSTRING 100
 
@@ -17,9 +15,11 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+//
 void Marker(LONG x, LONG y, HWND hwnd);
 void DrawMarker(HWND hWnd, LPARAM lParam);
-
+void DrawParabola(HWND hWnd, HDC hdc);
+//
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -160,7 +160,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             RECT rt4Text = { 100, 100, 500, 300 };
             // 텍스트를 가운데 정렬하고 한 줄이 꽉찰 경우 개행한다
             DrawText(hdc, L"Hello World", -1, &rt4Text, DT_CENTER | DT_WORDBREAK);
-
+            DrawParabola(hWnd, hdc);
             EndPaint(hWnd, &ps);
         }
         break;
@@ -228,4 +228,35 @@ void DrawMarker(HWND hWnd, LPARAM lParam) {
         Marker(ptMouseDown[index].x, ptMouseDown[index].y, hWnd);
         index++;
     }
+}
+
+void DrawParabola(HWND hWnd, HDC hdc) {
+    RECT rect;
+
+    HPEN hNewPen, hPrevPen;
+
+    double a = 0.01;
+    double b = 0;
+    double c = 0;
+
+    hNewPen = CreatePen(PS_DOT, 2, RGB(255, 255, 0));
+    hPrevPen = (HPEN)SelectObject(hdc, hNewPen);
+
+    GetClientRect(hWnd,&rect);
+
+    MoveToEx(hdc, rect.left, rect.bottom / 2, NULL);
+    LineTo(hdc, rect.right, rect.bottom / 2);
+    MoveToEx(hdc, rect.right/2, rect.top, NULL);
+    LineTo(hdc, rect.right/2, rect.bottom / 2);
+
+
+    MoveToEx(hdc, rect.left, rect.bottom / 2, NULL);
+    for (int x = rect.left; x <= rect.right; x++)
+    {
+        double y = a * pow(x - rect.right / 2, 2) + b * (x - rect.right / 2) + c + rect.bottom / 2;
+        LineTo(hdc, x, y);
+    }
+
+    SelectObject(hdc, hPrevPen);
+    DeleteObject(hNewPen);
 }

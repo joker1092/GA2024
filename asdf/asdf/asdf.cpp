@@ -1,19 +1,25 @@
 ﻿#include <iostream>
 using namespace std;
 
-int str_length(char* str);
-
 int main(int argc, char* argv[])
 {
-	char str[] = { "What is your name?" };
-	printf("이 문자열의 길이 : %d \n", str_length(str));
-	return 0;
-}
+	const int count = 10;
 
-int str_length(char* str) {
-	int rt = 0;
-	while (str[rt] != '\0') {
-		rt++;
+	//int* p = new int[count];
+	int* p = (int*)malloc(sizeof(int) * count);
+
+	for (int i = 0; i < count; i++)
+	{
+		*(p + i)=i+1;
 	}
-	return rt+1;
+
+	for (int i = 0; i < count; i++)
+	{
+		cout << *(p + i) << endl;
+	}
+	
+	//delete[] p;
+	free(p);
+
+	return 0;
 }
