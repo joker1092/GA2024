@@ -39,3 +39,7 @@ namespace global
 {
 	const WinApp& GetWinApp();
 }
+
+class WinApp
+{
+};

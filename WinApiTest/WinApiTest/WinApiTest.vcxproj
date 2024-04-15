@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{5b7c7344-85cd-4b8f-a389-d405d173a666}</ProjectGuid>
-    <RootNamespace>Win32TestProject</RootNamespace>
+    <ProjectGuid>{3aaa1aad-e44c-4699-a6d4-3957f8d61e7a}</ProjectGuid>
+    <RootNamespace>WinApiTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -130,19 +130,19 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="Win32TestProject.h" />
+    <ClInclude Include="WinApiTest.h" />
     <ClInclude Include="WinApp.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Win32TestProject.cpp" />
+    <ClCompile Include="WinApiTest.cpp" />
     <ClCompile Include="WinApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Win32TestProject.rc" />
+    <ResourceCompile Include="WinApiTest.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="small.ico" />
-    <Image Include="Win32TestProject.ico" />
+    <Image Include="WinApiTest.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -24,7 +24,7 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Win32TestProject.h">
+    <ClInclude Include="WinApiTest.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="WinApp.h">
@@ -32,7 +32,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Win32TestProject.cpp">
+    <ClCompile Include="WinApiTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="WinApp.cpp">
@@ -40,7 +40,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Win32TestProject.rc">
+    <ResourceCompile Include="WinApiTest.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -48,7 +48,7 @@
     <Image Include="small.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="Win32TestProject.ico">
+    <Image Include="WinApiTest.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>
