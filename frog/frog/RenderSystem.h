@@ -24,6 +24,8 @@ public:
     //void DrawFont(int x, int y, const char* text, COLORREF color, int fontSize, const wchar_t* fontName, int fontStyle);
 
     void DrawBitmap(int x, int y, HBITMAP hBitmap);
+    
+    void TransparentDrawBitmap(int x, int y, HBITMAP hBitmap);
 
     HBITMAP LoadImdage(const char* path);
 

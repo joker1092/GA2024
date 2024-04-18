@@ -1,24 +1,24 @@
 ﻿#include <iostream>
 using namespace std;
 
-struct TEST {
-	int age;
-	int gender;
-};
-
-int set_human(TEST &human,int a, int b) {
-	
-	human.age = a;
-	human.gender = b;
-	return 0;
+void nstrcpy(char* string1, char* string2) {
+    int i = 0;
+    while (string2[i] != '\0') {
+        string1[i] = string2[i];
+        
+        i++;
+    }
+    string1[i] = '\0';
 }
 
-int main(int argc, char* argv[])
+int main()
 {
-	TEST human = {};
-	set_human(human, 10, 1);
-	
-	cout << human.age << human.gender;
+    char str1[20] = "abc";
+    char str2[20] = "abcdefghij";
+
+    nstrcpy(str1, str2);
+
+    cout << str1;
 
 	return 0;
 }

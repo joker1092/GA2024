@@ -27,6 +27,7 @@ namespace game {
 		static void DestroyInstance();
 
 	private:
+		void initMap();
 		//bool isRectEnter();
 		void DrawBack();
 		void DrawFPS();

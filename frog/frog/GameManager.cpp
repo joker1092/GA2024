@@ -15,6 +15,22 @@ enum state
 	QUIT
 };
 
+enum BackDraw {
+	END,
+	WATER,
+	GREEN,
+	LOAD,
+	POSITION,
+};
+
+const int CAR1_INDEX = 3;
+const int CAR2_INDEX = 2;
+const int CAR3_INDEX = 4;
+const int CAR4_INDEX = 2;
+
+const int WOOD1_INDEX = 4;
+const int WOOD2_INDEX = 3;
+const int WOOD3_INDEX = 2;
 
 
 namespace game {
@@ -24,12 +40,37 @@ namespace game {
 	RenderSystem render;
 	Object player;
 
+	Object car1[CAR1_INDEX];
+	Object car2[CAR2_INDEX];
+	Object car3[CAR3_INDEX];
+	Object car4[CAR4_INDEX];
+
+	Object wood1[WOOD1_INDEX];
+	Object wood2[WOOD2_INDEX];
+	Object wood3[WOOD3_INDEX];
+
 	HBITMAP hBackBitmap = nullptr;
+	RECT playRect;
+
+	HBITMAP hBitmap_end = nullptr;
+	HBITMAP hBitmap_water = nullptr;
+	HBITMAP hBitmap_green = nullptr;
+	HBITMAP hBitmap_load = nullptr;
+	HBITMAP hBitmap_start = nullptr;
+
+	struct bound {
+		int x;
+		int y;
+		int state = 0;
+		BackDraw draw;
+	};
+
+	bound Map[10][10];
 
 	void UpdatePlayer()
 	{
 		// 게임 로직은 여기에 추가
-		if (input.IsKey('A'))
+		/*if (input.IsKey('A'))
 		{
 			player.Move(-player.speed*time.GetDeltaTime(), 0);
 		}
@@ -44,6 +85,71 @@ namespace game {
 		else if (input.IsKey('S'))
 		{
 			player.Move(0, player.speed * time.GetDeltaTime());
+		}*/
+		if (input.IsKeyDown('A'))
+		{
+			player.Move(-80, 0);
+		}
+		else if (input.IsKeyDown('D'))
+		{
+			player.Move(80, 0);
+		}
+		if (input.IsKeyDown('W'))
+		{
+			player.Move(0, -80);
+		}
+		else if (input.IsKeyDown('S'))
+		{
+			player.Move(0, 80);
+		}
+	}
+
+	void UpdateEnemy()
+	{
+		for (int i = 0; i < CAR1_INDEX; i++)
+		{
+			car1[i].Move(-car1[i].speed, 0);
+			if (car1[i].x+160 < 10)
+			{
+				car1[i].SetPos(800, car1->y);
+			}
+		}
+	}
+
+	void GameManager::initMap() {
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 10; j++)
+			{
+				Map[i][j].x = j;
+				Map[i][j].y = i;
+
+				switch (i)
+				{
+				case 0:
+					Map[i][j].draw = END;
+					break;
+				case 1:
+				case 2:
+				case 3:
+					Map[i][j].draw = WATER;
+					break;
+				case 4:
+					Map[i][j].draw = GREEN;
+					break;
+				case 5:
+				case 6:
+				case 7:
+				case 8:
+					Map[i][j].draw = LOAD;
+					break;
+				case 9:
+					Map[i][j].draw = POSITION;
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 
@@ -60,9 +166,20 @@ namespace game {
 		time.InitTime();
 		input.InitInput();
 		render.InitRender();
+		initMap();
+		Load(".\\assets\\end.bmp", &hBitmap_end);
+		Load(".\\assets\\water.bmp", &hBitmap_water);
+		Load(".\\assets\\green.bmp", &hBitmap_green);
+		Load(".\\assets\\load.bmp", &hBitmap_load);
+		Load(".\\assets\\start.bmp", &hBitmap_start);
+		player.InitObject(410, 730, 80, 80, 0.3f, nullptr);
+		Load(".\\assets\\frog_up.bmp", &player.pBitmap);
 
-		player.InitObject(global::GetWinApp().GetWidth() / 2.f, global::GetWinApp().GetHeight() / 2.f, 10, 10, 0.3f, nullptr);
-		Load(".\\assets\\marine.bmp", &player.pBitmap);
+		for (int i = 0; i < CAR1_INDEX; i++)
+		{
+			car1[i].InitObject(80 + i * 320, 650, 80, 80, 0.1f, nullptr);
+			Load(".\\assets\\car1.bmp", &car1[i].pBitmap);
+		}
 	}
 
 	void GameManager::Update()
@@ -73,6 +190,7 @@ namespace game {
 		time.UpdateTime();
 		
 		UpdatePlayer();
+		UpdateEnemy();
 		//UpdateBlueCircle();
 
 		input.ResetInput();
@@ -95,7 +213,9 @@ namespace game {
 	void GameManager::Render()
 	{
 		render.BeginDraw();
+
 		DrawBack();
+
 		DrawFPS();
 		DrawSomething();
 		DrawPlayer();
@@ -109,7 +229,16 @@ namespace game {
 		Upload(player.pBitmap);
 		/*Upload(enemy.pBitmap);
 		Upload(hTestBitmap);*/
+		for (int i = 0; i < CAR1_INDEX; i++)
+		{
+			Upload(car1[i].pBitmap);
+		}
 
+		Upload(hBitmap_end);
+		Upload(hBitmap_water);
+		Upload(hBitmap_green);
+		Upload(hBitmap_load);
+		Upload(hBitmap_start);
 		render.ReleaseRender();
 	}
 	void GameManager::Run()
@@ -191,18 +320,56 @@ namespace game {
 
 	}
 
+
 	void GameManager::DrawBack() {
-		render.DrawBitmap(0, 0, hBackBitmap);
+		int playbleWidth = 800;
+		int playbleheight = 800;
+
+		render.DrawRect(10,10, 10+playbleWidth, 10+playbleheight, RGB(255, 0, 255));
+		for (int i = 0; i < 10; i++)
+		{
+			for (int j = 0; j < 10; j++)
+			{
+				HBITMAP setDraw=nullptr;
+				switch (Map[i][j].draw)
+				{
+				case END:
+					setDraw = hBitmap_end;
+					break;
+				case WATER:
+					setDraw = hBitmap_water;
+					break;
+				case GREEN:
+					setDraw = hBitmap_green;
+					break;
+				case LOAD:
+					setDraw = hBitmap_load;
+					break;
+				case POSITION:
+					setDraw = hBitmap_start;
+					break;
+				default:
+					break;
+				}
+				/*std::string str = "draw: " + std::to_string(Map[i][j].draw);
+				str += std::to_string((int)setDraw);
+				render.DrawText(30 + (j * 80), 30 + (i * 80), str.c_str(), RGB(0, 255, 0));*/
+				render.DrawBitmap(10+(j*80), 10+(i*80), setDraw);
+			}
+		}
 	}
 
 	void GameManager::DrawPlayer()
 	{
-		render.DrawBitmap(player.x, player.y, player.pBitmap);
+		render.TransparentDrawBitmap(player.x, player.y, player.pBitmap);
 	}
 
 	void GameManager::DrawEnemy()
 	{
-		//render.DrawBitmap(enemy.x, enemy.y, enemy.pBitmap);
+		for (int i = 0; i < CAR1_INDEX; i++)
+		{
+			render.TransparentDrawBitmap(car1[i].x, car1[i].y, car1[i].pBitmap);
+		}
 	}
 
 	void GameManager::DrawSomething()

@@ -19,7 +19,7 @@ constexpr int SCREEN_START_TOP = 10;
 
 constexpr int SCREEN_WIDTH = 1024;
 
-constexpr int SCREEN_HEIGHT = 768;
+constexpr int SCREEN_HEIGHT = 900;
 
 void PlaceInCenterOfScreen(HWND window, DWORD style, DWORD exStyle)
 {

@@ -130,6 +130,20 @@ void RenderSystem::DrawBitmap(int x, int y, HBITMAP hBitmap) {
     DeleteDC(bitmapMemDC);
 }
 
+
+void RenderSystem::TransparentDrawBitmap(int x, int y, HBITMAP hBitmap) {
+    HDC bitmapMemDC = CreateCompatibleDC(frontMemDC);
+
+    HBITMAP hOldBitmap = (HBITMAP)SelectObject(bitmapMemDC, hBitmap);
+
+    BITMAP bm;
+    GetObject(hBitmap, sizeof(BITMAP), &bm);
+
+    ::TransparentBlt(backMemDC, x, y, bm.bmWidth, bm.bmHeight, bitmapMemDC, 0, 0, bm.bmWidth, bm.bmHeight, RGB(255,255,255));
+
+    DeleteDC(bitmapMemDC);
+}
+
 HBITMAP RenderSystem::LoadImdage(const char* path) {
     HBITMAP hBitmap = (HBITMAP)LoadImageA(NULL, path, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 
