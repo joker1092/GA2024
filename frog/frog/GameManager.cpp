@@ -32,6 +32,7 @@ const int WOOD1_INDEX = 4;
 const int WOOD2_INDEX = 3;
 const int WOOD3_INDEX = 2;
 
+const int block = 80;
 
 namespace game {
 
@@ -67,8 +68,20 @@ namespace game {
 
 	bound Map[10][10];
 
+	bool Clamp(int x, int y) {
+		int offsetx = 10;
+		int offsety = 10;
+		int playbleWidth = 800-block;
+		int playbleheight = 800 - block;
+
+		return (x<offsetx || y<offsety || x>(offsetx + playbleWidth) || y>(offsety + playbleheight));
+	}
+
+
 	void UpdatePlayer()
 	{
+		
+
 		// 게임 로직은 여기에 추가
 		/*if (input.IsKey('A'))
 		{
@@ -88,19 +101,31 @@ namespace game {
 		}*/
 		if (input.IsKeyDown('A'))
 		{
-			player.Move(-80, 0);
+			player.Move(-block, 0);
+			if (Clamp(player.x, player.y)) {
+				player.SetPos(player.x + block, player.y);
+			}
 		}
 		else if (input.IsKeyDown('D'))
 		{
-			player.Move(80, 0);
+			player.Move(block, 0);
+			if (Clamp(player.x, player.y)) {
+				player.SetPos(player.x - block, player.y);
+			}
 		}
 		if (input.IsKeyDown('W'))
 		{
-			player.Move(0, -80);
+			player.Move(0, -block);
+			if (Clamp(player.x, player.y)) {
+				player.SetPos(player.x , player.y + block);
+			}
 		}
 		else if (input.IsKeyDown('S'))
 		{
-			player.Move(0, 80);
+			player.Move(0, block);
+			if (Clamp(player.x, player.y)) {
+				player.SetPos(player.x , player.y - block);
+			}
 		}
 	}
 
@@ -112,6 +137,30 @@ namespace game {
 			if (car1[i].x+160 < 10)
 			{
 				car1[i].SetPos(800, car1->y);
+			}
+		}
+		for (int i = 0; i < CAR2_INDEX; i++)
+		{
+			car2[i].Move(car2[i].speed, 0);
+			if (car2[i].x  > 800)
+			{
+				car2[i].SetPos(-160, car2->y);
+			}
+		}
+		for (int i = 0; i < CAR3_INDEX; i++)
+		{
+			car3[i].Move(-car3[i].speed, 0);
+			if (car3[i].x + 160 < 10)
+			{
+				car3[i].SetPos(800, car3->y);
+			}
+		}
+		for (int i = 0; i < CAR4_INDEX; i++)
+		{
+			car4[i].Move(car4[i].speed, 0);
+			if (car4[i].x  > 800)
+			{
+				car4[i].SetPos(-320, car4->y);
 			}
 		}
 	}
@@ -177,8 +226,23 @@ namespace game {
 
 		for (int i = 0; i < CAR1_INDEX; i++)
 		{
-			car1[i].InitObject(80 + i * 320, 650, 80, 80, 0.1f, nullptr);
+			car1[i].InitObject(80 + i * (block * 4), 10+(block*8), (block * 2), 80, 0.1f, nullptr);
 			Load(".\\assets\\car1.bmp", &car1[i].pBitmap);
+		}
+		for (int i = 0; i < CAR2_INDEX; i++)
+		{
+			car2[i].InitObject(80 + i * (block*5), 10 + (block * 7), 80, 80, 0.3f, nullptr);
+			Load(".\\assets\\car2.bmp", &car2[i].pBitmap);
+		}
+		for (int i = 0; i < CAR3_INDEX; i++)
+		{
+			car3[i].InitObject(80 + i * (block * 4), 10 + (block * 6), (block * 3/2), 80, 0.1f, nullptr);
+			Load(".\\assets\\car3.bmp", &car3[i].pBitmap);
+		}
+		for (int i = 0; i < CAR4_INDEX; i++)
+		{
+			car4[i].InitObject(80 + i * (block * 8), 10 + (block * 5), (block * 4), 80, 0.6f, nullptr);
+			Load(".\\assets\\car4.bmp", &car4[i].pBitmap);
 		}
 	}
 
@@ -233,6 +297,19 @@ namespace game {
 		{
 			Upload(car1[i].pBitmap);
 		}
+		for (int i = 0; i < CAR2_INDEX; i++)
+		{
+			Upload(car2[i].pBitmap);
+		}
+		for (int i = 0; i < CAR3_INDEX; i++)
+		{
+			Upload(car3[i].pBitmap);
+		}
+		for (int i = 0; i < CAR4_INDEX; i++)
+		{
+			Upload(car4[i].pBitmap);
+		}
+
 
 		Upload(hBitmap_end);
 		Upload(hBitmap_water);
@@ -370,6 +447,18 @@ namespace game {
 		{
 			render.TransparentDrawBitmap(car1[i].x, car1[i].y, car1[i].pBitmap);
 		}
+		for (int i = 0; i < CAR2_INDEX; i++)
+		{
+			render.TransparentDrawBitmap(car2[i].x, car2[i].y, car2[i].pBitmap);
+		}
+		for (int i = 0; i < CAR3_INDEX; i++)
+		{
+			render.TransparentDrawBitmap(car3[i].x, car3[i].y, car3[i].pBitmap);
+		}
+		for (int i = 0; i < CAR4_INDEX; i++)
+		{
+			render.TransparentDrawBitmap(car4[i].x, car4[i].y, car4[i].pBitmap);
+		}
 	}
 
 	void GameManager::DrawSomething()
@@ -396,16 +485,7 @@ namespace game {
 		render.ReleaseImage(bitmap);
 	}
 
-	//bool GameManager::isRectEnter() {
-		/*<if (player.x + player.size < enemy.x || player.x>enemy.x + enemy.size || player.y + player.size<enemy.y || player.y>enemy.y + enemy.size)
-		{
-			return false;
-		}
-		else {
-			return true;
-		}*/
-
-	//}
+	
 }
 
 
