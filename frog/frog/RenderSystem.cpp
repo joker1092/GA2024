@@ -153,3 +153,6 @@ HBITMAP RenderSystem::LoadImdage(const char* path) {
 void RenderSystem::ReleaseImage(HBITMAP hBitmap) {
     DeleteObject(hBitmap);
 }
+
+
+

@@ -30,5 +30,6 @@ public:
     HBITMAP LoadImdage(const char* path);
 
     void ReleaseImage(HBITMAP hBitmap);
-};
+
+    };
 

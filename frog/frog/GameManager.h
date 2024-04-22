@@ -28,7 +28,7 @@ namespace game {
 
 	private:
 		void initMap();
-		//bool isRectEnter();
+		
 		void DrawBack();
 		void DrawFPS();
 		void DrawPlayer();
