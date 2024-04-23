@@ -36,7 +36,7 @@ namespace game {
 		void DrawSomething();
 
 		void Load(const char* path, HBITMAP* bitmap);
-		void Upload(HBITMAP bitmap);
+		void Unload(HBITMAP bitmap);
 
 		static GameManager* instance;
 

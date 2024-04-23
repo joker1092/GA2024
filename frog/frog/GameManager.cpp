@@ -7,6 +7,8 @@
 
 #include <string>
 
+#include <vector>
+
 enum state
 {
 	READY,
@@ -30,7 +32,7 @@ const int CAR3_INDEX = 3;
 const int CAR4_INDEX = 2;
 
 const int WOOD1_INDEX = 2;
-const int WOOD2_INDEX = 3;
+const int WOOD2_INDEX = 2;
 const int WOOD3_INDEX = 2;
 
 const int block = 80;
@@ -73,13 +75,19 @@ namespace game {
 
 	state gameState = READY;
 
+	float reloadTime = 0;
+
+	unsigned int score = 0;
+
 	bool preCollison = false;
 	bool curCollison = false;
+
+
 
 	bool Clamp(int x, int y) {
 		int offsetx = 10;
 		int offsety = 10;
-		int playbleWidth = 800-block;
+		int playbleWidth = 800 - block;
 		int playbleheight = 800 - block;
 
 		return (x<offsetx || y<offsety || x>(offsetx + playbleWidth) || y>(offsety + playbleheight));
@@ -102,8 +110,8 @@ namespace game {
 
 	void UpdatePlayer()
 	{
-		//if (gameState!=DEATH)
-		//{
+		if (gameState!=DEATH&& gameState != GAMEOVER)
+		{
 			if (input.IsKeyDown('A'))
 			{
 				player.Move(-block, 0);
@@ -132,7 +140,7 @@ namespace game {
 					player.SetPos(player.x, player.y - block);
 				}
 			}
-		//}
+		}
 	}
 
 	void UpdateEnemy()
@@ -141,7 +149,7 @@ namespace game {
 		for (int i = 0; i < CAR1_INDEX; i++)
 		{
 			car1[i].Move(-car1[i].speed, 0);
-			if (car1[i].x+160 < 10)
+			if (car1[i].x + 160 < 10)
 			{
 				car1[i].SetPos(800, car1->y);
 			}
@@ -149,7 +157,7 @@ namespace game {
 		for (int i = 0; i < CAR2_INDEX; i++)
 		{
 			car2[i].Move(car2[i].speed, 0);
-			if (car2[i].x  > 800)
+			if (car2[i].x > 800)
 			{
 				car2[i].SetPos(-160, car2->y);
 			}
@@ -165,7 +173,7 @@ namespace game {
 		for (int i = 0; i < CAR4_INDEX; i++)
 		{
 			car4[i].Move(car4[i].speed, 0);
-			if (car4[i].x  > 800)
+			if (car4[i].x > 800)
 			{
 				car4[i].SetPos(-320, car4->y);
 			}
@@ -174,9 +182,9 @@ namespace game {
 		//wood object
 		for (int i = 0; i < WOOD1_INDEX; i++)
 		{
-			
+
 			wood1[i].Move(-wood1[i].speed, 0);
-			if (wood1[i].x + (5*block) < 10)
+			if (wood1[i].x + (5 * block) < 10)
 			{
 				wood1[i].SetPos(800, wood1->y);
 			}
@@ -200,99 +208,135 @@ namespace game {
 	}
 
 	void UpdateState() {
-
-		if (gameState==DEATH)
+		if (gameState == GAMEOVER)
 		{
-			if (playerLife>0)
+			if (input.IsKeyDown('R'))
 			{
-				player.SetPos(410, 730);
+				player.SetPos(playerInitX, playerInitY);
+				playerLife = 3;
 				gameState = START;
 			}
 		}
-
-
-		if (player.y<block)
-		{
-
-		}
-		else if (player.y < wood3->y + block) {
-			for (int i = 0; i < WOOD3_INDEX; i++)
+		else if (gameState == DEATH)
 			{
-				if (!isRectEnter(&player, &wood3[i]))
-				{
-					gameState = DEATH;
-				}
+				reloadTime += (float)time.GetDeltaTime();
 
-			}
-		}
-		else if (player.y < wood2->y + block) {
-			for (int i = 0; i < WOOD2_INDEX; i++)
-			{
-				if (!isRectEnter(&player, &wood2[i]))
+				if (playerLife > 0)
 				{
-					gameState = DEATH;
+					if (reloadTime > 500)
+					{
+						player.SetPos(playerInitX, playerInitY);
+						gameState = START;
+						playerLife--;
+						reloadTime = 0;
+					}
 				}
-
-			}
-		}
-		else if (player.y < wood1->y+block)
-		{
-			for (int i = 0; i < WOOD1_INDEX; i++)
-			{
-				if (!isRectEnter(&player, &wood1[i]))
-				{
-					gameState = DEATH;
+				else {
+					gameState = GAMEOVER;
 				}
-
-			}
-		}
-		else if (player.y < car4->y) {
-			gameState = START;
-		}
-		else if (player.y < car4->y+block ) {
-			for (int i = 0; i < CAR4_INDEX; i++)
-			{
-				if (isRectEnter(&player, &car4[i]))
-				{
-					gameState = DEATH;
-				}
-				
-			}
-		}
-		else if (player.y < car3->y + block) {
-			for (int i = 0; i < CAR3_INDEX; i++)
-			{
-				if (isRectEnter(&player, &car3[i]))
-				{
-					gameState = DEATH;
-				}
-				
-			}
-		}
-		else if (player.y < car2->y + block) {
-			for (int i = 0; i < CAR2_INDEX; i++)
-			{
-				if (isRectEnter(&player, &car2[i]))
-				{
-					gameState = DEATH;
-				}
-				
-			}
-		}
-		else if (player.y < car1->y + block)
-		{
-			for (int i = 0; i < CAR1_INDEX; i++) {
-				if (isRectEnter(&player, &car1[i]))
-				{
-					gameState = DEATH;
-				}
-			}			
 		}
 		else {
+			if (player.y < block)
+			{
+				if (playerLife > 0)
+				{
+					player.SetPos(playerInitX, playerInitY);
+					gameState = START;
+					playerLife--;
+				}
+			}
+
+			else if (player.y < wood3->y + block) {
+				if (isRectEnter(&player, &wood3[0]))
+				{
+					gameState = START;
+				}
+				else if (isRectEnter(&player, &wood3[1]))
+				{
+					gameState = START;
+				}
+				else {
+					gameState = DEATH;
+				}
+			}
+			else if (player.y < wood2->y + block) {
+				if (isRectEnter(&player, &wood2[0]))
+				{
+					gameState = START;
+				}
+				else if (isRectEnter(&player, &wood2[1]))
+				{
+					gameState = START;
+				}
+				else {
+					gameState = DEATH;
+				}
+
+			}
+			else if (player.y < wood1->y + block)
+			{
+				if (isRectEnter(&player, &wood1[0]))
+				{
+					gameState = START;
+				}
+				else if (isRectEnter(&player, &wood1[1]))
+				{
+					gameState = START;
+				}
+				else {
+					gameState = DEATH;
+				}
+
+			}
+			else if (player.y < car4->y) {
+				gameState = READY;
+			}
+			else if (player.y < car4->y + block) {
+				for (int i = 0; i < CAR4_INDEX; i++)
+				{
+					if (isRectEnter(&player, &car4[i]))
+					{
+						gameState = DEATH;
+					}
+
+				}
+			}
+			else if (player.y < car3->y + block) {
+				for (int i = 0; i < CAR3_INDEX; i++)
+				{
+					if (isRectEnter(&player, &car3[i]))
+					{
+						gameState = DEATH;
+					}
+
+				}
+			}
+			else if (player.y < car2->y + block) {
+				for (int i = 0; i < CAR2_INDEX; i++)
+				{
+					if (isRectEnter(&player, &car2[i]))
+					{
+						gameState = DEATH;
+					}
+
+				}
+			}
+			else if (player.y < car1->y + block)
+			{
+				for (int i = 0; i < CAR1_INDEX; i++) {
+					if (isRectEnter(&player, &car1[i]))
+					{
+						gameState = DEATH;
+					}
+				}
+			}
+			else {
+			}
 		}
 
-		
+
 	}
+
 
 
 	void GameManager::initMap() {
@@ -342,6 +386,7 @@ namespace game {
 
 	void GameManager::Initialize()
 	{
+		score = 0;
 		time.InitTime();
 		input.InitInput();
 		render.InitRender();
@@ -384,12 +429,12 @@ namespace game {
 		}
 		for (int i = 0; i < WOOD2_INDEX; i++)
 		{
-			wood2[i].InitObject(80 + i * (block * 4), 10 + (block * 2), (block * 3 / 2), 80, 0.1f, nullptr);
+			wood2[i].InitObject(80 + i * (block * 5), 10 + (block * 2), (block * 3), 80, 0.1f, nullptr);
 			Load(".\\assets\\wood2.bmp", &wood2[i].pBitmap);
 		}
 		for (int i = 0; i < WOOD3_INDEX; i++)
 		{
-			wood3[i].InitObject(80 + i * (block * 8), 10 + (block * 1), (block * 4), 80, 0.6f, nullptr);
+			wood3[i].InitObject(80 + i * (block * 8), 10 + (block * 1), (block * 2), 80, 0.6f, nullptr);
 			Load(".\\assets\\wood3.bmp", &wood3[i].pBitmap);
 		}
 
@@ -402,13 +447,13 @@ namespace game {
 		input.UpdateMouse();
 		time.UpdateTime();
 		
-		if (gameState!=DEATH)
+		
+		if (gameState != DEATH&& gameState != GAMEOVER)
 		{
-			UpdatePlayer();
 			UpdateEnemy();
 		}
+		UpdatePlayer();
 		
-		//UpdateBlueCircle();
 		UpdateState();
 
 		input.ResetInput();
@@ -435,9 +480,9 @@ namespace game {
 		DrawBack();
 
 		DrawFPS();
-		DrawSomething();
 		DrawEnemy();
 		DrawPlayer();
+		DrawSomething();
 		
 
 		render.EndDraw();
@@ -445,49 +490,49 @@ namespace game {
 	void GameManager::Finalize()
 	{
 
-		Upload(player.pBitmap);
+		Unload(player.pBitmap);
 		/*Upload(enemy.pBitmap);
 		Upload(hTestBitmap);*/
 
 		//car object
 		for (int i = 0; i < CAR1_INDEX; i++)
 		{
-			Upload(car1[i].pBitmap);
+			Unload(car1[i].pBitmap);
 		}
 		for (int i = 0; i < CAR2_INDEX; i++)
 		{
-			Upload(car2[i].pBitmap);
+			Unload(car2[i].pBitmap);
 		}
 		for (int i = 0; i < CAR3_INDEX; i++)
 		{
-			Upload(car3[i].pBitmap);
+			Unload(car3[i].pBitmap);
 		}
 		for (int i = 0; i < CAR4_INDEX; i++)
 		{
-			Upload(car4[i].pBitmap);
+			Unload(car4[i].pBitmap);
 		}
 
 		//wood object
 		for (int i = 0; i < WOOD1_INDEX; i++)
 		{
-			Upload(wood1[i].pBitmap);
+			Unload(wood1[i].pBitmap);
 		}
 		for (int i = 0; i < WOOD2_INDEX; i++)
 		{
-			Upload(wood2[i].pBitmap);
+			Unload(wood2[i].pBitmap);
 		}
 		for (int i = 0; i < WOOD3_INDEX; i++)
 		{
-			Upload(wood3[i].pBitmap);
+			Unload(wood3[i].pBitmap);
 		}
 
 
-		Upload(hBitmap_end);
-		Upload(hBitmap_water);
-		Upload(hBitmap_green);
-		Upload(hBitmap_load);
-		Upload(hBitmap_start);
-		Upload(hBitmap_death);
+		Unload(hBitmap_end);
+		Unload(hBitmap_water);
+		Unload(hBitmap_green);
+		Unload(hBitmap_load);
+		Unload(hBitmap_start);
+		Unload(hBitmap_death);
 
 		render.ReleaseRender();
 	}
@@ -601,10 +646,7 @@ namespace game {
 				default:
 					break;
 				}
-				/*std::string str = "draw: " + std::to_string(Map[i][j].draw);
-				str += std::to_string((int)setDraw);
-				render.DrawText(30 + (j * 80), 30 + (i * 80), str.c_str(), RGB(0, 255, 0));*/
-				render.DrawBitmap(10+(j*80), 10+(i*80), setDraw);
+				render.DrawBitmap(10+(j*block), 10+(i*block), setDraw);
 			}
 		}
 	}
@@ -612,7 +654,7 @@ namespace game {
 	void GameManager::DrawPlayer()
 	{
 		render.TransparentDrawBitmap(player.x, player.y, player.pBitmap);
-		if (gameState == DEATH)
+		if (gameState == DEATH|| gameState == GAMEOVER)
 		{
 			render.TransparentDrawBitmap(player.x, player.y, hBitmap_death);
 		}
@@ -637,36 +679,17 @@ namespace game {
 
 	void GameManager::DrawSomething()
 	{
-		/*for (int i = 0; i < blueCircleCount; i++)
+		if (gameState==GAMEOVER)
 		{
-			render::DrawCircle(blueCircles[i].x, blueCircles[i].y, blueCircles[i].size, blueCircles[i].color);
+			render.DrawText(400, 400, "GAME OVER", RGB(255, 0, 0));
 		}
-
-		if (state)
-		{
-			render::DrawRect(player.x - 25, player.y - 25, 50, 50, RGB(255, 0, 255));
-		}*/
-		std::string str = "gameState: " + std::to_string(gameState);
-		str += "           player.y " + std::to_string(player.y);
-		str += "           wood1[0].y " + std::to_string(wood1[0].y);
-		str += "           isRectEnter " + isRectEnter(&player, &car1[0]);
-		str += "           isRectEnter " + isRectEnter(&player, &car1[1]);
-		str += "           isRectEnter " + isRectEnter(&player, &car1[2]);
-
-		render.DrawText(40, 40, str.c_str(), RGB(255, 0, 0));
 
 	}
 	void GameManager::Load(const char* path, HBITMAP* bitmap) {
 		//const char* path = ".\\assets\\sample.bmp";
 		*bitmap = render.LoadImdage(path);
 	}
-	void GameManager::Upload(HBITMAP bitmap) {
+	void GameManager::Unload(HBITMAP bitmap) {
 		render.ReleaseImage(bitmap);
 	}
-	
-	
-	
-
 }
-
-
