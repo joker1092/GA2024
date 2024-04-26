@@ -13,6 +13,7 @@ void TimeSystem::UpdateTime() {
 	QueryPerformanceCounter(&currentTime);
 
 	deltaTime = (currentTime.QuadPart - previousTime.QuadPart) / (frequency.QuadPart / 1000.0f);
+	//deltaTime = ((currentTime.QuadPart - previousTime.QuadPart) / (frequency.QuadPart ))/ 1000.0f;
 }
 
 const float TimeSystem::GetFrameRate() {

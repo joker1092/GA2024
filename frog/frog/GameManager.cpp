@@ -62,6 +62,10 @@ namespace game {
 	HBITMAP hBitmap_green = nullptr;
 	HBITMAP hBitmap_load = nullptr;
 	HBITMAP hBitmap_start = nullptr;
+	HBITMAP hBitmap_life = nullptr;
+
+	HBITMAP hBitmap_default = nullptr;
+	HBITMAP frogBmps[4] = {};
 
 	HBITMAP hBitmap_death = nullptr;
 
@@ -77,12 +81,16 @@ namespace game {
 
 	float reloadTime = 0;
 
+	float gameTime = 0.0f;
+
+	float renderTime = 0.0f;
+
 	unsigned int score = 0;
 
-	bool preCollison = false;
-	bool curCollison = false;
+	//bool preCollison = false;
+	//bool curCollison = false;
 
-
+	
 
 	bool Clamp(int x, int y) {
 		int offsetx = 10;
@@ -107,6 +115,12 @@ namespace game {
 		return !((obj1->x) > (obj2->x + obj2->width) || (obj1->x + obj1->width) < (obj2->x) || (obj1->y) > (obj2->y + obj2->height) || (obj1->y + obj1->height) > (obj2->y + obj2->height));
 	}
 
+	void jumpRender(Object& frog) {
+		renderTime += time.GetDeltaTime();
+		int i = (int)renderTime % 4;
+		frog.pBitmap = frogBmps[i];
+	}
+
 
 	void UpdatePlayer()
 	{
@@ -114,7 +128,9 @@ namespace game {
 		{
 			if (input.IsKeyDown('A'))
 			{
+
 				player.Move(-block, 0);
+				jumpRender(player);
 				if (Clamp(player.x, player.y)) {
 					player.SetPos(player.x + block, player.y);
 				}
@@ -208,6 +224,14 @@ namespace game {
 	}
 
 	void UpdateState() {
+		if (gameState == READY)
+		{
+			if (gameTime < 0 || gameTime > 90)
+			{
+				gameTime = 90.0f;
+			}
+		}
+
 		if (gameState == GAMEOVER)
 		{
 			if (input.IsKeyDown('R'))
@@ -215,6 +239,7 @@ namespace game {
 				player.SetPos(playerInitX, playerInitY);
 				playerLife = 3;
 				gameState = START;
+				gameTime = 90.0f;
 			}
 		}
 		else if (gameState == DEATH)
@@ -229,6 +254,7 @@ namespace game {
 						gameState = START;
 						playerLife--;
 						reloadTime = 0;
+						gameTime = 90.0f;
 					}
 				}
 				else {
@@ -236,13 +262,26 @@ namespace game {
 				}
 		}
 		else {
+
+			if (gameTime < 0)
+			{
+				gameState = DEATH;
+			}
+
 			if (player.y < block)
 			{
+				reloadTime += (float)time.GetDeltaTime();
 				if (playerLife > 0)
 				{
-					player.SetPos(playerInitX, playerInitY);
-					gameState = START;
-					playerLife--;
+					if (reloadTime > 300) {
+						player.SetPos(playerInitX, playerInitY);
+						gameState = START;
+						playerLife--;
+						gameTime = 90.0f;
+					}	
+				}
+				else {
+					gameState = GAMEOVER;
 				}
 			}
 
@@ -397,9 +436,12 @@ namespace game {
 		Load(".\\assets\\load.bmp", &hBitmap_load);
 		Load(".\\assets\\start.bmp", &hBitmap_start);
 
+		Load(".\\assets\\life.bmp", &hBitmap_life);
 		Load(".\\assets\\death.bmp", &hBitmap_death);
-		player.InitObject(410, 730, 80, 80, 0.3f, nullptr);
-		Load(".\\assets\\frog_up.bmp", &player.pBitmap);
+		player.InitObject(410, 730, 80, 80, 1/80, nullptr);
+		//Load(".\\assets\\frog_up.bmp", &player.pBitmap);
+		Load(".\\assets\\frog_up.bmp", &hBitmap_default);
+		player.pBitmap = hBitmap_default;
 		//car object
 		for (int i = 0; i < CAR1_INDEX; i++)
 		{
@@ -438,6 +480,14 @@ namespace game {
 			Load(".\\assets\\wood3.bmp", &wood3[i].pBitmap);
 		}
 
+		//froganimate
+
+		Load(".\\assets\\jump_1.bmp", &frogBmps[0]);
+		Load(".\\assets\\jump_2.bmp", &frogBmps[1]);
+		Load(".\\assets\\jump_3.bmp", &frogBmps[2]);
+		Load(".\\assets\\jump_4.bmp", &frogBmps[3]);
+
+		
 	}
 
 	void GameManager::Update()
@@ -448,8 +498,10 @@ namespace game {
 		time.UpdateTime();
 		
 		
+		
 		if (gameState != DEATH&& gameState != GAMEOVER)
 		{
+			gameTime -= (time.GetDeltaTime()/1000);
 			UpdateEnemy();
 		}
 		UpdatePlayer();
@@ -532,7 +584,15 @@ namespace game {
 		Unload(hBitmap_green);
 		Unload(hBitmap_load);
 		Unload(hBitmap_start);
+
+		Unload(hBitmap_default);
+		Unload(hBitmap_life);
 		Unload(hBitmap_death);
+
+		for (int i = 0; i < 4; i++)
+		{
+			Unload(frogBmps[i]);
+		}
 
 		render.ReleaseRender();
 	}
@@ -679,6 +739,22 @@ namespace game {
 
 	void GameManager::DrawSomething()
 	{
+		for (int i = 0; i < playerLife; i++)
+		{
+			render.TransparentDrawBitmap(0+(i* 40), (block*10), hBitmap_life);
+		}
+
+		render.DrawRect(200, 800, 600, 40, RGB(0, 0, 0));
+		if (gameTime>0)
+		{
+			render.DrawRect(200, 800, (int)(600 * (gameTime / 90.0f)), 40, RGB(255, 100, 0));
+		}
+		
+		std::string str = "time: " + std::to_string(gameTime);
+		
+
+		render.DrawText(10, 40, str.c_str(), RGB(255, 0, 0)); 
+		
 		if (gameState==GAMEOVER)
 		{
 			render.DrawText(400, 400, "GAME OVER", RGB(255, 0, 0));
