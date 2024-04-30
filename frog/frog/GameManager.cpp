@@ -680,7 +680,7 @@ namespace game {
 		int playbleWidth = 800;
 		int playbleheight = 800;
 
-		render.DrawRect(10,10, 10+playbleWidth, 10+playbleheight, RGB(255, 0, 255));
+		//render.DrawRect(10,10, 10+playbleWidth, 10+playbleheight, RGB(255, 0, 255));
 		for (int i = 0; i < 10; i++)
 		{
 			for (int j = 0; j < 10; j++)

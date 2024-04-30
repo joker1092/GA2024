@@ -17,7 +17,7 @@ constexpr int SCREEN_START_LEFT = 10;
 
 constexpr int SCREEN_START_TOP = 10;
 
-constexpr int SCREEN_WIDTH = 1024;
+constexpr int SCREEN_WIDTH = 840;
 
 constexpr int SCREEN_HEIGHT = 900;
 
