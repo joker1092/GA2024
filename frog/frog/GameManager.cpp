@@ -43,7 +43,7 @@ namespace game {
 	InputSystem input;
 	RenderSystem render;
 	Object player;
-	int playerLife = 3;
+	int playerLife = 2;
 	int playerInitX = 410, playerInitY = 730;
 	Object car1[CAR1_INDEX];
 	Object car2[CAR2_INDEX];
@@ -667,11 +667,11 @@ namespace game {
 			m_FixedUpdateCount = 0;
 		}
 
-		std::string str = "FPS: " + std::to_string(time.GetFrameRate());
+		/*std::string str = "FPS: " + std::to_string(time.GetFrameRate());
 		str += "           Update " + std::to_string(UpdateCount);
 		str += "           FixedUpdate " + std::to_string(FixedUpdateCount);
 
-		render.DrawText(10, 10, str.c_str(), RGB(255, 0, 0));
+		render.DrawText(10, 10, str.c_str(), RGB(255, 0, 0));*/
 
 	}
 
@@ -739,7 +739,7 @@ namespace game {
 
 	void GameManager::DrawSomething()
 	{
-		for (int i = 0; i < playerLife; i++)
+		for (int i = 0; i < playerLife+1; i++)
 		{
 			render.TransparentDrawBitmap(0+(i* 40), (block*10), hBitmap_life);
 		}
@@ -750,10 +750,8 @@ namespace game {
 			render.DrawRect(200, 800, (int)(600 * (gameTime / 90.0f)), 40, RGB(255, 100, 0));
 		}
 		
-		std::string str = "time: " + std::to_string(gameTime);
-		
-
-		render.DrawText(10, 40, str.c_str(), RGB(255, 0, 0)); 
+		//std::string str = "time: " + std::to_string(gameTime);
+		//render.DrawText(10, 40, str.c_str(), RGB(255, 0, 0)); 
 		
 		if (gameState==GAMEOVER)
 		{
