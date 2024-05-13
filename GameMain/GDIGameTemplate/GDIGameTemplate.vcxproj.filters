@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="WinMain.cpp" />
+    <ClCompile Include="Manager\SceneManager.cpp">
+      <Filter>Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\CScene.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\StartScene.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\ColliderManager.cpp">
+      <Filter>Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="System\InputSystem.cpp">
+      <Filter>System\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="System\RenderSystem.cpp">
+      <Filter>System\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="System\TimeSystem.cpp">
+      <Filter>System\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="System\SoundSystem.cpp">
+      <Filter>System\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Animation.cpp">
+      <Filter>GamaLogic\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Collider.cpp">
+      <Filter>GamaLogic\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Vector2.cpp">
+      <Filter>GamaLogic\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Objects\Object.cpp">
+      <Filter>GamaLogic\Objects\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Objects\UIObject.cpp">
+      <Filter>GamaLogic\Objects\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\CPathManager.cpp">
+      <Filter>Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\CResourceManager.cpp">
+      <Filter>Manager\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Stage01.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Objects\Fish.cpp">
+      <Filter>GamaLogic\Objects\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Event.cpp">
+      <Filter>GamaLogic\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="GameLogic\Objects\Player.cpp">
+      <Filter>GamaLogic\Objects\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Manager\GameManager.cpp">
+      <Filter>Manager\cpp</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WinMain.h" />
+    <ClInclude Include="Manager\SceneManager.h">
+      <Filter>Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\StartScene.h">
+      <Filter>Scene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\GameManager.h">
+      <Filter>Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\ColliderManager.h">
+      <Filter>Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="System\InputSystem.h">
+      <Filter>System\h</Filter>
+    </ClInclude>
+    <ClInclude Include="System\RenderSystem.h">
+      <Filter>System\h</Filter>
+    </ClInclude>
+    <ClInclude Include="System\TimeSystem.h">
+      <Filter>System\h</Filter>
+    </ClInclude>
+    <ClInclude Include="System\SoundSystem.h">
+      <Filter>System\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Vector2.h">
+      <Filter>GamaLogic\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Collider.h">
+      <Filter>GamaLogic\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Bounds.h">
+      <Filter>GamaLogic\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Animation.h">
+      <Filter>GamaLogic\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Objects\Object.h">
+      <Filter>GamaLogic\Objects\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Objects\UIObject.h">
+      <Filter>GamaLogic\Objects\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\CScene.h">
+      <Filter>Scene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\CPathManager.h">
+      <Filter>Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Manager\CResourceManager.h">
+      <Filter>Manager\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Stage01.h">
+      <Filter>Scene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Objects\Fish.h">
+      <Filter>GamaLogic\Objects\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Event.h">
+      <Filter>GamaLogic\h</Filter>
+    </ClInclude>
+    <ClInclude Include="GameLogic\Objects\Player.h">
+      <Filter>GamaLogic\Objects\h</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GDIGameTemplate.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{4d3a78dd-20c9-4f0e-8bfc-4e6d7dbd14ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\cpp">
+      <UniqueIdentifier>{806749ea-b402-4a05-8b6c-c1b40411beef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Manager\h">
+      <UniqueIdentifier>{ada2947e-e91b-4c2e-b4e1-aaf8ec0f2a10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System">
+      <UniqueIdentifier>{0e43b326-23ef-4e28-87cf-128f6475e886}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\cpp">
+      <UniqueIdentifier>{d3936fb0-035a-42b3-ac7a-904c09c4d70b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="System\h">
+      <UniqueIdentifier>{544a9710-58ca-4858-9d39-b2d6dca790d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GamaLogic">
+      <UniqueIdentifier>{9430757f-5e8c-43a9-ad40-bb8eb04170b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{ae2bac4b-51c6-491b-a4f0-22afb3f04eec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\cpp">
+      <UniqueIdentifier>{c9b4ad94-dcc8-4f1d-ab4d-bc089ff19667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene\h">
+      <UniqueIdentifier>{ba321b4c-00da-4e28-a0a5-405d5677567c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GamaLogic\cpp">
+      <UniqueIdentifier>{65569de8-8ff6-4281-b322-9cdddec11db9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GamaLogic\h">
+      <UniqueIdentifier>{c617bdfd-86c3-42c5-ba0a-d20b7a4867f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GamaLogic\Objects">
+      <UniqueIdentifier>{a0f81e9d-95c3-4839-9044-da2eee72f425}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GamaLogic\Objects\cpp">
+      <UniqueIdentifier>{17a12fe0-7c1b-42e4-9972-d7f89e48b175}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GamaLogic\Objects\h">
+      <UniqueIdentifier>{c454301a-2c63-49f5-b5fb-8fa275fcd5a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="image1.png" />
+  </ItemGroup>
+</Project>

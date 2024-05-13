@@ -9,11 +9,12 @@ void TimeSystem::InitTime() {
 }
 
 void TimeSystem::UpdateTime() {
-	previousTime = currentTime;
+
 	QueryPerformanceCounter(&currentTime);
 
 	deltaTime = (currentTime.QuadPart - previousTime.QuadPart) / (frequency.QuadPart / 1000.0f);
 	//deltaTime = ((currentTime.QuadPart - previousTime.QuadPart) / (frequency.QuadPart ))/ 1000.0f;
+	previousTime = currentTime;
 }
 
 const float TimeSystem::GetFrameRate() {
