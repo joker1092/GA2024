@@ -1,11 +1,8 @@
 #include "Stage01.h"
 #include "../GameLogic/Objects/UIObject.h"
-#include "../GameLogic/Objects/Player.h"
 #include "../GameLogic/Objects/Fish.h"
 #include "../System/TimeSystem.h"
 #include "../GameLogic/Event.h"
-
-
 void Stage01::Init()
 {
 	// 작성요령
@@ -22,29 +19,91 @@ void Stage01::Init()
 
 	//UIBackGround* myBack = new UIBackGround();
 	//AddObject(myBack);
+	colliderManager = new ColliderManager();
+
 	Player* m_Player = new Player();
-	AddObject(m_Player);
+	UIImage* pauseBack = new UIImage();
+	m_Player->Init();
+
+	PauseEvent* e_pause = new PauseEvent;
+	ResumeEvent* e_resume = new ResumeEvent;
+	RetryEvent* e_retry = new RetryEvent;
+	ExitEvent* e_exit = new ExitEvent;
+
+	UIButton* resume = new UIButton(Vector2{ 710,200 }, e_resume);
+	UIButton* retry = new UIButton(Vector2{ 710,400 }, e_retry);
+	UIButton* exit = new UIButton(Vector2{ 710,600 }, e_exit);
+	e_resume->Resume = resume;
+	e_resume->Retry = retry;
+	e_resume->PauseBack = pauseBack;
+	e_resume->Exit = exit;
+
+	e_pause->Resume = resume;
+	e_pause->Retry = retry;
+	e_pause->PauseBack = pauseBack;
+	e_pause->Exit = exit;
+	
+	e_resume->OnTrigger();
+	m_Player->pauseEvent = e_pause;
+	CResourceManager* CRM = CResourceManager::GetInstance();
+	Gdiplus::Bitmap* pauseBackImage = CRM->LoadBitmapResouce(L"pauseBackImage",L"image1.png");
+	pauseBack->Init(pauseBackImage,Vector2{500.f,400.f});
+
+	
+
+	pauseBack->m_isActive = false;
+	resume->m_isActive = false;
+	retry->m_isActive = false;
+	exit->m_isActive = false;
+
+
 	SelectScnEvent* nextScnEvent = new SelectScnEvent(3);
-	UITimer* myTimer = new UITimer(Vector2{910,100}, nextScnEvent);
+	UITimer* myTimer = new UITimer(Vector2{910,100}, e_retry);
+
+	UIBackGround* myBackGround = new UIBackGround();
+	myBackGround->Init(L"Water_Down_00.bmp",CRM);
+	AddObject(myBackGround);
 	AddObject(myTimer);
 	Fish* myFish;
-	for (int i = 0; i < 20; i++) {
+	srand(std::time(NULL));
+	for (int i = 0; i < 10; i++) {
 		myFish = new Fish();
+		myFish->m_pos = { 600.f, 350.f };
 		myFish->Init();
-		myFish->m_pos = { 300.f, 300.f };
 		AddObject(myFish);
+		colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
 	}
+	
+	AddObject(m_Player);
+	m_Player->m_pos = { 600.f, 350.f };
+	UIBackGround* myUPBackGround = new UIBackGround();
+	myUPBackGround->Init(L"Water_UP_00.bmp", CRM);
+	AddObject(myUPBackGround);
+	AddObject(pauseBack);
+	AddObject(resume);
+	AddObject(retry);
+	AddObject(exit);
 	
 }
 
 Stage01::~Stage01() {
 	for (int i = 0; i < m_arrObj.size(); i++) {
+		/*if (m_arrObj[i]->m_Event != nullptr) {
+			
+
+		}*/
 		delete m_arrObj[i];
 	}
+	delete colliderManager;
 }
 
 void Stage01::Start()
 {
+}
+
+void Stage01::FixedUpdate() {
+	//myBackGround->FixedUpdate();
+	//myUPBackGround->FixedUpdate();
 }
 
 void Stage01::Exit()

@@ -1,16 +1,18 @@
 #pragma once
 #include "Object.h"
+class Event;
 
 class Player : public Object
 {
 private:
 	float moveSpeed;
-	float width;
-	float height;
-	Vector2 center;
 	float radius;
-	float angle;
+	Vector2 moveDirection;
+	bool flag;
+
+	Gdiplus::Bitmap* playerBitmap;
 public:
+	Event* pauseEvent;
 	Player();
 	~Player();
 
@@ -25,5 +27,7 @@ public:
 	void Down(float delta);
 	void Left(float delta);
 	void Right(float delta);
+
+	void SetStatus();
 };
 

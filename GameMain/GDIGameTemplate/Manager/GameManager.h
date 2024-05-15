@@ -8,7 +8,7 @@
 
 #include "../Manager/SceneManager.h"
 
-//#include "../GameLogic/Animation.h"
+#include "../GameLogic/Animation.h"
 namespace Game
 {
 	class GameManager

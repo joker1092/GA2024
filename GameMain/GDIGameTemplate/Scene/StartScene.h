@@ -1,6 +1,10 @@
 #pragma once
 #include "CScene.h"
+#include "../GameLogic/Objects/UIObject.h"
 
+#include "../System/RenderSystem.h"
+
+#include "../Manager/ColliderManager.h"
 class StartScene : public CScene
 {	
 private:
@@ -9,6 +13,7 @@ private:
 	UIButton* gameStartButton;
 	UIButton* gameExitButton;*/
 	// CScene을(를) 통해 상속됨
+	Gdiplus::Bitmap* myBitmap;
 public:
 	void Init() override;
 	void Start() override;

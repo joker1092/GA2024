@@ -2,12 +2,13 @@
 //#include "../Scene/CScene.h"
 #include "../Scene/StartScene.h"
 #include "../Scene/Stage01.h"
-
+#include "../Scene/IntroScene.h"
 class CScene;
 enum class SceneType
 {
 	NONE,
 	START,
+	INTRO,
 	STAGE_01,
 	END
 };

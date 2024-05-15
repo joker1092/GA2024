@@ -28,11 +28,19 @@ constexpr int SCREEN_START_LEFT = 0;
 
 constexpr int SCREEN_START_TOP = 0;
 
+#define SCREEN_WIDTH  1920									// We want a 800 pixel width resolution
+#define SCREEN_HEIGHT 1080	
+
+BOOL bFullScreen = FALSE;
+const TCHAR* appName = TEXT("Test Game Framework");
+
+void ChangeToFullScreen(int width, int height);
+
 void WinApp::Initialize(HINSTANCE hInstance)
 {
 	m_hInstance = hInstance;
 
-	const TCHAR* appName = TEXT("Test Game Framework");
+	//const TCHAR* appName = TEXT("Test Game Framework");
 
 	//Step 1: Registering the Window Class
 
@@ -51,29 +59,41 @@ void WinApp::Initialize(HINSTANCE hInstance)
 
 	RegisterClass(&wndClass);
 
+
+	
+
 	// Step 2: Creating the Window
 
 	// 원하는 크기가 조정되어 리턴
-	SIZE clientSize = { 1920, 1080 };
+	SIZE clientSize = { 1280, 720 };
 	RECT clientRect = { 0, 0, clientSize.cx, clientSize.cy };
+	int width = GetSystemMetrics(SM_CXSCREEN);
+	int height = GetSystemMetrics(SM_CXSCREEN);
+	//RECT clientRect = { 0, 0, width, height };
+	
 	AdjustWindowRect(&clientRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 
 	m_hWnd = CreateWindow(appName, appName, WS_OVERLAPPED | WS_SYSMENU,
 		SCREEN_START_LEFT, SCREEN_START_TOP, clientSize.cx, clientSize.cy, NULL, NULL, hInstance, NULL);
+	//m_hWnd = CreateWindow(appName, appName, WS_POPUP | WS_SYSMENU,
+	//	SCREEN_START_LEFT, SCREEN_START_TOP, width, height, NULL, NULL, hInstance, NULL);
 
+	
 	if (!m_hWnd)
 	{
 		MessageBox(NULL, L"윈도우 생성 실패", L"에러", MB_OK | MB_ICONERROR);
 		return;
 	}
 
+
 	ShowWindow(m_hWnd, SW_SHOWNORMAL);
+	//ShowWindow(m_hWnd, SW_MAXIMIZE);
+	
 	UpdateWindow(m_hWnd);
 
-	Render::InitRender(m_hWnd, clientSize.cx, clientSize.cy);
-	Input::InitInput();
-	High_Resolution_Time::InitTime();
+	//Render::InitRender(m_hWnd, clientSize.cx, clientSize.cy);
+	Render::InitRender(m_hWnd, width, height);
 
 	// Step 3: Game Initialize Here
 	Game::GameManager::GetInstance()->Initialize();
@@ -90,10 +110,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	global::winApp.Initialize(hInstance);
 
-	bool bUseConsole=true;
+	bool bUseConsole = true;
 	if (bUseConsole)
 	{
-		AllocConsole();
+		//AllocConsole();
 		FILE* _tempFile;
 		freopen_s(&_tempFile, "CONOUT$", "w", stdout);
 	}	
@@ -112,6 +132,19 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if (msg.message == WM_QUIT)
 				break;
 
+			if (msg.message == WM_KEYDOWN)
+			{
+				Input::KeyDown(msg.wParam);
+			}
+			else if (msg.message == WM_KEYUP)
+			{
+				Input::KeyUp(msg.wParam);
+			}
+			else
+			{
+				DispatchMessage(&msg);
+			}
+
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
@@ -124,11 +157,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//ReleaseResource();
 	Game::GameManager::GetInstance()->ReleaseResource();
-	Render::ReleaseRender();
 	if (bUseConsole)
 	{
 		FreeConsole();
 	}
+
+	//UnregisterClass(appName, hInstance);
 
 	return static_cast<int>(msg.wParam);
 }
@@ -146,21 +180,3 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 	return 0;
 }
-
-//AnimationResource* g_PlayerAnim;
-
-//void LoadResource()
-//{
-//	g_PlayerAnim = new AnimationResource;
-//
-//	g_PlayerAnim->LoadAnimImage(L"../Resource/Ken.png");
-//	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenIdle.txt");				 //	OBJECT_STATUS_IDLE,
-//	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenMove.txt");				 //	OBJECT_STATUS_MOVE,
-//	g_PlayerAnim->LoadAnimMotion(L"../Resource/KenAttack.txt", false);		 //	OBJECT_STATUS_ATTACK
-//
-//}
-//
-//void ReleaseResource()
-//{
-//	delete g_PlayerAnim;
-//}

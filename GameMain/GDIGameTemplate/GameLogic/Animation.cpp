@@ -59,3 +59,4 @@ void AnimationResource::LoadAnimMotion(const WCHAR* fileName,bool IsLoop)
 	m_motions[m_motionCount] = motion;
 	m_motionCount++;
 }
+

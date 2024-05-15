@@ -27,10 +27,12 @@ ColliderManager::ColliderManager() {
 }
 
 ColliderManager::~ColliderManager() {
-
+	/*for (int i = 0; i < (UINT)TYPE::END; i++) {
+		delete colliders[i];
+	}*/
 }
 void ColliderManager::Init() {
-
+	
 }
 
 void ColliderManager::Update() {
@@ -43,14 +45,58 @@ void ColliderManager::Update() {
 	}*/
 }
 
-void ColliderManager::PushCollider(Collider* collider) {
-	colliders.push_back(collider);
+
+void ColliderManager::PushCollider(Collider* collider, TYPE type) {
+	colliders[(UINT)type].push_back(collider);
 }
 
 void ColliderManager::ClearColliders() {
-	colliders.clear(); // 오류발생 가능성 있음.
+	for (int i = 0; i < (UINT)TYPE::END; i++) {
+		colliders[i].clear(); // 오류발생 가능성 있음.
+	}
 }
 
 void ColliderManager::PointCollision(Vector2 point, Collider* rhs) {
 	rhs->isPointColliding(point);
+}
+
+Collider* ColliderManager::GetCurrentPointCollider(Vector2 point) {
+	for (int i = (UINT)TYPE::END - 1; i >= 0; i--) {
+		for (int j = colliders[i].size() - 1; j >= 0; j--) {
+			if ((colliders[i])[j]->parent->m_isActive == false) continue;
+			else {
+				if ((colliders[i])[j]->isPointColliding(point)) {
+					return (colliders[i])[j];
+				}
+			}
+		}
+	}
+	return nullptr;
+}
+
+Collider* ColliderManager::GetCurrentPointCollider(Vector2 point, TYPE type) {
+	for (int j = colliders[(UINT)type].size() - 1; j >= 0; j--) {
+		if ((colliders[(UINT)type])[j]->parent->m_isActive == false) continue;
+		else {
+			if ((colliders[(UINT)type])[j]->isPointColliding(point)) {
+				return (colliders[(UINT)type])[j];
+			}
+		}
+	}
+	return nullptr;
+}
+
+int ColliderManager::GetCountCollidersAtType(Collider* collider, Collider** arrCollider, int length, TYPE type){
+	int count = 0;
+	for (int i = colliders[(UINT)type].size() - 1; i >= 0; i--) {
+		if (colliders[(UINT)type][i]->parent->m_isActive == false) continue;
+		else {
+			if ((colliders[(UINT)type])[i]->isColliding(*collider)) {
+				arrCollider[count] = (colliders[(UINT)type][i]);
+				count++;
+			}
+		}
+	}
+
+	return count;
 }

@@ -20,6 +20,8 @@ namespace High_Resolution_Time
 
 	void UpdateTime();
 
+	void SetTimeScale(float _timeScale);
+
 	const float GetFrameRate();
 
 	const float GetDeltaTime();

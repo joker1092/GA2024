@@ -32,6 +32,9 @@ struct Object
 	// 만약 오브젝트 삭제 시 콜라이더를 삭제하는데 콜라이더 매니저에 등록된 콜라이더는 어떤 방식으로 삭제할지
 	Bounds m_renderBounds;							// 렌더할 이미지 좌표
 
+	Vector2 m_moveDir = { 0.0f ,0.0f };
+	Vector2 m_moveDirPrev = { 0.0f,0.0f };
+	Vector2 m_inputDir;
 	ObjectStatus m_status = OBJECT_STATUS_IDLE;	// 플레이어의 상태 나타낼 때 사용
 
 	AnimationResource* m_pAnimationResource = nullptr;

@@ -1,5 +1,6 @@
 #pragma once
 #include "../stdafx.h"
+
 // 동작의 하나의 프레임 정보
 struct Frame
 {

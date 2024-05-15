@@ -159,6 +159,7 @@
     <ClCompile Include="GameLogic\Objects\Player.cpp" />
     <ClCompile Include="GameLogic\Objects\UIObject.cpp" />
     <ClCompile Include="GameLogic\Vector2.cpp" />
+    <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Manager\ColliderManager.cpp" />
     <ClCompile Include="Manager\CPathManager.cpp" />
     <ClCompile Include="Manager\CResourceManager.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="GameLogic\Objects\Player.h" />
     <ClInclude Include="GameLogic\Objects\UIObject.h" />
     <ClInclude Include="GameLogic\Vector2.h" />
+    <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Manager\ColliderManager.h" />
     <ClInclude Include="Manager\CPathManager.h" />
     <ClInclude Include="Manager\CResourceManager.h" />

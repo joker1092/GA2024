@@ -12,7 +12,7 @@ enum class TYPE
 	FISH,
 	UI,
 
-	END = 32,
+	END = 5
 };
 
 //class ColliderManager;
@@ -27,7 +27,7 @@ public:
 	virtual void Init() = 0; 
 	void Update();
 	void Render();
-	void FixedUpdate();
+	virtual void FixedUpdate();
 
 	virtual void Start() = 0;
 	virtual void Exit() = 0;

@@ -22,9 +22,13 @@ namespace Render
 
 	void DrawText(int x, int y, const char* text, COLORREF color);
 
-	void DrawFont(int x, int y, const char* text, COLORREF color, int fontSize, const wchar_t* fontName, int fontStyle);
+	void DrawFont(int x, int y, const WCHAR* text, COLORREF color, int fontSize, const wchar_t* fontName, int fontStyle);
 
 	SIZE GetScreenSize();
 
 	void DrawImage(int x, int y, Gdiplus::Bitmap* bitmap, int srcX, int srcY, int srcWitdh, int srcHeight);
+
+	void DrawRotateImage(int centerX, int centerY, Gdiplus::Bitmap* bitmap, float rad);
+
+	void DrawBitmap(int x, int y, Gdiplus::Bitmap* bitmap, int srcX, int srcY, int srcWitdh, int srcHeight);
 }
