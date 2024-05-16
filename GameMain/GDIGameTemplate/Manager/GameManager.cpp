@@ -8,6 +8,7 @@ namespace Game
 	Gdiplus::Bitmap* hTestBitmap = nullptr; // 전역 변수
 	GameManager* GameManager::instance = nullptr;
 	mySound::SoundManager* SMInstance = mySound::SoundManager::GetInstance();
+	
 	GameManager::GameManager()
 	{
 	}
@@ -23,7 +24,7 @@ namespace Game
 		m_hWnd = global::GetWinApp().GetWindow();
 		m_hdc = GetDC(m_hWnd);
 		m_curScene = m_sceneManager->GetCurScene();
-		
+		i_renk = new Renking();
 	}
 
 	void GameManager::Update()
@@ -72,9 +73,11 @@ namespace Game
 	}
 	void GameManager::Finalize()
 	{
-
+		SceneManager::GetInstance()->DestroyInstance();
+		CResourceManager::GetInstance()->DestroyInstance();
 		Render::ReleaseRender();
 		SMInstance->DestroyInstance();
+
 	}
 	void GameManager::Run()
 	{

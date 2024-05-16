@@ -31,8 +31,10 @@ public:
 
 	virtual void Start() = 0;
 	virtual void Exit() = 0;
-
+	
 	ColliderManager* colliderManager; // 씬 전체 콜라이더를 관리하기 위함.
+
+	float alpha;					  // 알파
 protected:
 	//void AddObject(Object* obj, TYPE _type) {
 	//	m_arrObj[(UINT)_type].push_back(obj); //이 코드 세철씨한테 물어볼 것.
@@ -44,5 +46,15 @@ protected:
 
 public:
 	CScene() {};
-	virtual ~CScene() {};
+	~CScene() {
+		for (int i = 0; i < m_arrObj.size(); i++) {
+
+			if (m_arrObj[i] != nullptr) {
+				delete m_arrObj[i];
+			}
+		}
+		m_arrObj.clear();
+		if (colliderManager != nullptr)
+			delete colliderManager;
+	};
 };

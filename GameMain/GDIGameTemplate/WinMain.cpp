@@ -1,5 +1,9 @@
 #include "WinMain.h"
-
+// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+#define _CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+#define new new(_NORMAL_BLOCK, __FILE__, __LINE__)
 
 
 
@@ -7,9 +11,9 @@
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 bool g_Mirror = false;
-// ºñÁÖ¾ó ½ºÆ©µð¿À°¡ ¸¸µç ÅÛÇÃ¸´Àº ´Ù¸¥ Ãß°¡ÀûÀÎ ³»¿ëÀÌ ¸¹¾Æ ÀÌÇØÇÏ±â ¾î·Á¿ö °¡Àå °£´ÜÇÏ°Ô ÀÛ¼ºÇÔ.
+// ï¿½ï¿½ï¿½Ö¾ï¿½ ï¿½ï¿½Æ©ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ ï¿½Ù¸ï¿½ ï¿½ß°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°ï¿½ ï¿½Û¼ï¿½ï¿½ï¿½.
 
-// À©µµ¿ì ÇÁ·Î½ÃÀú ÇÔ¼ö ¼±¾ð
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 //void LoadResource();
 //void ReleaseResource();
@@ -64,7 +68,7 @@ void WinApp::Initialize(HINSTANCE hInstance)
 
 	// Step 2: Creating the Window
 
-	// ¿øÇÏ´Â Å©±â°¡ Á¶Á¤µÇ¾î ¸®ÅÏ
+	// ï¿½ï¿½ï¿½Ï´ï¿½ Å©ï¿½â°¡ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ ï¿½ï¿½ï¿½ï¿½
 	SIZE clientSize = { 1280, 720 };
 	RECT clientRect = { 0, 0, clientSize.cx, clientSize.cy };
 	int width = GetSystemMetrics(SM_CXSCREEN);
@@ -82,7 +86,7 @@ void WinApp::Initialize(HINSTANCE hInstance)
 	
 	if (!m_hWnd)
 	{
-		MessageBox(NULL, L"À©µµ¿ì »ý¼º ½ÇÆÐ", L"¿¡·¯", MB_OK | MB_ICONERROR);
+		MessageBox(NULL, L"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", L"ï¿½ï¿½ï¿½ï¿½", MB_OK | MB_ICONERROR);
 		return;
 	}
 
@@ -100,11 +104,16 @@ void WinApp::Initialize(HINSTANCE hInstance)
 }
 
 
-// ÇÁ·ÎÁ§Æ® ¼Ó¼º -> ¸µÄ¿ -> ½Ã½ºÅÛ -> ÇÏÀ§ ½Ã½ºÅÛ -> Windows·Î º¯°æ
-// ÁøÀÔÁ¡ ÇÔ¼ö Á¤ÀÇ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ó¼ï¿½ -> ï¿½ï¿½Ä¿ -> ï¿½Ã½ï¿½ï¿½ï¿½ -> ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ -> Windowsï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
-{
+{	
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
+	//_CrtSetBreakAlloc(4769);
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -113,7 +122,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bool bUseConsole = true;
 	if (bUseConsole)
 	{
-		//AllocConsole();
+		AllocConsole();
 		FILE* _tempFile;
 		freopen_s(&_tempFile, "CONOUT$", "w", stdout);
 	}	
@@ -121,14 +130,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 	//LoadResource();
 
-	// ´ë±â°¡ ¾ø´Â ¸Þ¼¼Áö ·çÇÁ
+	// ï¿½ï¿½â°¡ ï¿½ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	MSG msg;
 	while (true)
 	{
-		// ¸Þ½ÃÁö°¡ ÀÖÀ¸¸é Ã³¸®, ¾øÀ¸¸é ¹Ù·Î °ÔÀÓ ·çÇÁ·Î ÀÌµ¿
+		// ï¿½Þ½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ìµï¿½
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
-			// WM_QUIT ¸Þ½ÃÁö È®ÀÎ
+			// WM_QUIT ï¿½Þ½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 			if (msg.message == WM_QUIT)
 				break;
 
@@ -150,30 +159,34 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		else
 		{
-			// °ÔÀÓ ·çÇÁ			
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½			
 			Game::GameManager::GetInstance()->Run();
 		}
 	}
 
 	//ReleaseResource();
+	Game::GameManager::GetInstance()->Finalize();
 	Game::GameManager::GetInstance()->ReleaseResource();
+	Game::GameManager::GetInstance()->DestroyInstance();
 	if (bUseConsole)
 	{
 		FreeConsole();
 	}
-
+	
 	//UnregisterClass(appName, hInstance);
 
 	return static_cast<int>(msg.wParam);
 }
 
-// À©µµ¿ì ÇÁ·Î½ÃÀú ÇÔ¼ö Á¤ÀÇ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½ ï¿½ï¿½ï¿½ï¿½
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
 	case WM_DESTROY:
+		
 		PostQuitMessage(0);
+		
 		break;
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);

@@ -31,6 +31,11 @@ void Player::Init()
 
 void Player::Update(float delta)
 {
+	/*sScale -= delta;
+	if (sScale <= 0.7f)
+	{
+		sScale = 0.7f;
+	}*/
 	movePlayer(delta);
 	if (flag == true)
 	{
@@ -49,10 +54,11 @@ void Player::Update(float delta)
 
 }
 
-void Player::Render()
+void Player::Render(float alpha)
 {
 	/*Render::DrawCircle(m_pos.x, m_pos.y, radius, RGB(0, 255, 0));
 	Render::*/
+
 	if (m_pAnimationResource && m_AnimationMotionIndex != -1)
 	{
 		Frame& frame = m_pAnimationResource->m_motions[m_AnimationMotionIndex].Frames[m_AnimationFrameIndex];
@@ -64,11 +70,13 @@ void Player::Render()
 		int srcX = m_AnimationFlip ? m_pAnimationResource->m_bitmapFlip->GetWidth() - frame.Size.cx - frame.Source.left : frame.Source.left;
 		int srcY = frame.Source.top;
 
-		Render::DrawImage(x, y, bitmap, srcX, srcY, frame.Size.cx, frame.Size.cy);
+		Render::DrawImage(x, y, bitmap, srcX, srcY, frame.Size.cx, frame.Size.cy , alpha);
 	}
 	//Render::DrawCircle(m_pos.x, m_pos.y, radius, RGB(0, 255, 0));
 	//Render::DrawRect(m_pos.x, m_pos.y, m_renderBounds.extents.x * 2, m_renderBounds.extents.y * 2, RGB(255, 0, 0));
-	Render::DrawImage(m_pos.x - m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, playerBitmap, 0, 0, playerBitmap->GetWidth(), playerBitmap->GetHeight());
+	//Render::DrawImage(m_pos.x - m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, playerBitmap, 0, 0, playerBitmap->GetWidth(), playerBitmap->GetHeight());
+	Render::DrawCircle(m_pos.x, m_pos.y, radius, RGB(0, 255, 0));
+	Render::DrawImage(m_pos.x - m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, playerBitmap, 0, 0, playerBitmap->GetWidth(), playerBitmap->GetHeight(), alpha,sScale);
 }
 
 void Player::OnTrigger()

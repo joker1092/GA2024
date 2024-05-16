@@ -9,6 +9,7 @@
 #include "../Manager/SceneManager.h"
 
 #include "../GameLogic/Animation.h"
+#include "../GameLogic/Ranking.h"
 namespace Game
 {
 	class GameManager
@@ -42,6 +43,7 @@ namespace Game
 		static GameManager* instance;
 		SceneManager* m_sceneManager;
 		CScene* m_curScene;
+		Renking* i_renk;
 		HWND m_hWnd = nullptr;
 		HDC m_hdc = nullptr;
 		int m_UpdateCount = { 0 };

@@ -11,6 +11,8 @@ private:
 	bool flag;
 
 	Gdiplus::Bitmap* playerBitmap;
+
+	float sScale = 1.f;
 public:
 	Event* pauseEvent;
 	Player();
@@ -18,7 +20,7 @@ public:
 
 	void Init() override;
 	void Update(float delta) override;
-	void Render() override;
+	void Render(float alpha) override;
 	void OnTrigger() override;
 
 	void movePlayer(float delta);

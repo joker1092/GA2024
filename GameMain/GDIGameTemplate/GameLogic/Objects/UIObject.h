@@ -1,14 +1,14 @@
 #pragma once
 #include "Object.h"
 //#include "../Event.h"
-#define BACK_GROUND_ANIM_FRAME 10
+#define BACK_GROUND_ANIM_FRAME 60
 
 class UIObject : public Object
 {
 	// Object을(를) 통해 상속됨
 	void Init() override;
 	//void Update(float delta) override;
-	void Render()override;
+	void Render(float alpha) override;
 	//void SetMotion(int index)override;
 	//void UpdateAnimation(float delta)override;
 	//void ChangeStatus(ObjectStatus status)override;
@@ -21,9 +21,9 @@ class UIImage : public UIObject
 public:
 	void Init(Gdiplus::Bitmap* myBitMap , Vector2 myVector);
 	UIImage() {};
-	~UIImage() { delete m_BackGround; }
+	~UIImage() override {};//{ delete m_BackGround; }
 	//void Update(float delta) override;
-	void Render();
+	void Render(float alpha) override;
 	//void SetMotion(int index)override;
 	//void UpdateAnimation(float delta)override;
 	//void ChangeStatus(ObjectStatus status)override;
@@ -45,15 +45,14 @@ public:
 		m_renderBounds = { {0.f, 0.f },{(float)x,(float)y} };
 	}
 	void Update(float delta) override;
-	void Render()override;
+	void Render(float alpha) override;
 	//void SetMotion(int index)override;
 	//void UpdateAnimation(float delta)override;
 	//void ChangeStatus(ObjectStatus status)override;
 	void OnTrigger() override;
-	~UIButton() {
+	~UIButton() override {}; /*{
 		delete m_Bitmap;
-		delete m_Event;
-	}
+	}*/
 	
 private:
 	Gdiplus::Bitmap* m_Bitmap;
@@ -80,12 +79,14 @@ public:
 		//m_renderBounds = { {(float)cx,(float)cy},{(float)x,(float)y} };
 	}
 	void Update(float delta) override;
-	void Render()override;
+	void Render(float alpha) override;
 	//void SetMotion(int index)override;
 	//void UpdateAnimation(float delta)override;
 	//void ChangeStatus(ObjectStatus status)override;
 	void OnTrigger() override;
-
+	~UITimer() override {}; /*{
+		delete m_Bitmap;
+	}*/
 
 private:
 	Gdiplus::Bitmap* m_Bitmap;
@@ -112,13 +113,13 @@ public:
 	// Object을(를) 통해 상속됨
 	void Init(const WCHAR* fileName, CResourceManager* CRM);
 	void Update(float delta) override;
-	void Render()override;
+	void Render(float alpha) override;
 	void FixedUpdate();
 	//void SetMotion(int index)override;
 	//void UpdateAnimation(float delta)override;
 	//void ChangeStatus(ObjectStatus status)override;
 	//void OnTrigger() override;
-	~UIBackGround();
+	~UIBackGround() override {};
 	void LoadAnimImage(const WCHAR* fileName, CResourceManager* CRM);
 	
 
@@ -134,6 +135,6 @@ private:
 public:
 	void Init(Vector2 myPos, Vector2 endPos,WCHAR* _string);
 	void Update(float delta) override;
-	void Render()override;
+	void Render(float alpha)override;
 	void OnTrigger() override;
 };

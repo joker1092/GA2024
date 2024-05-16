@@ -88,15 +88,13 @@ class RetryEvent : public Event
 	// + 시간초가 다되면 retry 이벤트가 자동으로 실행되게끔
 
 private:
-	SceneManager* scnManager;
-	Game::GameManager* gameManager;
-	int nextSceneNum;
+	SceneManager* scnManager = SceneManager::GetInstance();
+	Game::GameManager* gameManager = Game::GameManager::GetInstance();
+
 public:
 
 	void OnTrigger() override
-	{
-		scnManager = SceneManager::GetInstance();
-		gameManager = Game::GameManager::GetInstance();
+	{	
 		scnManager->SetCurScene(1);
 	}
 };
@@ -106,5 +104,19 @@ class ExitEvent : public Event
 	void OnTrigger() override
 	{
 		PostQuitMessage(1);
+	}
+};
+
+class Discription : public Event
+{
+public:
+	UIButton* Close;
+	UIButton* Resume;
+
+	void OnTrigger() override
+	{	
+		Close->m_isActive = true;
+		Resume->m_isActive = true;
+		High_Resolution_Time::SetTimeScale(0.f);
 	}
 };

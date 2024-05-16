@@ -8,6 +8,10 @@ private:
 	float maxTime = 0.f;
 	Vector2 m_moveDirection;
 
+	float animTime = 0.f;
+	float animMaxTime = 0.f;
+	int animationFrame = 0;
+
 	void Move(float delta);
 	Vector2 GetRandomPosition();
 
@@ -28,9 +32,15 @@ private:
 	const static int x2 = 800;
 	const static int y2 = 620;
 
+	std::wstring m_fileName[30];
+	Gdiplus::Bitmap* m_bitmap[30] = { nullptr, };
+
 public:
 	void Init() override;
 	void Update(float delta) override;
-	void Render() override;
+	void Render(float alpha) override;
 	void OnTrigger() override;
+
+	void SetRandomPosition();
+	void LoadAnimImage(const WCHAR* fileName, CResourceManager* CRM);
 };

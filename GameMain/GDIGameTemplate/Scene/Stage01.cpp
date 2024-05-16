@@ -37,7 +37,6 @@ void Stage01::Init()
 	e_resume->Retry = retry;
 	e_resume->PauseBack = pauseBack;
 	e_resume->Exit = exit;
-
 	e_pause->Resume = resume;
 	e_pause->Retry = retry;
 	e_pause->PauseBack = pauseBack;
@@ -60,15 +59,18 @@ void Stage01::Init()
 	SelectScnEvent* nextScnEvent = new SelectScnEvent(3);
 	UITimer* myTimer = new UITimer(Vector2{910,100}, e_retry);
 
-	UIBackGround* myBackGround = new UIBackGround();
-	myBackGround->Init(L"Water_Down_00.bmp",CRM);
+	UIImage* myBackGround = new UIImage();
+	Gdiplus::Bitmap* waterBack = CRM->LoadBitmapResouce(L"waterImage", L"Water.png");
+	myBackGround->Init(waterBack, { 640.f, 360.f });
+	//UIBackGround* myBackGround = new UIBackGround();
+	//myBackGround->Init(L"Water_Down_00.bmp",CRM);
 	AddObject(myBackGround);
 	AddObject(myTimer);
 	Fish* myFish;
 	srand(std::time(NULL));
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < 16; i++) {
 		myFish = new Fish();
-		myFish->m_pos = { 600.f, 350.f };
+		myFish->LoadAnimImage(L"BossFish_00.png", CRM);
 		myFish->Init();
 		AddObject(myFish);
 		colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
@@ -77,24 +79,29 @@ void Stage01::Init()
 	AddObject(m_Player);
 	m_Player->m_pos = { 600.f, 350.f };
 	UIBackGround* myUPBackGround = new UIBackGround();
-	myUPBackGround->Init(L"Water_UP_00.bmp", CRM);
+	myUPBackGround->Init(L"물결+그림자_00.png", CRM);
 	AddObject(myUPBackGround);
 	AddObject(pauseBack);
 	AddObject(resume);
 	AddObject(retry);
 	AddObject(exit);
 	
+
+	alpha = 1.0f;
+
 }
 
 Stage01::~Stage01() {
 	for (int i = 0; i < m_arrObj.size(); i++) {
-		/*if (m_arrObj[i]->m_Event != nullptr) {
-			
 
-		}*/
-		delete m_arrObj[i];
+		if (m_arrObj[i] != nullptr) {
+			delete m_arrObj[i];
+		}
+
 	}
-	delete colliderManager;
+	m_arrObj.clear();
+	if (colliderManager != nullptr)
+		delete colliderManager;
 }
 
 void Stage01::Start()
@@ -108,5 +115,14 @@ void Stage01::FixedUpdate() {
 
 void Stage01::Exit()
 {
-	
+	for (int i = 0; i < m_arrObj.size(); i++) {
+
+		if (m_arrObj[i] != nullptr) {
+			delete m_arrObj[i];
+		}
+		
+	}
+	m_arrObj.clear();
+	if (colliderManager != nullptr)
+	delete colliderManager;
 }

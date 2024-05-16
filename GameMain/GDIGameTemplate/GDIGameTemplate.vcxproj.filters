@@ -62,9 +62,6 @@
     <ClCompile Include="Manager\GameManager.cpp">
       <Filter>Manager\cpp</Filter>
     </ClCompile>
-    <ClCompile Include="IntroScene.cpp">
-      <Filter>Scene\cpp</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -132,9 +129,6 @@
     </ClInclude>
     <ClInclude Include="GameLogic\Objects\Player.h">
       <Filter>GamaLogic\Objects\h</Filter>
-    </ClInclude>
-    <ClInclude Include="IntroScene.h">
-      <Filter>Scene\h</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

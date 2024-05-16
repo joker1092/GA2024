@@ -12,6 +12,9 @@ void SceneManager::Init() {
 }
 
 void SceneManager::SetCurScene(int i) {
+
+	if (m_curScene != nullptr)
+		m_curScene->Exit();
 	m_curScene = m_sceneArr[i];
 	m_curScene->Init();
 }
@@ -27,6 +30,16 @@ SceneManager* SceneManager::GetInstance() {
 	}
 	return m_Instance;
 }
+
+void SceneManager::DestroyInstance()
+{
+	if (m_Instance != nullptr)
+	{
+		delete m_Instance;
+		m_Instance = nullptr;
+	}
+}
+
 
 SceneManager::~SceneManager() {
 	for (int i = 0; i < (UINT)SceneType::END; i++) {

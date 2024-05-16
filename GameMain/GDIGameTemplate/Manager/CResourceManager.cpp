@@ -15,13 +15,20 @@ CResourceManager::~CResourceManager() {
 	//소멸자에서 map 순회하며 전체 리소스 해제
 	std::map<std::wstring, Gdiplus::Bitmap*>::iterator iter = m_mapBitmap.begin();
 	for (; iter != m_mapBitmap.end(); ++iter) {
-		delete iter->second;
+		if (iter->second != nullptr) {
+			delete iter->second;
+		}
+		
 	}
-
+	
 	std::map<std::wstring, AnimationResource*>::iterator iterAnimation = m_mapAnimation.begin();
 	for (; iter != m_mapBitmap.end(); ++iter) {
-		delete iter->second;
+		if (iter->second != nullptr) {
+			delete iter->second;
+		}
 	}
+	m_mapBitmap.clear();
+	m_mapAnimation.clear();
 }
 
 Gdiplus::Bitmap* CResourceManager::LoadBitmapResouce(const std::wstring& _strkey, const std::wstring& _path)

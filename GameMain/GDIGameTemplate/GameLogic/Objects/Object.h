@@ -47,7 +47,7 @@ struct Object
 
 	virtual void Init();
 	virtual void Update(float delta);
-	virtual void Render();
+	virtual void Render(float alpha);
 	virtual void SetMotion(int index);
 	virtual void UpdateAnimation(float delta);	
 	virtual void ChangeStatus(ObjectStatus status);
@@ -58,6 +58,16 @@ struct Object
 	friend class Collider;
 	friend class CircleCollider;
 	friend class RectangleCollider;
+
+	virtual ~Object() {
+		if (m_collider != nullptr) {
+			delete m_collider;
+		}
+
+		if (m_pAnimationResource != nullptr) {
+			delete m_pAnimationResource;
+		}
+	}
 };
 
 //struct UIObject : public Object{

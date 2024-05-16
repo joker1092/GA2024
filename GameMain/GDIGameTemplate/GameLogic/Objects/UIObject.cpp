@@ -6,8 +6,9 @@ void UIObject::Init() {
 
 }
 
-void UIObject::Render() {
-
+void UIObject::Render(float alpha) 
+{
+	
 }
 
 
@@ -25,10 +26,10 @@ void UIImage::Init(Gdiplus::Bitmap* myBitMap, Vector2 myVector) {
 	m_pos = myVector;
 }
 
-void UIImage::Render() {
+void UIImage::Render(float alpha) {
 	if (m_isActive == false) return;
 	//0x00000147f3f723d0
-	Render::DrawImage(m_pos.x- m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_BackGround, 0, 0, m_renderBounds.extents.x * 2, m_renderBounds.extents.y * 2);
+	Render::DrawImage(m_pos.x- m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_BackGround, 0, 0, m_renderBounds.extents.x * 2, m_renderBounds.extents.y * 2 , 1.0f);
 }
 
 void UIButton::Init(Vector2 myPos, Event* myEvent) {
@@ -44,9 +45,9 @@ void UIButton::Init(Vector2 myPos, Event* myEvent) {
 	m_collider->parent = this;
 }
 
-void UIButton::Render() {
+void UIButton::Render(float alpha) {
 	if (m_isActive == false) return;
-	Render::DrawImage(m_pos.x - m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_Bitmap, 0, 0, cx, cy);
+	Render::DrawImage(m_pos.x - m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_Bitmap, 0, 0, cx, cy, 1.0f);
 }
 
 void UIButton::OnTrigger() {
@@ -94,7 +95,7 @@ void UITimer::Update(float delta) {
 	}
 }
 
-void UITimer::Render() {
+void UITimer::Render(float alpha) {
 	if (m_isActive == false) return;
 	Render::DrawRect(m_pos.x, m_pos.y, cx, cy, RGB(255, 255, 255));
 	Render::DrawRect(m_pos.x, m_pos.y, (UINT)deltaCx, cy, RGB(255, 255, 0));
@@ -131,7 +132,7 @@ void UIBackGround::LoadAnimImage(const WCHAR* fileName,CResourceManager* CRM)
 			m_fileName[i] = noNumFileName.append(wNum);
 		}
 		
-		m_bitmap[i] = CRM->LoadBitmapResouce(m_fileName[i].c_str(), m_fileName[i].append(L".bmp").c_str());
+		m_bitmap[i] = CRM->LoadBitmapResouce(m_fileName[i].c_str(), m_fileName[i].append(L".png").c_str());
 		noNumFileName = noNumFileName.substr(0, fileNameLength - 6);
 	}
 
@@ -151,7 +152,7 @@ void UIBackGround::Update(float delta) {
 	}*/
 }
 
-void UIBackGround::Render() {
+void UIBackGround::Render(float alpha) {
 	
 	/*Render::DrawImage(m_pos.x - m_renderBounds.extents.x, 
 		m_pos.y - m_renderBounds.extents.y, m_bitmap[backGroundFrame], 
@@ -167,12 +168,14 @@ void UIBackGround::FixedUpdate() {
 	
 }
 
-UIBackGround::~UIBackGround() {
-	for (int i = 0; i < BACK_GROUND_ANIM_FRAME; i++) {
-		if (m_bitmap[i]!=nullptr)
-			delete m_bitmap[i];
-	}
-}
+
+//UIBackGround::~UIBackGround() {
+//	for (int i = 0; i < BACK_GROUND_ANIM_FRAME; i++) {
+//		if (m_bitmap[i]!=nullptr)
+//			delete m_bitmap[i];
+//	}
+//}
+
 
 void UIDialog::Init(Vector2 myPos, Vector2 endPos, WCHAR* _string) {
 	x = myPos.x;
@@ -181,7 +184,15 @@ void UIDialog::Init(Vector2 myPos, Vector2 endPos, WCHAR* _string) {
 	cy = endPos.y;
 	string = _string;
 }
-void UIDialog::Render(){
-	Render::DrawFont(x, y, string, RGB(0, 255, 0), 12, L"Arial", 1);
+void UIDialog::Render(float alpha){
+	Render::DrawFont(x, y,cx,cx, string, RGB(0, 255, 0), 12, L"Arial", 1);
+}
+
+void UIDialog::Update(float delta) {
+	
+}
+
+void UIDialog::OnTrigger() {
+
 }
 

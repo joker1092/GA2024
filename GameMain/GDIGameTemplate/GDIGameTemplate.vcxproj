@@ -158,14 +158,15 @@
     <ClCompile Include="GameLogic\Objects\Object.cpp" />
     <ClCompile Include="GameLogic\Objects\Player.cpp" />
     <ClCompile Include="GameLogic\Objects\UIObject.cpp" />
+    <ClCompile Include="GameLogic\Ranking.cpp" />
     <ClCompile Include="GameLogic\Vector2.cpp" />
-    <ClCompile Include="IntroScene.cpp" />
     <ClCompile Include="Manager\ColliderManager.cpp" />
     <ClCompile Include="Manager\CPathManager.cpp" />
     <ClCompile Include="Manager\CResourceManager.cpp" />
     <ClCompile Include="Manager\GameManager.cpp" />
     <ClCompile Include="Manager\SceneManager.cpp" />
     <ClCompile Include="Scene\CScene.cpp" />
+    <ClCompile Include="Scene\IntroScene.cpp" />
     <ClCompile Include="Scene\Stage01.cpp" />
     <ClCompile Include="Scene\StartScene.cpp" />
     <ClCompile Include="System\InputSystem.cpp" />
@@ -183,8 +184,8 @@
     <ClInclude Include="GameLogic\Objects\Object.h" />
     <ClInclude Include="GameLogic\Objects\Player.h" />
     <ClInclude Include="GameLogic\Objects\UIObject.h" />
+    <ClInclude Include="GameLogic\Ranking.h" />
     <ClInclude Include="GameLogic\Vector2.h" />
-    <ClInclude Include="IntroScene.h" />
     <ClInclude Include="Manager\ColliderManager.h" />
     <ClInclude Include="Manager\CPathManager.h" />
     <ClInclude Include="Manager\CResourceManager.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="Manager\SceneManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Scene\CScene.h" />
+    <ClInclude Include="Scene\IntroScene.h" />
     <ClInclude Include="Scene\Stage01.h" />
     <ClInclude Include="Scene\StartScene.h" />
     <ClInclude Include="stdafx.h" />
