@@ -6,8 +6,8 @@
 class ColliderManager
 {
 private:
-	std::vector<Collider*> colliders[(UINT)TYPE::END];
 public:
+	std::vector<Collider*> colliders[(UINT)TYPE::END];
 	ColliderManager();
 	~ColliderManager();
 

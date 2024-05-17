@@ -8,15 +8,23 @@ private:
 	float moveSpeed;
 	float radius;
 	Vector2 moveDirection;
-	bool flag;
+	float up = -1;
+	float down = 1;
+	float left = -1;
+	float right = 1;
 
 	Gdiplus::Bitmap* playerBitmap;
 
-	float sScale = 1.f;
+	bool isScoopUp = false;
+	float scoopUpTime = 0.f;
+	float scale = 1.f;
+	bool isOnScoopUpSound;
+
+	bool isAwake;
 public:
 	Event* pauseEvent;
 	Player();
-	~Player();
+	~Player() override { delete playerBitmap; }
 
 	void Init() override;
 	void Update(float delta) override;
@@ -24,12 +32,6 @@ public:
 	void OnTrigger() override;
 
 	void movePlayer(float delta);
-
-	void Up(float delta);
-	void Down(float delta);
-	void Left(float delta);
-	void Right(float delta);
-
-	void SetStatus();
+	void ScoopUp(float delta);
 };
 

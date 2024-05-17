@@ -3,6 +3,11 @@
 #include "../Scene/StartScene.h"
 #include "../Scene/Stage01.h"
 #include "../Scene/IntroScene.h"
+#include "../Scene/Stage02.h"
+#include "../Scene/Stage03.h"
+#include "../Scene/Stage04.h"
+#include "../Scene/Stage05.h"
+
 class CScene;
 enum class SceneType
 {
@@ -10,6 +15,10 @@ enum class SceneType
 	START,
 	INTRO,
 	STAGE_01,
+	STAGE_02,
+	STAGE_03,
+	STAGE_04,
+	STAGE_05,
 	END
 };
 

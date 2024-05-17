@@ -13,6 +13,9 @@ class UIObject : public Object
 	//void UpdateAnimation(float delta)override;
 	//void ChangeStatus(ObjectStatus status)override;
 	void OnTrigger() override;
+
+public:
+	float alpha = 1.f;
 };
 
 class UIImage : public UIObject
@@ -36,11 +39,11 @@ class UIButton : public UIObject
 {
 	// Object을(를) 통해 상속됨
 public:
-	void Init(Vector2 myPos, Event* myEvent);
+	void Init(Vector2 myPos, Event* myEvent, Gdiplus::Bitmap* myBitMap);
 	
 
-	UIButton(Vector2 myPos, Event* myEvent) {
-		Init(myPos,myEvent);
+	UIButton(Vector2 myPos, Event* myEvent, Gdiplus::Bitmap* myBitMap) {
+		Init(myPos,myEvent, myBitMap);
 		m_Event = myEvent;
 		m_renderBounds = { {0.f, 0.f },{(float)x,(float)y} };
 	}
@@ -70,11 +73,11 @@ class UITimer : public UIObject
 {
 	// Object을(를) 통해 상속됨
 public:
-	void Init(Vector2 myPos,Event* myEvent);
+	void Init(Vector2 myPos,Event* myEvent,float _setTime);
 
 
-	UITimer(Vector2 myPos, Event* myEvent) {
-		Init(myPos,myEvent);
+	UITimer(Vector2 myPos, Event* myEvent,float _setTime) {
+		Init(myPos,myEvent,_setTime);
 		//m_Event = myEvent;
 		//m_renderBounds = { {(float)cx,(float)cy},{(float)x,(float)y} };
 	}
@@ -90,12 +93,13 @@ public:
 
 private:
 	Gdiplus::Bitmap* m_Bitmap;
-	UINT cx = 0;
-	UINT cy = 0;
-	UINT x = 1600;
-	UINT y = 800;
-	float deltaCx = 1600.0f;
-	float setTime = 60.0f;
+	UINT cx;
+	UINT cy;
+	UINT x;
+	UINT y;
+	float deltaCx;
+	float setTime;
+	float deltaTime;
 };
 
 class UIBackGround : public UIObject
@@ -132,9 +136,24 @@ private:
 	UINT x = 0;
 	UINT y = 0;
 	WCHAR* string;
+	COLORREF color;
+	int fontSize;
 public:
-	void Init(Vector2 myPos, Vector2 endPos,WCHAR* _string);
+	~UIDialog()override {
+		delete[] string;
+	};
+	void Init(Vector2 myPos, Vector2 endPos,WCHAR* _string, COLORREF _color, int _fontSize);
 	void Update(float delta) override;
 	void Render(float alpha)override;
 	void OnTrigger() override;
+};
+
+class UICrossDissolve : public UIObject {
+	Gdiplus::Bitmap* m_BackGround;
+	float alphaValue;
+public:
+	UICrossDissolve(Vector2 position, Gdiplus::Bitmap* bitmap);
+	void Init();
+	void Update(float delta) override;
+	void Render(float alpha) override;
 };

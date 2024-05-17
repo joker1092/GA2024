@@ -35,25 +35,9 @@ void Fish::AngularVelocity(float delta) {
 }
 
 Vector2 Fish::GetRandomDirection() {
-	/*float theta = rand() % 360;
-	theta -= 180;
-	theta = theta / 180.f * 3.14159f;
-	float a = cosf(theta);
-	float b = sinf(theta);
-	return { cosf(theta), sinf(theta) };*/
-	//int random = rand() % 20000;
-	//random -= 10000;
-	//float x = random / 10000.f; //-1.f ~ 1.f
-	//float y = 1 - (x * x);
-	//y = sqrtf(y);
-	//y = (rand() % 2) == 0 ? -y : y;
-	//return { x, y };
-	//std::cout << "현재 위치: " << (int)m_pos.x << ", " << (int)m_pos.y << std::endl;
 	Vector2 position = GetRandomPosition();
-	//std::cout << "랜덤 위치: " << position.x << ", " << position.y;
 	float distance = sqrtf(pow(m_pos.x - position.x, 2) + pow(m_pos.y - position.y, 2)); // 거리는 곧 시간이 됨.
 	maxTime = distance / m_speed;
-	//std::cout << ", " << maxTime << std::endl;
 	Vector2 direction = m_pos - position;
 	direction.Normalize(); // 방향.
 	return direction;
@@ -71,17 +55,29 @@ Vector2 Fish::GetRandomPosition() {
 	return { (float)width, (float)height };
 }
 
+Fish::Fish(const WCHAR* name, float moveSpeed, float angulerSpeed, const WCHAR* fileName, CResourceManager* CRM, const WCHAR* imageType, float rotateInterval1, float rotateInterval2, float colliderWidth, float colliderHeight)
+{
+	memset(m_name, '\0', 255);
+	wcscpy_s(m_name, 255, name);
+
+	m_speed = moveSpeed;
+	angulerSpeed = m_AngulerSpeed;
+	LoadAnimImage(fileName, CRM, imageType);
+	m_rotateInterval1 = rotateInterval1;
+	m_rotateInterval2 = rotateInterval2;
+
+	m_collider = new RectangleCollider({ 0.f,0.f }, colliderWidth, colliderHeight);
+	m_collider->parent = this;
+
+	Init();
+}
+
 void Fish::Init() {
 	// 테스트용
-	m_collider = new RectangleCollider({ 0.f,0.f }, 100.f, 100.f);
-	m_collider->parent = this;
 	
-	//m_FishImage = Gdiplus::Bitmap::FromFile(L"FishTest.png");
-	//m_renderBounds = { {0.f, 0.f}, {m_FishImage->GetWidth() / 2.f, m_FishImage->GetHeight() / 2.f}};
 	m_renderBounds = { {0.f, 0.f}, {m_bitmap[0]->GetWidth() / 2.f, m_bitmap[0]->GetHeight() / 2.f}};
 	m_pos = GetRandomPosition();
-	m_moveDirection = GetRandomDirection();
-	//renderBounds2 = { {0.f, 50.f} , {m_FishImage->GetWidth() / 2.f, m_FishImage->GetHeight() / 2.f} };
+	m_moveDirection = GetRandomDirection() * -1.f;
 
 	animationFrame = rand() % 30;
 }
@@ -94,15 +90,26 @@ void Fish::Update(float delta) {
 		time = 0;
 	}
 
-	Move(delta);
+	if (isCatch) {
+		alphaTime -= delta;
+		if (alphaTime <= 0) {
+			alphaTime = 0.f;
+			m_isActive = false;
+			isCatch = false;
+		}
+	}
 
-	if (m_AngulerDirection != Vector2(0.f, 0.f))
-		AngularVelocity(delta);
+	if (!isCatch) {
+		Move(delta);
 
-	animTime += delta;
-	if (animTime >= animMaxTime) {
-		animTime -= animMaxTime;
-		animationFrame = (animationFrame + 1) % 30;
+		if (m_AngulerDirection != Vector2(0.f, 0.f))
+			AngularVelocity(delta);
+
+		animTime += delta;
+		if (animTime >= animMaxTime) {
+			animTime -= animMaxTime;
+			animationFrame = (animationFrame + 1) % 30;
+		}
 	}
 }
 
@@ -110,50 +117,48 @@ void Fish::Render(float alpha) {
 	if (m_isActive == false) return;
 
 	float deg = (0.f * m_moveDirection.y + 1.f * m_moveDirection.x);  // 회전방향 구하기
-	//deg = asinf(deg) * 180.f / 3.14159f;
-	//float rad = asinf(deg);
 
 	float inner = 0.f * m_moveDirection.x - 1.f * m_moveDirection.y;
 	float deg2 = acosf(inner) * 180.f / 3.14159f;
 
 	float dirScale = deg > 0 ? deg2 : -deg2;
-	//float dir = deg > 0 ? m_AngulerSpeed * delta : -m_AngulerSpeed * delta;
 
+	Render::DrawRotateImage((int)m_pos.x - m_renderBounds.extents.x, (int)m_pos.y - m_renderBounds.extents.y, m_bitmap[animationFrame], dirScale, alphaTime);
 
+	RectangleCollider* r = dynamic_cast<RectangleCollider*>(m_collider);
+	
 	// 테스트용
-	//Render::DrawRotateImage((int)m_pos.x, (int)m_pos.y + 100.f, m_FishImage, dirScale);
-	Render::DrawRotateImage((int)m_pos.x - m_renderBounds.extents.x, (int)m_pos.y - m_renderBounds.extents.y, m_bitmap[animationFrame], dirScale);
-	//Render::DrawRect(m_pos.x - 50.f, m_pos.y - 50.f, 100, 100, RGB(0, 255, 0));
-	//Render::DrawImage(m_pos.x - m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_FishImage, 0, 0, (int)m_renderBounds.extents.x * 2, (int)m_renderBounds.extents.y * 2);
+	Render::DrawRect(m_pos.x - r->bounds.extents.x, m_pos.y - r->bounds.extents.y, r->bounds.extents.x * 2, r->bounds.extents.x * 2, RGB(0, 255, 0));
 
-	//Render::DrawLine((int)m_pos.x - m_renderBounds.extents.x,
-	//	(int)m_pos.y + m_renderBounds.extents.y,
-	//	(int)m_pos.x + m_renderBounds.extents.x,
-	//	(int)m_pos.y + m_renderBounds.extents.y - 1, RGB(0, 255, 0));
-	//Render::DrawLine((int)m_pos.x - m_renderBounds.extents.x,
-	//	(int)m_pos.y - m_renderBounds.extents.y,
-	//	(int)m_pos.x + m_renderBounds.extents.x,
-	//	(int)m_pos.y - m_renderBounds.extents.y + 1, RGB(0, 255, 0));
-	//Render::DrawLine((int)m_pos.x - m_renderBounds.extents.x,
-	//	(int)m_pos.y + m_renderBounds.extents.y,
-	//	(int)m_pos.x - m_renderBounds.extents.x + 1,
-	//	(int)m_pos.y - m_renderBounds.extents.y, RGB(0, 255, 0));
-	//Render::DrawLine((int)m_pos.x + m_renderBounds.extents.x - 1,
-	//	(int)m_pos.y + m_renderBounds.extents.y,
-	//	(int)m_pos.x + m_renderBounds.extents.x,
-	//	(int)m_pos.y - m_renderBounds.extents.y, RGB(0, 255, 0));
+	Render::DrawLine((int)m_pos.x - m_renderBounds.extents.x,
+		(int)m_pos.y + m_renderBounds.extents.y,
+		(int)m_pos.x + m_renderBounds.extents.x,
+		(int)m_pos.y + m_renderBounds.extents.y - 1, RGB(0, 255, 0));
+	Render::DrawLine((int)m_pos.x - m_renderBounds.extents.x,
+		(int)m_pos.y - m_renderBounds.extents.y,
+		(int)m_pos.x + m_renderBounds.extents.x,
+		(int)m_pos.y - m_renderBounds.extents.y + 1, RGB(0, 255, 0));
+	Render::DrawLine((int)m_pos.x - m_renderBounds.extents.x,
+		(int)m_pos.y + m_renderBounds.extents.y,
+		(int)m_pos.x - m_renderBounds.extents.x + 1,
+		(int)m_pos.y - m_renderBounds.extents.y, RGB(0, 255, 0));
+	Render::DrawLine((int)m_pos.x + m_renderBounds.extents.x - 1,
+		(int)m_pos.y + m_renderBounds.extents.y,
+		(int)m_pos.x + m_renderBounds.extents.x,
+		(int)m_pos.y - m_renderBounds.extents.y, RGB(0, 255, 0));
 
-	//Render::DrawLine(x1, y1, x2, y1 + 1, RGB(0, 255, 0));
-	//Render::DrawLine(x1, y2, x2, y2 - 1, RGB(0, 255, 0));
-	//Render::DrawLine(x1, y1, x1 + 1, y2, RGB(0, 255, 0));
-	//Render::DrawLine(x2, y1, x2 - 1, y2 - 1, RGB(0, 255, 0));
+	Render::DrawLine(x1, y1, x2, y1 + 1, RGB(0, 255, 0));
+	Render::DrawLine(x1, y2, x2, y2 - 1, RGB(0, 255, 0));
+	Render::DrawLine(x1, y1, x1 + 1, y2, RGB(0, 255, 0));
+	Render::DrawLine(x2, y1, x2 - 1, y2 - 1, RGB(0, 255, 0));
 
 	////Render::DrawText(10, 10, std::to_string(dirScale).c_str(), RGB(255, 0, 0));
 	//Render::DrawTextW(10, 70, std::to_string(time).c_str(), RGB(255, 0, 0));
 }
 
 void Fish::OnTrigger() {
-	m_isActive = false;
+	isCatch = true;
+	m_collider->isActive = false;
 }
 
 void Fish::SetRandomPosition()
@@ -161,7 +166,7 @@ void Fish::SetRandomPosition()
 	m_pos = GetRandomPosition();
 }
 
-void Fish::LoadAnimImage(const WCHAR* fileName, CResourceManager* CRM)
+void Fish::LoadAnimImage(const WCHAR* fileName, CResourceManager* CRM, const WCHAR* imageType)
 {
 	int fileNameLength = wcslen(fileName);
 
@@ -180,7 +185,7 @@ void Fish::LoadAnimImage(const WCHAR* fileName, CResourceManager* CRM)
 			m_fileName[i] = noNumFileName.append(wNum);
 		}
 
-		m_bitmap[i] = CRM->LoadBitmapResouce(m_fileName[i].c_str(), m_fileName[i].append(L".png").c_str());
+		m_bitmap[i] = CRM->LoadBitmapResouce(m_fileName[i].c_str(), m_fileName[i].append(imageType).c_str());
 		noNumFileName = noNumFileName.substr(0, fileNameLength - 6);
 	}
 }

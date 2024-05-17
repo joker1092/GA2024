@@ -62,6 +62,21 @@
     <ClCompile Include="Manager\GameManager.cpp">
       <Filter>Manager\cpp</Filter>
     </ClCompile>
+    <ClCompile Include="Scene\IntroScene.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Stage02.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Stage03.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Stage04.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene\Stage05.cpp">
+      <Filter>Scene\cpp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
@@ -129,6 +144,21 @@
     </ClInclude>
     <ClInclude Include="GameLogic\Objects\Player.h">
       <Filter>GamaLogic\Objects\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\IntroScene.h">
+      <Filter>Scene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Stage02.h">
+      <Filter>Scene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Stage03.h">
+      <Filter>Scene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Stage04.h">
+      <Filter>Scene\h</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene\Stage05.h">
+      <Filter>Scene\h</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

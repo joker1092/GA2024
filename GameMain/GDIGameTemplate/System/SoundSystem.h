@@ -1,8 +1,9 @@
 #pragma once
 
-#include "../stdafx.h"
+#include "../WinMain.h"
 #include "../inc/fmod.hpp"
 #pragma comment (lib, "fmod_vc.lib")
+#include "TimeSystem.h"
 
 using namespace std;
 using namespace FMOD;
@@ -20,8 +21,10 @@ namespace mySound
 	enum class SoundList
 	{
 		/* Ãß°¡ */
+		Void,
 		Drum,
-		Size,
+		Singing,
+		Size
 	};
 
 	class SoundManager;
@@ -42,8 +45,8 @@ namespace mySound
 
 		void SetVolume(float volume);
 
-
 		void RelaseSounds();
+
 
 	private:
 		SoundManager();
@@ -51,7 +54,7 @@ namespace mySound
 		~SoundManager();
 	private:
 		static SoundManager* mInstance;
-
+		
 		FMOD::System* mSystem;
 		FMOD::Channel* mChannel[static_cast<int>(SoundChannel::Size)];
 		FMOD::Sound* mSoundList[static_cast<int>(SoundList::Size)];

@@ -14,6 +14,7 @@ private:
 	UIButton* gameExitButton;*/
 	// CScene을(를) 통해 상속됨
 	Gdiplus::Bitmap* myBitmap = nullptr;
+	RECT scoreRect;
 public:
 	void Init() override;
 	void Start() override;

@@ -1,6 +1,7 @@
 #include "ColliderManager.h"
 
 bool ColliderManager::CheckCollision(Collider* lhs, Collider* rhs) {
+	if (lhs->isActive == false || rhs->isActive == false) return false;
 	if (const CircleCollider* c = dynamic_cast<const CircleCollider*>(lhs)) {
 		if(c->isColliding(*rhs)) {
 			if(lhs->parent != nullptr)
@@ -27,9 +28,10 @@ ColliderManager::ColliderManager() {
 }
 
 ColliderManager::~ColliderManager() {
-	/*for (int i = 0; i < (UINT)TYPE::END; i++) {
-		delete colliders[i];
-	}*/
+	int k = (UINT)TYPE::END;
+	for (int i = 0; i < k; i++) {
+		colliders[i].clear();
+	}
 }
 void ColliderManager::Init() {
 	
@@ -61,7 +63,8 @@ void ColliderManager::PointCollision(Vector2 point, Collider* rhs) {
 }
 
 Collider* ColliderManager::GetCurrentPointCollider(Vector2 point) {
-	for (int i = (UINT)TYPE::END - 1; i >= 0; i--) {
+	int k = (UINT)TYPE::END;
+	for (int i = k - 1; i >= 0; i--) {
 		for (int j = colliders[i].size() - 1; j >= 0; j--) {
 			if ((colliders[i])[j]->parent->m_isActive == false) continue;
 			else {
@@ -75,7 +78,9 @@ Collider* ColliderManager::GetCurrentPointCollider(Vector2 point) {
 }
 
 Collider* ColliderManager::GetCurrentPointCollider(Vector2 point, TYPE type) {
-	for (int j = colliders[(UINT)type].size() - 1; j >= 0; j--) {
+	int k = colliders[(UINT)type].size();
+	if (k == 0) return nullptr;
+	for (int j = k - 1; j >= 0; j--) {
 		if ((colliders[(UINT)type])[j]->parent->m_isActive == false) continue;
 		else {
 			if ((colliders[(UINT)type])[j]->isPointColliding(point)) {
@@ -88,7 +93,9 @@ Collider* ColliderManager::GetCurrentPointCollider(Vector2 point, TYPE type) {
 
 int ColliderManager::GetCountCollidersAtType(Collider* collider, Collider** arrCollider, int length, TYPE type){
 	int count = 0;
-	for (int i = colliders[(UINT)type].size() - 1; i >= 0; i--) {
+	int k = colliders[(UINT)type].size();
+	if (k == 0) return count;
+	for (int i = k - 1; i >= 0; i--) {
 		if (colliders[(UINT)type][i]->parent->m_isActive == false) continue;
 		else {
 			if ((colliders[(UINT)type])[i]->isColliding(*collider)) {

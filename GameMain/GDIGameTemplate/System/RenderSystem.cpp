@@ -1,5 +1,7 @@
 
 #include "RenderSystem.h"
+#include "../Manager/SceneManager.h"
+
 
 #pragma comment(lib, "msimg32.lib")
 #pragma comment(lib, "gdiplus.lib")
@@ -38,6 +40,25 @@ namespace Render
 		//Gdiplus::Image image(L"image1.png");
 	}
 
+	Gdiplus::Bitmap* GetFrontHDC()
+	{
+		HDC hdcScreen = GetDC(hWnd);
+
+		// Create compatible DC and Bitmap
+		HDC hdcCapture = CreateCompatibleDC(hdcScreen);
+		HBITMAP hBitmap = CreateCompatibleBitmap(hdcScreen, 1280, 720);
+		SelectObject(hdcCapture, hBitmap);
+
+		// Capture screen to HDC
+		BitBlt(hdcCapture, 0, 0, 1280, 720, hdcScreen, 0, 0, SRCCOPY);
+
+		// Create GDI+ Bitmap from HDC
+		Gdiplus::Bitmap* bitmap = new Gdiplus::Bitmap(hBitmap, NULL);
+
+
+		return bitmap;//new Gdiplus::Bitmap(1280, 720, Gdiplus::Graphics::FromHDC(frontMemDC));
+	}
+
 	void BeginDraw()
 	{
 		::PatBlt(backMemDC, 0, 0, nWidth, nHeight, BLACKNESS);
@@ -45,6 +66,9 @@ namespace Render
 
 	void EndDraw()
 	{
+		
+		//SceneManager::GetInstance()->GetCurScene()->prevBitmap = new Gdiplus::Bitmap(nWidth, nHeight, Gdiplus::Graphics::FromHDC(frontMemDC));
+
 		::BitBlt(frontMemDC, 0, 0, nWidth, nHeight, backMemDC, 0, 0, SRCCOPY);
 	}
 
@@ -176,31 +200,52 @@ namespace Render
 		//graphics->DrawImage()
 	}
 
-	void DrawRotateImage(int centerX, int centerY, Gdiplus::Bitmap* bitmap, float rad) {
+	void DrawRotateImage(int centerX, int centerY, Gdiplus::Bitmap* bitmap, float rad, float alpha) {
 		Gdiplus::Graphics ScreenG(backMemDC);
 		Gdiplus::Matrix mat;
+
+		Gdiplus::ImageAttributes imageAttributes;
+
+		Gdiplus::ColorMatrix colorMatrix{
+			{
+				{1.0f, 0.0f, 0.0f, 0.0f, 0.0f},
+				{0.0f, 1.0f, 0.0f, 0.0f, 0.0f},
+				{0.0f, 0.0f, 1.0f, 0.0f, 0.0f},
+				{0.0f, 0.0f, 0.0f, alpha, 0.0f},
+				{0.0f, 0.0f, 0.0f, 0.0f, 1.0f}
+			}
+		};
+
+		imageAttributes.SetColorMatrix(&colorMatrix);
+
 		mat.RotateAt(rad, Gdiplus::PointF((float)centerX + bitmap->GetWidth() / 2.f, (float)centerY + bitmap->GetHeight()/ 2.f));
 		ScreenG.SetTransform(&mat);
-		ScreenG.DrawImage(bitmap, centerX, centerY);
+		Gdiplus::Rect srcRect(0, 0, bitmap->GetWidth(), bitmap->GetHeight()); // 소스의 영역
+		Gdiplus::Rect destRect(centerX, centerY, srcRect.Width, srcRect.Height);
+
+		ScreenG.DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel, &imageAttributes);
+		//ScreenG.DrawImage(bitmap, centerX, centerY);
 	}
 
 	void DrawBitmap(int x, int y, Gdiplus::Bitmap* bitmap, int srcX, int srcY, int srcWitdh, int srcHeight) {
 		Gdiplus::ImageAttributes imgAttr;
 		Gdiplus::Rect srcRect(srcX, srcY, srcWitdh, srcHeight); // 소스의 영역
 		Gdiplus::Rect destRect(x, y, srcRect.Width, srcRect.Height);
-		imgAttr.SetColorKey(Gdiplus::Color(0, 0, 0), Gdiplus::Color(0, 0, 0), Gdiplus::ColorAdjustTypeBitmap);
-		graphics->DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel, &imgAttr);
+		//imgAttr.SetColorKey(Gdiplus::Color(0, 0, 0), Gdiplus::Color(0, 0, 0), Gdiplus::ColorAdjustTypeBitmap);
+		graphics->DrawImage(bitmap, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, Gdiplus::UnitPixel);
 	}
 
 	void DrawFont(int x, int y, int cx, int cy , const WCHAR* text, COLORREF color, int fontSize, const wchar_t* fontName, int fontStyle) {
 
-		Gdiplus::SolidBrush semiTransBrush(Gdiplus::Color(100, 0, 0, 0)); // 50% 투명 빨간색
+		Gdiplus::Color f_color;
+		f_color.SetFromCOLORREF(color);
+		Gdiplus::SolidBrush semiTransBrush(Gdiplus::Color(0, 0, 0, 0)); // 투명 
 		graphics->FillRectangle(&semiTransBrush, x, y, cx, cy);
 
 		Gdiplus::FontFamily   fontFamily(fontName);
 		Gdiplus::Font         font(&fontFamily, fontSize, fontStyle, Gdiplus::UnitPoint);
 		Gdiplus::RectF        rectF(x, y, cx, cy);
-		Gdiplus::SolidBrush   solidBrush(Gdiplus::Color(255, 255, 255, 0));
+		Gdiplus::SolidBrush   solidBrush(f_color);
 
 		//graphics.DrawString(string, -1, &font, rectF, NULL, &solidBrush);
 		graphics->DrawString(text, -1, &font, rectF, NULL, &solidBrush);

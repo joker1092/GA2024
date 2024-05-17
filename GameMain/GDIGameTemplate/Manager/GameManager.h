@@ -9,7 +9,6 @@
 #include "../Manager/SceneManager.h"
 
 #include "../GameLogic/Animation.h"
-#include "../GameLogic/Ranking.h"
 namespace Game
 {
 	class GameManager
@@ -27,6 +26,10 @@ namespace Game
 
 		void Render();
 
+		void PostProcessing();
+
+		void EndRender();
+
 		void Finalize();
 
 		void Run();
@@ -39,11 +42,11 @@ namespace Game
 
 		static void DestroyInstance();
 
+		Gdiplus::Bitmap* sceneBitmap;
 	private:
 		static GameManager* instance;
 		SceneManager* m_sceneManager;
 		CScene* m_curScene;
-		Renking* i_renk;
 		HWND m_hWnd = nullptr;
 		HDC m_hdc = nullptr;
 		int m_UpdateCount = { 0 };

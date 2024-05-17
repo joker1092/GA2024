@@ -3,6 +3,7 @@
 #include "../GameLogic/Objects/Fish.h"
 #include "../System/TimeSystem.h"
 #include "../GameLogic/Event.h"
+//#define TEST
 void Stage01::Init()
 {
 	// 작성요령
@@ -19,6 +20,7 @@ void Stage01::Init()
 
 	//UIBackGround* myBack = new UIBackGround();
 	//AddObject(myBack);
+
 	colliderManager = new ColliderManager();
 
 	Player* m_Player = new Player();
@@ -29,10 +31,20 @@ void Stage01::Init()
 	ResumeEvent* e_resume = new ResumeEvent;
 	RetryEvent* e_retry = new RetryEvent;
 	ExitEvent* e_exit = new ExitEvent;
+	AddEvent(e_pause);
+	AddEvent(e_resume);
+	AddEvent(e_retry);
+	AddEvent(e_exit);
 
-	UIButton* resume = new UIButton(Vector2{ 710,200 }, e_resume);
-	UIButton* retry = new UIButton(Vector2{ 710,400 }, e_retry);
-	UIButton* exit = new UIButton(Vector2{ 710,600 }, e_exit);
+	CResourceManager* CRM = CResourceManager::GetInstance();
+	Gdiplus::Bitmap* exitBtn = CRM->LoadBitmapResouce(L"exitBtn", L"exitbtn_sample.bmp");
+
+	Gdiplus::Bitmap* pauseBackImage = CRM->LoadBitmapResouce(L"pauseBackImage", L"image1.png");
+
+	UIButton* resume = new UIButton(Vector2{ 710,200 }, e_resume, exitBtn);
+	UIButton* retry = new UIButton(Vector2{ 710,400 }, e_retry, exitBtn);
+	UIButton* exit = new UIButton(Vector2{ 710,600 }, e_exit, exitBtn);
+
 	e_resume->Resume = resume;
 	e_resume->Retry = retry;
 	e_resume->PauseBack = pauseBack;
@@ -44,8 +56,7 @@ void Stage01::Init()
 	
 	e_resume->OnTrigger();
 	m_Player->pauseEvent = e_pause;
-	CResourceManager* CRM = CResourceManager::GetInstance();
-	Gdiplus::Bitmap* pauseBackImage = CRM->LoadBitmapResouce(L"pauseBackImage",L"image1.png");
+	
 	pauseBack->Init(pauseBackImage,Vector2{500.f,400.f});
 
 	
@@ -56,8 +67,9 @@ void Stage01::Init()
 	exit->m_isActive = false;
 
 
-	SelectScnEvent* nextScnEvent = new SelectScnEvent(3);
-	UITimer* myTimer = new UITimer(Vector2{910,100}, e_retry);
+	SelectScnEvent* e_nextScn = new SelectScnEvent((UINT)SceneType::STAGE_02);
+	AddEvent(e_nextScn);
+	UITimer* myTimer = new UITimer(Vector2{910,100}, e_nextScn,20.f);
 
 	UIImage* myBackGround = new UIImage();
 	Gdiplus::Bitmap* waterBack = CRM->LoadBitmapResouce(L"waterImage", L"Water.png");
@@ -66,33 +78,83 @@ void Stage01::Init()
 	//myBackGround->Init(L"Water_Down_00.bmp",CRM);
 	AddObject(myBackGround);
 	AddObject(myTimer);
-	Fish* myFish;
+
+	//*************물고기 생성****************
 	srand(std::time(NULL));
-	for (int i = 0; i < 16; i++) {
-		myFish = new Fish();
-		myFish->LoadAnimImage(L"BossFish_00.png", CRM);
-		myFish->Init();
+	Fish* myFish;
+	for (int i = 0; i < 4; i++) {
+		myFish = new Fish(L"Fish1", 50.f, 4.36f, L"Fish_01_Anim_00.png", CRM, L".png", 3.f, 4.f, 23.f, 23.f);
+		AddObject(myFish);
+		colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
+	}for (int i = 0; i < 4; i++) {
+		myFish = new Fish(L"Fish2", 50.f, 4.36f, L"Fish_02_Anim_00.png", CRM, L".png", 3.f, 4.f, 23.f, 23.f);
+		AddObject(myFish);
+		colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
+	}for (int i = 0; i < 4; i++) {
+		myFish = new Fish(L"Fish3", 50.f, 4.36f, L"Fish_03_Anim_00.png", CRM, L".png", 3.f, 4.f, 23.f, 23.f);
+		AddObject(myFish);
+		colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
+	}for (int i = 0; i < 4; i++) {
+		myFish = new Fish(L"Fish4", 50.f, 4.36f, L"Fish_04_Anim_00.png", CRM, L".png", 3.f, 4.f, 23.f, 23.f);
 		AddObject(myFish);
 		colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
 	}
-	
+	myFish = new Fish(L"CrawFish", 40.f, 3.5f, L"CrawFish_01_Anim_00.png", CRM, L".png", 4.f, 5.f, 23.f, 23.f);
+	AddObject(myFish);
+	colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
+	myFish = new Fish(L"BossFish", 60.f, 8.7f, L"BossFish_00.png", CRM, L".png", 2.f, 4.f, 30.f, 30.f);
+	AddObject(myFish);
+	colliderManager->PushCollider(myFish->m_collider, TYPE::FISH);
+	//***************************************
 	AddObject(m_Player);
 	m_Player->m_pos = { 600.f, 350.f };
+
 	UIBackGround* myUPBackGround = new UIBackGround();
 	myUPBackGround->Init(L"물결+그림자_00.png", CRM);
 	AddObject(myUPBackGround);
 	AddObject(pauseBack);
+#ifndef TEST
+	/*SelectScnEvent* e_TEST[8];
+	for (int i = 0; i < (int)SceneType::END; i++) {
+		e_TEST[i] = new SelectScnEvent(i+1);
+		AddEvent(e_TEST[i]);
+	}
+
+	UIButton* ub_S1 = new UIButton(Vector2{ 100,000 }, e_TEST[0]);
+	UIButton* ub_S2 = new UIButton(Vector2{ 100,200 }, e_TEST[1]);
+	UIButton* ub_S3 = new UIButton(Vector2{ 100,400 }, e_TEST[2]);
+	UIButton* ub_S4 = new UIButton(Vector2{ 100,600 }, e_TEST[3]);
+	AddObject(ub_S1);
+	AddObject(ub_S2);
+	AddObject(ub_S3);
+	AddObject(ub_S4);
+
+	UIButton* ub_S5 = new UIButton(Vector2{ 400,000 }, e_TEST[4]);
+	UIButton* ub_S6 = new UIButton(Vector2{ 400,200 }, e_TEST[5]);
+	UIButton* ub_S7 = new UIButton(Vector2{ 400,400 }, e_TEST[6]);
+	UIButton* ub_S8 = new UIButton(Vector2{ 400,600 }, e_TEST[7]);
+
+	AddObject(ub_S5);
+	AddObject(ub_S6);
+	AddObject(ub_S7);
+	AddObject(ub_S8);*/
+	
+#endif // !TEST
+
 	AddObject(resume);
 	AddObject(retry);
 	AddObject(exit);
 	
+
+	UICrossDissolve* backEffect = new UICrossDissolve({640.f, 360.f}, Game::GameManager::GetInstance()->sceneBitmap);
+	AddObject(backEffect);
 
 	alpha = 1.0f;
 
 }
 
 Stage01::~Stage01() {
-	for (int i = 0; i < m_arrObj.size(); i++) {
+	/*for (int i = 0; i < m_arrObj.size(); i++) {
 
 		if (m_arrObj[i] != nullptr) {
 			delete m_arrObj[i];
@@ -101,7 +163,7 @@ Stage01::~Stage01() {
 	}
 	m_arrObj.clear();
 	if (colliderManager != nullptr)
-		delete colliderManager;
+		delete colliderManager;*/
 }
 
 void Stage01::Start()
@@ -113,16 +175,25 @@ void Stage01::FixedUpdate() {
 	//myUPBackGround->FixedUpdate();
 }
 
-void Stage01::Exit()
-{
+void Stage01::Exit() {
+	if (Game::GameManager::GetInstance()->sceneBitmap != nullptr)
+		delete Game::GameManager::GetInstance()->sceneBitmap;
+	Game::GameManager::GetInstance()->sceneBitmap = Render::GetFrontHDC();
+	//CScene::~CScene();
+	if (colliderManager != nullptr)
+		delete colliderManager;
+
+	for (int i = 0; i < m_eventArr.size(); i++) {
+		if (m_eventArr[i] != nullptr) {
+			delete (m_eventArr[i]);
+		}
+	}
 	for (int i = 0; i < m_arrObj.size(); i++) {
 
 		if (m_arrObj[i] != nullptr) {
 			delete m_arrObj[i];
 		}
-		
 	}
 	m_arrObj.clear();
-	if (colliderManager != nullptr)
-	delete colliderManager;
+	m_eventArr.clear();
 }

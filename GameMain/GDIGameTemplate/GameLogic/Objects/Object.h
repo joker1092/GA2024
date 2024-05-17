@@ -24,6 +24,8 @@ enum ObjectStatus {
 struct AnimationResource;
 struct Object
 {
+	WCHAR m_name[255];
+
 	bool m_isActive = true;							// isDead 대신 활성상태를 나타냄.
 
 	Vector2 m_pos;									// 현재 위치	

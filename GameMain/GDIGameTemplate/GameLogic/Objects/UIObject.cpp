@@ -22,23 +22,25 @@ void UIImage::Init(Gdiplus::Bitmap* myBitMap, Vector2 myVector) {
 	//m_BackGround = CR->LoadBitmapResouce(L"image1",L"image1.png");
 	//m_BackGround = Gdiplus::Bitmap::FromFile(L"image1.png");
 	m_BackGround = myBitMap;
+	if (m_BackGround == nullptr) return;
 	m_renderBounds = { {0.f, 0.f}, {myBitMap->GetWidth() / 2.f, myBitMap->GetHeight() / 2.f} };
 	m_pos = myVector;
 }
 
-void UIImage::Render(float alpha) {
+void UIImage::Render(float _alpha) {
 	if (m_isActive == false) return;
 	//0x00000147f3f723d0
-	Render::DrawImage(m_pos.x- m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_BackGround, 0, 0, m_renderBounds.extents.x * 2, m_renderBounds.extents.y * 2 , 1.0f);
+	if (m_BackGround == nullptr) return;
+	Render::DrawImage(m_pos.x- m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_BackGround, 0, 0, m_renderBounds.extents.x * 2, m_renderBounds.extents.y * 2 , alpha);
 }
-
-void UIButton::Init(Vector2 myPos, Event* myEvent) {
+//게임 - 시작 - 버튼 - 기본 - 1	200 * 100
+void UIButton::Init(Vector2 myPos, Event* myEvent, Gdiplus::Bitmap* myBitMap) {
 	/*CResourceManager CR = CResourceManager::CResourceManager();
 	m_Bitmap = CR.LoadBitmapResouce(L"버튼",L"sampleButton.png");*/
 	m_pos = myPos;
 	m_Event = myEvent;
-	m_Bitmap = Gdiplus::Bitmap::FromFile(L"sampleButton.png");
-
+	m_Bitmap = myBitMap;
+	if (m_Bitmap == nullptr) return;
 	cx = m_Bitmap->GetWidth();
 	cy = m_Bitmap->GetHeight();
 	m_collider = new RectangleCollider({ 0.f,0.f }, { (float)cx, (float)cy });
@@ -64,34 +66,35 @@ void UIButton::Update(float delta) {
 	}
 }
 
-
-void UITimer::Init(Vector2 myPos, Event* myEvent) {
+//제한-시간-게이지-바-게이지-1	600*50
+//제한 - 시간 - 게이지 - 바 - 배경 - 1	600 * 50
+void UITimer::Init(Vector2 myPos, Event* myEvent,float _setTime) {
 	/*CResourceManager CR = CResourceManager::CResourceManager();
 	m_Bitmap = CR.LoadBitmapResouce(L"버튼",L"sampleButton.png");*/
+	//m_Bitmap = Gdiplus::Bitmap::FromFile(L"sampleButton.png");
 	m_pos = myPos;
 	m_Event = myEvent;
-	//m_Bitmap = Gdiplus::Bitmap::FromFile(L"sampleButton.png");
-
-	//cx = m_Bitmap->GetWidth();
-	//cy = m_Bitmap->GetHeight();
-	cx = 400;
-	cy = 100;
-	//m_collider = new RectangleCollider({ 0.f,0.f }, { (float)cx, (float)cy });
-	//m_collider->parent = this;
-	deltaCx = 400;
+	
+	cx = 600;
+	cy = 50;
+	
+	deltaCx = 600;
+	setTime = _setTime;
+	deltaTime = _setTime;
 }
 void UITimer::Update(float delta) {
 	if (m_isActive == false) return;
-	setTime -= delta;
+	deltaTime -= delta;
 	/*std::cout << "delta : " << delta << endl;
 	std::cout << "setTime : " << setTime << endl;*/
 	//줄어든 바의 길이  = (정한시간에서 delta만크 줄어든 시기나 / 정한 시간 ) * 가로 길이 값
-	if (setTime > 0) {
-		deltaCx = (setTime / 60.0f) * cx;
+	if (deltaTime > 0) {
+
+		deltaCx = (deltaTime / setTime) * cx;
+
 	}
 	else {
 		OnTrigger();
-		m_Event = nullptr;
 	}
 }
 
@@ -102,7 +105,7 @@ void UITimer::Render(float alpha) {
 }
 
 void UITimer::OnTrigger() {
-	//if (m_Event != nullptr) m_Event->OnTrigger();
+	if (m_Event != nullptr) m_Event->OnTrigger();
 }
 
 void UIBackGround::Init(const WCHAR* fileName, CResourceManager* CRM) {
@@ -177,15 +180,17 @@ void UIBackGround::FixedUpdate() {
 //}
 
 
-void UIDialog::Init(Vector2 myPos, Vector2 endPos, WCHAR* _string) {
+void UIDialog::Init(Vector2 myPos, Vector2 endPos, WCHAR* _string,COLORREF _color ,int _fontSize) {
 	x = myPos.x;
 	y = myPos.y;
 	cx = endPos.x;
 	cy = endPos.y;
 	string = _string;
+	color = _color;
+	fontSize = _fontSize;
 }
 void UIDialog::Render(float alpha){
-	Render::DrawFont(x, y,cx,cx, string, RGB(0, 255, 0), 12, L"Arial", 1);
+	Render::DrawFont(x, y, cx, cx, string, color, fontSize , L"Arial", 1);
 }
 
 void UIDialog::Update(float delta) {
@@ -196,3 +201,33 @@ void UIDialog::OnTrigger() {
 
 }
 
+UICrossDissolve::UICrossDissolve(Vector2 position, Gdiplus::Bitmap* bitmap)
+{
+	m_pos = position;
+	m_BackGround = bitmap;
+	Init();
+}
+
+void UICrossDissolve::Init()
+{
+	alphaValue = 1.f;
+	if (m_BackGround == nullptr) return;
+	m_renderBounds = { {0.f, 0.f}, {m_BackGround->GetWidth() / 2.f, m_BackGround->GetHeight() / 2.f} };
+}
+
+void UICrossDissolve::Update(float delta)
+{
+	if (m_isActive == false) return;
+	alphaValue -= delta;
+	if (alphaValue < 0.f) {
+		alphaValue = 0;
+		m_isActive = false;
+	}
+}
+
+void UICrossDissolve::Render(float alpha)
+{
+	if (m_isActive == false) return;
+	if (m_BackGround == nullptr) return;
+	Render::DrawImage(m_pos.x - m_renderBounds.extents.x, m_pos.y - m_renderBounds.extents.y, m_BackGround, 0, 0, m_renderBounds.extents.x * 2, m_renderBounds.extents.y * 2, alphaValue);
+}

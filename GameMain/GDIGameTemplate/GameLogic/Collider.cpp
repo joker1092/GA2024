@@ -9,6 +9,7 @@ Vector2 CircleCollider::GetPosition() const {
 }
 
 bool CircleCollider::isColliding(const Collider& other) const {
+    if (isActive == false || other.isActive == false) return false; // 둘중 하나라도 비활성화라면 이 충돌검사는 무효.
     // 원과 원 충돌
     if (const CircleCollider* circle = dynamic_cast<const CircleCollider*>(&other)) {
         float distance = std::sqrt(std::pow(circle->GetPosition().x - GetPosition().x, 2) +
@@ -39,6 +40,7 @@ bool CircleCollider::isColliding(const Collider& other) const {
 }
 
 bool CircleCollider::isPointColliding(const Vector2& point) const {
+    if (isActive == false) return false;
     float distance = std::sqrt(std::pow(GetPosition().x - point.x, 2) +
         std::pow(GetPosition().y - point.y, 2));
     return distance < radius;
@@ -52,6 +54,7 @@ Vector2 RectangleCollider::GetPosition() const {
 }
 
 bool RectangleCollider::isColliding(const Collider& other) const {
+    if (isActive == false || other.isActive == false) return false; // 둘중 하나라도 비활성화라면 이 충돌검사는 무효.
     // 사각형과 원 충돌
     if (const CircleCollider* c = dynamic_cast<const CircleCollider*>(&other)) {
         auto circleX = c->GetPosition().x;
@@ -96,6 +99,7 @@ bool RectangleCollider::isColliding(const Collider& other) const {
 }
 
 bool RectangleCollider::isPointColliding(const Vector2& point) const {
+    if (isActive == false) return false;
     float rectX = GetPosition().x;
     float rectY = GetPosition().y;
     if (point.x >= rectX - bounds.extents.x &&
