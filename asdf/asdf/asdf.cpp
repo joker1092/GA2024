@@ -1,32 +1,35 @@
 ﻿#include <iostream>
-using namespace std;
-
-class MyClass
-{
-	int num = 0;
-public:
-	MyClass(int a) : num(a){}
-	void show() { cout << num << endl; }
-private:
-
-};
-
-
 
 int main()
 {
-	MyClass myclass(1);
+	int size = 3;
+	int* p = new int[size] {1, 2, 3};
 
-	MyClass* p = &myclass;
+	
 
-	p->show();
+	size = 4;
+	int* temp = new int[size];
+	
+	/*for (size_t i = 0; i < 3; i++)
+	{
+		temp[i] = p[i];
+	}*/
+	memcpy(temp, p, sizeof(int) * 3);
+	//memcpy_s(temp, sizeof(int)*size, p, sizeof(int) * 3);
 
-	MyClass arr[3] = { MyClass(1), MyClass(2) ,MyClass(3) };
+	delete[] p;
 
-	MyClass* ptr = arr;
+	p = temp;
 
-	ptr[2].show();
+	p[3] = 4;
+
+
+	for (size_t i = 0; i < size; i++)
+	{
+		std::cout << p[i] << " ";
+	}
+
+	delete[] p;
 
 	return 0;
-
 }
