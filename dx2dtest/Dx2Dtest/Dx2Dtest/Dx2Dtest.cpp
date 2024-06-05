@@ -3,9 +3,11 @@
 #include "framework.h"
 #include "Dx2Dtest.h"
 #include <d2d1.h>
+#include <dwrite.h>
+#include <wincodec.h>
 
 #pragma comment(lib, "d2d1.lib")
-
+#pragma comment(lib,"dwrite.lib")
 
 #define MAX_LOADSTRING 100
 
@@ -21,6 +23,12 @@ ID2D1HwndRenderTarget* pRenderTarget;
 ID2D1SolidColorBrush* pBlackBrush;
 ID2D1SolidColorBrush* pGrayBrush;
 
+IDWriteFactory* pDWriteFactory;
+IDWriteTextFormat* pDWriteFormat;
+
+IWICImagingFactory* pWICFactory;
+
+ID2D1Bitmap* pD2DBitmap = nullptr;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -31,6 +39,8 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 
 BOOL InitDirect2D();
 void UninitDirect2D();
+HRESULT D2DBitmapFromFile(const WCHAR* path, ID2D1Bitmap** ppID2D1Bitmap);
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -76,8 +86,18 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         else {
             pRenderTarget->BeginDraw();
 
-            pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+            pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
 
+            D2D1_SIZE_F size = pRenderTarget->GetSize();
+            for (float y = 0; y < size.height; y += 10) {
+                pRenderTarget->DrawLine(D2D1::Point2F(0.0f, y), D2D1::Point2F(size.width, y), pBlackBrush, 0.5f);
+            }
+
+            pRenderTarget->FillRectangle(D2D1::RectF(size.width / 2 - 150.0f, size.height / 2 - 150.0f, size.width / 2 + 150.0f, size.height / 2 + 150.0f), pGrayBrush);
+            pRenderTarget->DrawRectangle(D2D1::RectF(size.width / 2 - 50.0f, size.height / 2 - 50.0f, size.width / 2 + 50.0f, size.height / 2 + 50.0f), pBlackBrush);
+
+            WCHAR wc_text[] = L"Hello, 대충 텍스트";
+            pRenderTarget->DrawText(wc_text, ARRAYSIZE(wc_text) - 1, pDWriteFormat, D2D1::RectF(0, 0, size.width, size.height / 2), pBlackBrush);
 
             pRenderTarget->EndDraw();
         }
@@ -256,14 +276,84 @@ BOOL InitDirect2D() {
         return FALSE;
     }
 
+    hr = DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(pDWriteFactory), reinterpret_cast<IUnknown**>(&pDWriteFactory));
+    if (FAILED(hr))
+    {
+        return FALSE;
+    }
+
+    hr = pDWriteFactory->CreateTextFormat(L"Cooper", NULL, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_NORMAL, 50.0f, L"", &pDWriteFormat);
+    if (FAILED(hr))
+    {
+        return FALSE;
+    }
+
+    hr = CoCreateInstance(CLSID_WICImagingFactory, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pWICFactory));
+    if (FAILED(hr))
+    {
+        return FALSE;
+    }
+
+    pDWriteFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
+    pDWriteFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
+
     return TRUE;
 }
 
 void UninitDirect2D() {
+
+    if (pWICFactory)pWICFactory->Release();
+    if (pDWriteFormat)pDWriteFormat->Release();
+    if (pDWriteFactory)pDWriteFactory->Release();
     if (pBlackBrush) pBlackBrush->Release();
     if (pGrayBrush) pGrayBrush->Release();
     if (pRenderTarget) pRenderTarget->Release();
     if (pD2DFactory) pD2DFactory->Release();
 
     CoUninitialize();
+}
+
+HRESULT D2DBitmapFromFile(const WCHAR* path, ID2D1Bitmap** ppID2D1Bitmap) {
+    HRESULT hr;
+    IWICBitmapDecoder* pDecoder = NULL;
+    IWICFormatConverter* pConverter = NULL;
+
+    hr = pWICFactory->CreateDecoderFromFilename(path, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &pDecoder);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    IWICBitmapFrameDecode* pFrame = NULL;
+    hr = pDecoder->GetFrame(0, &pFrame);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    hr = pWICFactory->CreateFormatConverter(&pConverter);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    hr = pConverter->Initialize(pFrame, GUID_WICPixelFormat32bppPBGRA, WICBitmapDitherTypeNone, NULL, 0.f, WICBitmapPaletteTypeCustom);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    hr = pRenderTarget->CreateBitmapFromWicBitmap(pConverter, NULL, ppID2D1Bitmap);
+    if (FAILED(hr))
+    {
+        return hr;
+    }
+
+    if (pConverter)pConverter->Release();
+    if (pDecoder)pDecoder->Release();
+    if (pFrame)pFrame->Release();
+    
+
+    return hr;
+
 }

@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 
 bool isPrime(int n, int divisor = 2) {
 	if (n == 2)
@@ -8,7 +8,7 @@ bool isPrime(int n, int divisor = 2) {
 	if (n % divisor == 0) {
 		return false;
 	}
-	if (divisor * divisor > n ) {
+	if (divisor * divisor > n) {
 		return true;
 	}
 	return isPrime(n, divisor + 1);
