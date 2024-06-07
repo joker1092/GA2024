@@ -5,6 +5,8 @@
 #include <d2d1.h>
 #include <dwrite.h>
 #include <wincodec.h>
+#include <comdef.h>
+#include <d2d1_1helper.h>
 
 #pragma comment(lib, "d2d1.lib")
 #pragma comment(lib,"dwrite.lib")
@@ -88,16 +90,31 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
             pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
 
-            D2D1_SIZE_F size = pRenderTarget->GetSize();
-            for (float y = 0; y < size.height; y += 10) {
-                pRenderTarget->DrawLine(D2D1::Point2F(0.0f, y), D2D1::Point2F(size.width, y), pBlackBrush, 0.5f);
+            
+            
+            
+            D2D1_SIZE_F screenSize = pRenderTarget->GetSize();
+            for (float y = 0; y < screenSize.height; y += 10) {
+                pRenderTarget->DrawLine(D2D1::Point2F(0.0f, y), D2D1::Point2F(screenSize.width, y), pBlackBrush, 0.5f);
             }
 
-            pRenderTarget->FillRectangle(D2D1::RectF(size.width / 2 - 150.0f, size.height / 2 - 150.0f, size.width / 2 + 150.0f, size.height / 2 + 150.0f), pGrayBrush);
-            pRenderTarget->DrawRectangle(D2D1::RectF(size.width / 2 - 50.0f, size.height / 2 - 50.0f, size.width / 2 + 50.0f, size.height / 2 + 50.0f), pBlackBrush);
+            pRenderTarget->FillRectangle(D2D1::RectF(screenSize.width / 2 - 150.0f, screenSize.height / 2 - 150.0f, screenSize.width / 2 + 150.0f, screenSize.height / 2 + 150.0f), pGrayBrush);
+            pRenderTarget->DrawRectangle(D2D1::RectF(screenSize.width / 2 - 50.0f, screenSize.height / 2 - 50.0f, screenSize.width / 2 + 50.0f, screenSize.height / 2 + 50.0f), pBlackBrush);
 
             WCHAR wc_text[] = L"Hello, 대충 텍스트";
-            pRenderTarget->DrawText(wc_text, ARRAYSIZE(wc_text) - 1, pDWriteFormat, D2D1::RectF(0, 0, size.width, size.height / 2), pBlackBrush);
+            pRenderTarget->DrawText(wc_text, ARRAYSIZE(wc_text) - 1, pDWriteFormat, D2D1::RectF(0, 0, screenSize.width, screenSize.height / 2), pBlackBrush);
+            
+            pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+            D2D1_VECTOR_2F pos{ 0,0 };
+            D2D1_SIZE_F bitmapSize = pD2DBitmap->GetSize();
+            D2D1_RECT_F rect = { pos.x,pos.y,pos.x + bitmapSize.width * 1.5f,pos.y + bitmapSize.height * 1.5f };
+            pRenderTarget->DrawBitmap(pD2DBitmap, rect);
+            //pRenderTarget->DrawBitmap(pD2DBitmap);
+
+            pRenderTarget->SetTransform(D2D1::Matrix3x2F::Translation(0, pos.y + bitmapSize.height * 1.5f));
+            pRenderTarget->DrawBitmap(pD2DBitmap);
+            D2D1_MATRIX_3X2_F Matrix = D2D1::Matrix3x2F::Scale(-1.0f, 1.0f, D2D1::Point2F(0, 0));
+            pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 
             pRenderTarget->EndDraw();
         }
@@ -293,6 +310,14 @@ BOOL InitDirect2D() {
     {
         return FALSE;
     }
+    hr = D2DBitmapFromFile(L"./Resource/kitten.png", &pD2DBitmap);
+    if (FAILED(hr))
+    {
+        _com_error err(hr);
+        ::MessageBox(hWnd, err.ErrorMessage(), L"FAILED", MB_OK);
+        //::MessageBox(hWnd, L"D2DBitmapFromFile Error", L"FAILED", MB_OK);
+        return false;
+    }
 
     pDWriteFormat->SetTextAlignment(DWRITE_TEXT_ALIGNMENT_CENTER);
     pDWriteFormat->SetParagraphAlignment(DWRITE_PARAGRAPH_ALIGNMENT_CENTER);
@@ -321,6 +346,7 @@ HRESULT D2DBitmapFromFile(const WCHAR* path, ID2D1Bitmap** ppID2D1Bitmap) {
     hr = pWICFactory->CreateDecoderFromFilename(path, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &pDecoder);
     if (FAILED(hr))
     {
+        //::MessageBox(hWnd, L"CreateDecoderFromFilename Error", L"FAILED", MB_OK);
         return hr;
     }
 
@@ -328,24 +354,28 @@ HRESULT D2DBitmapFromFile(const WCHAR* path, ID2D1Bitmap** ppID2D1Bitmap) {
     hr = pDecoder->GetFrame(0, &pFrame);
     if (FAILED(hr))
     {
+       //::MessageBox(hWnd, L"GetFrame Error", L"FAILED", MB_OK);
         return hr;
     }
 
     hr = pWICFactory->CreateFormatConverter(&pConverter);
     if (FAILED(hr))
     {
+        //::MessageBox(hWnd, L"CreateFormatConverter Error", L"FAILED", MB_OK);
         return hr;
     }
 
     hr = pConverter->Initialize(pFrame, GUID_WICPixelFormat32bppPBGRA, WICBitmapDitherTypeNone, NULL, 0.f, WICBitmapPaletteTypeCustom);
     if (FAILED(hr))
     {
+        //::MessageBox(hWnd, L"pConverter Initialize Error", L"FAILED", MB_OK);
         return hr;
     }
 
     hr = pRenderTarget->CreateBitmapFromWicBitmap(pConverter, NULL, ppID2D1Bitmap);
     if (FAILED(hr))
     {
+        //::MessageBox(hWnd, L"CreateBitmapFromWicBitmap Error", L"FAILED", MB_OK);
         return hr;
     }
 

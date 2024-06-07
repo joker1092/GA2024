@@ -1,16 +1,16 @@
-ï»¿#include <iostream>
+#include <iostream>
 using namespace std;
 
 class Item
 {
 	int index;
 	char name[40];
-	int level; 
+	int level;
 	char grade;
 public:
-	Item( const char* _name,int _level,char _grade, int _index = 0) {
+	Item(const char* _name, int _level, char _grade, int _index = 0) {
 		index = _index;
-		int namesize = strlen(_name)+1;
+		int namesize = strlen(_name) + 1;
 		strcpy_s(name, namesize, _name);
 		level = _level;
 		grade = _grade;
@@ -110,23 +110,23 @@ void ItemManager::remove(int index) {
 }
 
 void ItemManager::GradeUp() {
-	cout << "í•©ì„± ìž¬ë£Œë¥¼ ìž…ë ¥í•˜ì„¸ìš”.(ë™ì¼í•œ ë“±ê¸‰ì˜ ë‘ ì•„ì´í…œì˜ ë²ˆí˜¸)" << endl;
+	cout << "ÇÕ¼º Àç·á¸¦ ÀÔ·ÂÇÏ¼¼¿ä.(µ¿ÀÏÇÑ µî±ÞÀÇ µÎ ¾ÆÀÌÅÛÀÇ ¹øÈ£)" << endl;
 	int a;
 	int b;
-	Item* item1=nullptr;
+	Item* item1 = nullptr;
 	Item* item2 = nullptr;
 	while (true)
 	{
 		cin >> a;
 		cin >> b;
 		if (a == b) {
-			cout << "ìž˜ ëª» ìž…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤." << endl;
+			cout << "Àß ¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù." << endl;
 			continue;
 		}
 
 		for (size_t i = 0; i < 100; i++)
 		{
-			if (list[i]!=nullptr)
+			if (list[i] != nullptr)
 			{
 				if (list[i]->CompareIndex(a))
 				{
@@ -142,11 +142,11 @@ void ItemManager::GradeUp() {
 			break;
 		}
 		else {
-			cout << "ë“±ê¸‰ì´ ê°™ì§€ ì•ŠìŠµë‹ˆë‹¤." << endl;
+			cout << "µî±ÞÀÌ °°Áö ¾Ê½À´Ï´Ù." << endl;
 		}
 	}
 	item1->GradeUp();
-	cout << "í•©ì„±ê²°ê³¼ : " << index << "," << item1->GetName() << "," << 1 << "," << item1->GetGrade() << endl;
+	cout << "ÇÕ¼º°á°ú : " << index << "," << item1->GetName() << "," << 1 << "," << item1->GetGrade() << endl;
 	add(Item(item1->GetName(), 1, item1->GetGrade()));
 	remove(a);
 	remove(b);
@@ -167,11 +167,11 @@ void ItemManager::print() {
 int main()
 {
 	ItemManager manager;
-	manager.add(Item("ë‹¨ê²€", 1, 'A'));
-	manager.add(Item("ë‹¨ê²€", 2, 'A'));
-	manager.add(Item("ê°‘ì˜·", 3, 'B'));
-	manager.add(Item("ë°˜ì§€", 3, 'B'));
-	manager.add(Item("ë°˜ì§€", 3, 'S'));
+	manager.add(Item("´Ü°Ë", 1, 'A'));
+	manager.add(Item("´Ü°Ë", 2, 'A'));
+	manager.add(Item("°©¿Ê", 3, 'B'));
+	manager.add(Item("¹ÝÁö", 3, 'B'));
+	manager.add(Item("¹ÝÁö", 3, 'S'));
 	//manager.remove(2);
 	manager.print();
 
