@@ -16,11 +16,12 @@
 //** [연습 문제 1] 배열에서 최대 값 찾기**
 //
 //```cpp
+#include <iostream>
+
 int FindMax(const int* arr, const int size)
 {
     int max = arr[0];
 
-    // todo: Here is your code
     for (size_t i = 1; i < size; i++)
     {
         if (max < arr[i])
@@ -28,7 +29,6 @@ int FindMax(const int* arr, const int size)
             max = arr[i];
         }
     }
-
     return max;
 }
 
@@ -76,8 +76,8 @@ int main()
 //```
 //
 //Q.어떤 차이점이 있나요 ?
-// array는 maxsize를 정하여 놓고 maxsize 이상의 내용을 담을 수 없다
-// vector는 capacity 이상의 내용을 추가 할경우 capacity의 크기를 늘린다.
+// array는 maxsize를 정하여 놓고 maxsize 이상의 내용을 담을 수 없다 //스택영역에 할당
+// vector는 capacity 이상의 내용을 추가 할경우 capacity의 크기를 늘린다. //힙영역에 할당
 // 
 //Q.어떤 공통점이 있나요 ?
 // 배열로서 인덱스 접근이 가능하고 메모리에 선형적인 구조를 가진다.
