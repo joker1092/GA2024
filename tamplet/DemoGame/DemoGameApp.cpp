@@ -34,13 +34,20 @@ void DemoGameApp::Render(D2DRenderer* Render)
 	D2D1InvertMatrix(&g_matCameraInv);
 
 	D2D_MATRIX_3X2_F Transform = g_matWorld * g_matCameraInv;
-
+	
 	Render->CreateD2DBitmapFromFile(L"../Resource/atk_1.png", &pBitmap);
-	Render->DrawBitmap(pBitmap, 100, 200); 
-	Render->PrintMatrix(L"Transform", Transform, 0, 100);
 
-	Render->PrintMatrix(L"g_matWorld", g_matWorld, 300, 100);
-	Render->PrintMatrix(L"g_matCameraInv", g_matCameraInv, 400, 100);
+	Render->RenderSetTransform(Transform);
+
+	D2D_MATRIX_3X2_F pBitmapTransform = D2D1::Matrix3x2F::Translation(200.0f, 200.0f);
+	D2D_MATRIX_3X2_F pBitmapRotation = D2D1::Matrix3x2F::Rotation(45.0f);
+	D2D_MATRIX_3X2_F pBitmapMatrix = pBitmapTransform * pBitmapRotation;
+	Render->DrawBitmap(pBitmap, pBitmapMatrix* Transform);
+
+	Render->PrintMatrix(L"Transform", Transform, 700, 100);
+
+	Render->PrintMatrix(L"g_matWorld", g_matWorld, 1000, 100);
+	Render->PrintMatrix(L"g_matCameraInv", g_matCameraInv, 1100, 100);
 
 	WCHAR buffer[256] = { 0 };
 	swprintf_s(buffer, L"%.2f, %.2f\n", g_posCamera.x, g_posCamera.y);

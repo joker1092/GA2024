@@ -153,13 +153,21 @@ HRESULT D2DRenderer::CreateD2DBitmapFromFile(const WCHAR* szFilePath, ID2D1Bitma
 	return hr;
 }
 
-void D2DRenderer::DrawBitmap(ID2D1Bitmap* pID2D1Bitmap, int x, int y)
+//void D2DRenderer::DrawBitmap(ID2D1Bitmap* pID2D1Bitmap, int x, int y)
+//{
+//	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
+//	D2D1_VECTOR_2F pos{ x,y };
+//	D2D1_SIZE_F size = pID2D1Bitmap->GetSize();
+//	D2D1_RECT_F rect = { pos.x- size.width/2 , pos.y- size.height/2, pos.x + size.width/2 ,pos.y + size.height/2};
+//	pRenderTarget->DrawBitmap(pID2D1Bitmap, rect);
+//	//pRenderTarget->DrawBitmap(pID2D1Bitmap);
+//}
+
+void D2DRenderer::DrawBitmap(ID2D1Bitmap* pID2D1Bitmap, D2D_MATRIX_3X2_F mat)
 {
-	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-	D2D1_VECTOR_2F pos{ x,y };
-	D2D1_SIZE_F size = pID2D1Bitmap->GetSize();
-	D2D1_RECT_F rect = { pos.x- size.width/2 , pos.y- size.height/2, pos.x + size.width/2 ,pos.y + size.height/2};
-	pRenderTarget->DrawBitmap(pID2D1Bitmap, rect);
+	pRenderTarget->SetTransform(mat);
+	pRenderTarget->DrawBitmap(pID2D1Bitmap);
+	//pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 }
 
 void D2DRenderer::PrintMatrix(const wchar_t* str, D2D_MATRIX_3X2_F& mat, float left, float top)
@@ -193,4 +201,9 @@ void D2DRenderer::DWDrawText(const wchar_t* str, D2D1_RECT_F rect)
 		rect,
 		g_pBrush
 	);
+}
+
+void D2DRenderer::RenderSetTransform(D2D_MATRIX_3X2_F Transform)
+{
+	pRenderTarget->SetTransform(Transform);
 }

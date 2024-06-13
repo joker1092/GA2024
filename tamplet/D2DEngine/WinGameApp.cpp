@@ -90,7 +90,7 @@ void WinGameApp::Run()
 				break;
 			else if (msg.message == WM_KEYDOWN)
 			{
-				pInput->IsKeyDown(msg.wParam);
+				pInput->KeyDown(msg.wParam);
 				//Input::KeyDown(msg.wParam);
 			}
 			else if (msg.message == WM_KEYUP)
@@ -102,7 +102,7 @@ void WinGameApp::Run()
 			// 마우스 좌클릭 메시지
 			if (msg.message == WM_LBUTTONDOWN)
 			{	
-				pInput->IsKeyDown(msg.wParam);
+				pInput->KeyDown(msg.wParam);
 			}
 			else if (msg.message == WM_LBUTTONUP) {
 				pInput->KeyUp(msg.wParam);
@@ -112,7 +112,7 @@ void WinGameApp::Run()
 			// 마우스 좌클릭 메시지
 			if (msg.message == WM_RBUTTONDOWN)
 			{
-				pInput->IsKeyDown(msg.wParam);
+				pInput->KeyDown(msg.wParam);
 				//Input::KeyDown(msg.wParam);
 			}
 			else if (msg.message == WM_RBUTTONUP) {
@@ -127,6 +127,7 @@ void WinGameApp::Run()
 		else
 		{
 			Update(pInput);
+			pInput->ResetInput();
 			pRender->BeginDraw();
 			pRender->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
 			Render(pRender);

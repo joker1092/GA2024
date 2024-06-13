@@ -15,11 +15,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
-    DemoGameApp App;
-    App.Initialize(hInstance,L"霸烙 力格");
-    App.Run();
-    App.Uninitialize();
-
+    
     bool bUseConsole = true;
     if (bUseConsole)
     {
@@ -27,4 +23,11 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         FILE* _tempFile;
         freopen_s(&_tempFile, "CONOUT$", "w", stdout);
     }
+
+    DemoGameApp App;
+    App.Initialize(hInstance,L"霸烙 力格");
+    App.Run();
+    App.Uninitialize();
+
+    
 }

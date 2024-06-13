@@ -28,14 +28,17 @@ void InputManager::ResetInput()
 
 void InputManager::KeyDown(unsigned int key)
 {
+	std::cout << key << "KeyDown : isKeyDown[key] = true; isKey[key] = true;" << std::endl;
 	isKeyDown[key] = true;
-	isKey[key] = false;
+	isKey[key] = true;
+	
 }
 
 void InputManager::KeyUp(unsigned int key)
 {
+	std::cout << key << "KeyUp : KeyUp[key] = true; KeyUp[key] = false;" << std::endl;
 	isKeyUp[key] = true;
-	isKey[key] = false;
+	isKey[key] = false;	
 }
 
 bool InputManager::IsKeyDown(unsigned int key)
@@ -45,6 +48,7 @@ bool InputManager::IsKeyDown(unsigned int key)
 
 bool InputManager::IsKeyUp(unsigned int key)
 {
+	
 	return isKeyUp[key];
 }
 
