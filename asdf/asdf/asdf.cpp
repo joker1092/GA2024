@@ -1,145 +1,62 @@
-﻿#include <iostream>
-#include <string>
+﻿
+//--------------------------------------------------------------------------------
+// 연산자 오버로딩을 구현하여 코드를 완성하세요
 
-void Enter(int input, char from, char stop, char to) {
-    std::cout << "Enter" << input << "-" << from << "-" << stop << "-" << to << std::endl;
-}
+#include <iostream>
+using namespace std;
 
-void Leave(int input, char from, char stop, char to) {
-
-    std::cout << "Leave" << input << "-" << from << "-" << stop << "-" << to << std::endl;
-}
-
-
-void Hanoi(int input, char from, char stop, char to) {
-
-    if (input == 0) { return; }
-    //Enter(input, from, stop, to);
-    Hanoi(input - 1, from, to, stop);
-    std::cout << "원판" << input << "을" << from << "에서" << to << "로 이동" << std::endl;
-    Hanoi(input - 1, stop, from, to);
-    //Leave(input, from, stop, to);
-}
-
-int main()
+class CMyData
 {
-    std::string input;
+private:
+	int m_nData = 0;
+public:
+	CMyData(int nParam) : m_nData(nParam) {}
 
-    std::cout << "원판의 개수를 입력하세요(1~5) : ";
-    std::getline(std::cin, input);
+	// +
+	CMyData operator+(CMyData& other) { return CMyData(m_nData + other.m_nData); }
+	// + 단항
+	CMyData operator+() { return CMyData(-this->m_nData); }
+	// ++
+	CMyData& operator++() { ++this->m_nData; return *this; }
+	// ++(int)
+	CMyData operator++(int) { CMyData temp{ this->m_nData }; this->m_nData++; return temp; }
+	// <
+	bool operator<(CMyData& other) { return this->m_nData < other.m_nData; }
+	// >
+	bool operator>(CMyData& other) { return this->m_nData > other.m_nData; }
+};
 
-    Hanoi(stoi(input), 'A', 'B', 'C');
 
-    return 0;
+void main()
+{
+	CMyData a(1);
+	CMyData b(2);
+
+	CMyData c = a + b;
+
+	c = +a;
+
+	c = ++a;
+
+	c = a++;
+
+	cout << (a > b) << endl;
 }
 
+//-------------------------------------------------------------------------------- -
+//주요 연산자오버로드에 대한 사용예시를 작성하세요.
 
-
-
-
-// bool move(std::stack<int>& from, std::stack<int>& over, std::stack<int>& to) {
-//    while (!from.empty()) {
-//        int ring = from.top();
-//        int count = from.size();
-//        std::cout << "ring : " << ring << " size count : "<<count << std::endl;
-//        if (count != 1) {
-//            if (to.empty()) {
-//                to.push(ring);
-//                from.pop();
-//                std::cout << ring << "to move" << std::endl;
-//            }
-//            else if (ring < to.top())
-//            {
-//                to.push(ring);
-//                from.pop();
-//                std::cout << ring << "to move" << std::endl;
-//            }
-//            else if (over.empty()) {
-//                over.push(ring);
-//                from.pop();
-//                std::cout << ring << "to move over" << std::endl;
-//            }
-//            else if (ring < over.top())
-//            {
-//                over.push(ring);
-//                from.pop();
-//                std::cout << ring << "to move over" << std::endl;
-//            }
-//            else 
-//            {
-//                std::cout << ring << "to move fail" << std::endl;
-//                break;
-//            }
-//        }
-//        else {
-//            if (to.empty()) {
-//                to.push(ring);
-//                from.pop();
-//                std::cout << ring << "to move" << std::endl;
-//            }
-//            else if (ring < to.top())
-//            {
-//                to.push(ring);
-//                from.pop();
-//                std::cout << ring << "to move" << std::endl;
-//            }
-//            else {
-//                if (over.empty())
-//                {
-//                    over.push(to.top());
-//                    std::cout << to.top() << "to move  over" << std::endl;
-//                    to.pop();
-//                }
-//                else if (to.top() < over.top())
-//                {
-//                    over.push(to.top());
-//                    std::cout << to.top() << "to move  over" << std::endl;
-//                    to.pop();
-//                }
-//                else {
-//                    std::cout << ring << "to move fail" << std::endl;
-//                    break;
-//                }
-//            }
-//        }
-//                
-//    }
-//    return false;
-//}
-//
-//
-//void Hanoi(int input, std::stack<int>* tower) {
-//    
-//    while (true) {
-//        std::cout << "A" << "B" << "C" << std::endl;
-//        move(tower[0], tower[1], tower[2]);
-//        if (!tower[2].empty() && tower[2].size() == input) {
-//            break;
-//        }
-//        std::cout << "B" << "A" << "C" << std::endl;
-//        move(tower[1], tower[0], tower[2]);
-//        if (!tower[2].empty() && tower[2].size() == input) {
-//            break;
-//        }
-//    }
-//  
-//    
-//}
-//
-//int main()
-//{
-//    std::stack<int> tower[3];
-//    std::string input;
-//
-//    std::cout << "원판의 개수를 입력하세요(1~5) : ";
-//    std::getline(std::cin, input);
-//    int ring = stoi(input);
-//    for (size_t i = ring; 0 < i; i--)
-//    {
-//        tower[0].push(i);
-//    }
-//
-//    Hanoi(ring, tower);
-//
-//    return 0;
-//}
+//산술연산자 + -*%
+// CMyData operator+(CMyData& other) { return CMyData(m_nData + other.m_nData); }
+//비교연산자 < > <= >= == !=
+// bool operator<(CMyData& other) { return this->m_nData < other.m_nData; }
+//부호연산자 + -
+// CMyData operator+() { return CMyData(-this->m_nData); }
+//출력연산자
+// friend std::ofstream& operator<<(std::ofstream& cout,CMyData& data) { std::cout << data.m_nData; return cout;	}
+//배열연산자[]
+// T& operator[](size_t index) { return array[index]; }
+//함수연산자()
+// CMyData operator()(int index) { return CMyData(this->m_nData+index); }
+//포인터연산자 * ->
+//T operator*(CMyData) { return m_nData; }
