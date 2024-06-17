@@ -1,5 +1,14 @@
 #include "D2DRenderer.h"
 
+D2DRenderer* D2DRenderer::rInstance = nullptr;
+
+D2DRenderer* D2DRenderer::GetInstance()
+{
+	if (rInstance == nullptr)
+		rInstance = new D2DRenderer();
+	return rInstance;
+}
+
 BOOL D2DRenderer::D2DInitialize(HWND hWnd)
 {
 	WCHAR buffer[MAX_PATH];
@@ -21,7 +30,11 @@ BOOL D2DRenderer::D2DInitialize(HWND hWnd)
 	RECT rc;
 	GetClientRect(hWnd, &rc);
 
-	D2D1_SIZE_U size = D2D1::SizeU(
+	/*D2D1_SIZE_U size = D2D1::SizeU(
+		rc.right - rc.left,
+		rc.bottom - rc.top);*/
+
+	size = D2D1::SizeU(
 		rc.right - rc.left,
 		rc.bottom - rc.top);
 
@@ -33,7 +46,7 @@ BOOL D2DRenderer::D2DInitialize(HWND hWnd)
 
 	if (FAILED(hr))
 		return FALSE;
-
+		
 	hr = CoCreateInstance(
 		CLSID_WICImagingFactory,
 		NULL,
@@ -207,3 +220,6 @@ void D2DRenderer::RenderSetTransform(D2D_MATRIX_3X2_F Transform)
 {
 	pRenderTarget->SetTransform(Transform);
 }
+
+
+

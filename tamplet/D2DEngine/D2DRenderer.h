@@ -14,6 +14,7 @@
 class D2DRenderer
 {
 public:
+	static D2DRenderer* GetInstance();
 	BOOL D2DInitialize(HWND hWnd);
 	void D2DUninitialize();
 	void BeginDraw();
@@ -25,16 +26,22 @@ public:
 	void EndDraw();
 	void DWDrawText(const wchar_t* str, D2D1_RECT_F rect);
 	void RenderSetTransform(D2D_MATRIX_3X2_F Transform);
+	D2D1_SIZE_U GetSize() { return size; }
 private:
+	static D2DRenderer* rInstance;
+	D2DRenderer(){}
+	~D2DRenderer() {}
 	ID2D1Factory* pD2DFactorty;
 	ID2D1HwndRenderTarget* pRenderTarget;
 
 	IWICImagingFactory* g_pWICFactory;
-
+	
+	D2D1_SIZE_U size;
 	// DWrite
 	IDWriteFactory* g_pDWriteFactory;
 	IDWriteTextFormat* g_pDWriteTextFormat;
 
 	ID2D1SolidColorBrush* g_pBrush; // 브러시 개체 인터페이스 포인터 변수
 };
+
 

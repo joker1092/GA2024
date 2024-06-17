@@ -127,18 +127,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationInstance.h" />
+    <ClInclude Include="BitmapScene.h" />
     <ClInclude Include="D2DEngine.h" />
     <ClInclude Include="D2DRenderer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TimeSystem.h" />
     <ClInclude Include="WinGameApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationInstance.cpp" />
+    <ClCompile Include="BitmapScene.cpp" />
     <ClCompile Include="D2DEngine.cpp" />
     <ClCompile Include="D2DRenderer.cpp" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="WinGameApp.cpp" />
   </ItemGroup>
   <ItemGroup>
