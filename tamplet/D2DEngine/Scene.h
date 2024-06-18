@@ -17,6 +17,7 @@ protected:
 	float fRelativeRotation =0;
 	D2D1_POINT_2F pCentorPoint = { 0,0 };
 	D2D1_VECTOR_2F vRelativeLocation = {0,0};
+	D2D1_MATRIX_3X2_F mInvertCenterMat;
 	D2D1_MATRIX_3X2_F mRelativeTransform;
 	D2D1_MATRIX_3X2_F mWorldTransform;
 };

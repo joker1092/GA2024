@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationInstance.h" />
     <ClInclude Include="BitmapScene.h" />
     <ClInclude Include="D2DEngine.h" />
@@ -140,6 +141,7 @@
     <ClInclude Include="WinGameApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationInstance.cpp" />
     <ClCompile Include="BitmapScene.cpp" />
     <ClCompile Include="D2DEngine.cpp" />

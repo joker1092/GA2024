@@ -1,6 +1,7 @@
 #pragma once
 #include "../D2DEngine/WinGameApp.h"
 #include "../D2DEngine/BitmapScene.h"
+#include "../D2DEngine/AnimationInstance.h"
 class DemoGameApp : public WinGameApp {
 public:
 	virtual void Initialize(HINSTANCE hInstance, LPCTSTR appName) override;
@@ -18,6 +19,7 @@ private:
 	BitmapScene m_Sun;
 	BitmapScene m_Earth;
 	BitmapScene m_Moon;
+	//AnimationInstance anione;
 
 	D2D_MATRIX_3X2_F g_matWorldScale = D2D1::Matrix3x2F::Identity();
 	D2D_MATRIX_3X2_F g_matWorldRotation = D2D1::Matrix3x2F::Identity();

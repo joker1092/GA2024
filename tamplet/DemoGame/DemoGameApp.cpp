@@ -10,11 +10,15 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR appName)
 	m_Sun.SetLocation({ 640,480 });
 	m_Sun.SetScale({1.5,1.5});
 	m_Earth.SetParent(&m_Sun);
-	m_Earth.SetLocation({ 320,240 });
+	m_Earth.SetLocation({ 200,200 });
+	//m_Earth.SetLocation({ 0,0 });
 	m_Earth.SetScale({ 0.5,0.5 });
 	m_Moon.SetParent(&m_Earth);
-	m_Moon.SetLocation({ 320,240 });
+	m_Moon.SetLocation({ 200,200 });
+	//m_Moon.SetLocation({ 0,0 });
 	m_Moon.SetScale({ 0.5,0.5 });
+	/*anione.SetPosition({ 640,480 });
+	anione.SetAnimationIndex()*/
 }
 
 
