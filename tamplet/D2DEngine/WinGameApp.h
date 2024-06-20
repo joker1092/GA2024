@@ -4,7 +4,6 @@
 // Windows 헤더 파일
 #include <windows.h>
 #include "Resource.h"
-#include "framework.h"
 #include "InputManager.h"
 #include "TimeSystem.h"
 

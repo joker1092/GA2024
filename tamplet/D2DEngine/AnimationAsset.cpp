@@ -1,17 +1,29 @@
 #include <fstream>
 #include <sstream>
-
+#include "pch.h"
 #include "AnimationAsset.h"
 
 
-bool AnimationAsset::setAnimation(const wchar_t* strBitmapFilePath,State state)
+bool AnimationAsset::SetAnimationImage(const wchar_t* strBitmapImage)
+{
+	D2DRenderer* render = D2DRenderer::GetInstance();
+	HRESULT hr = S_OK;
+	hr=render->CreateD2DBitmapFromFile(strBitmapImage, &pBitmap);
+	if (FAILED(hr)) return false;
+
+	return true;
+}
+
+bool AnimationAsset::setAnimation(const wchar_t* strBitmapFilePath)
 {
 	
 	std::wifstream file(strBitmapFilePath);
 	if (!file.is_open()) {
 		std::cout << "파일을 열 수 없습니다." << std::endl;
+		return false;
 	}
 	std::wstring line;			// 한줄의 문자열	
+	
 	FRAME_INFO frame;
 	//Motion motion;
 	int count = 0;
@@ -51,12 +63,26 @@ bool AnimationAsset::setAnimation(const wchar_t* strBitmapFilePath,State state)
 			/*motion.Frames[j].Size.cx = motion.Frames[j].Source.right - motion.Frames[j].Source.left + 1;
 			motion.Frames[j].Size.cy = motion.Frames[j].Source.bottom - motion.Frames[j].Source.top + 1;*/
 		}
-		Animations[state].push_back(frame);
+		//motion.index = state;
+		//motion.motion.push_back(frame);
+		//motion.push_back((int)state,frame);
 	}
 	//motion.IsLoop = IsLoop;
-
+	//Animations[state] = motion;
+	//Animations.push_back(motion);
 	//m_motions[m_motionCount] = motion;
 
 	//m_motionCount++;
-    return false;
+	return true;
 }
+
+
+AnimationAsset::~AnimationAsset()
+{
+	if (pBitmap)
+	{
+		pBitmap->Release();
+	}
+}
+
+

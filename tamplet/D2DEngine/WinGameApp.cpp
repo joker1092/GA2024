@@ -1,4 +1,5 @@
-﻿#include "WinGameApp.h"
+﻿#include "pch.h"
+#include "WinGameApp.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -47,8 +48,8 @@ void WinGameApp::Initialize(HINSTANCE hInstance, LPCTSTR appName)
 
 	/*m_hWnd = CreateWindowW(appName, appName, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);*/
-	m_hWnd = CreateWindowW(appName, appName, WS_OVERLAPPEDWINDOW,
-		0, 0, 1280, 960, nullptr, nullptr, hInstance, nullptr);
+		m_hWnd = CreateWindowW(appName, appName, WS_OVERLAPPEDWINDOW,
+			0, 0, 1280, 960, nullptr, nullptr, hInstance, nullptr);
 
 
 	if (!m_hWnd)

@@ -27,6 +27,7 @@ public:
 	void DWDrawText(const wchar_t* str, D2D1_RECT_F rect);
 	void RenderSetTransform(D2D_MATRIX_3X2_F Transform);
 	D2D1_SIZE_U GetSize() { return size; }
+	ID2D1HwndRenderTarget* GetRenderTarget() {return pRenderTarget;}
 private:
 	static D2DRenderer* rInstance;
 	D2DRenderer(){}

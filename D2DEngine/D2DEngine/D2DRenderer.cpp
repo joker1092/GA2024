@@ -31,11 +31,7 @@ BOOL D2DRenderer::D2DInitialize(HWND hWnd)
 	RECT rc;
 	GetClientRect(hWnd, &rc);
 
-	/*D2D1_SIZE_U size = D2D1::SizeU(
-		rc.right - rc.left,
-		rc.bottom - rc.top);*/
-
-	size = D2D1::SizeU(
+	D2D1_SIZE_U size = D2D1::SizeU(
 		rc.right - rc.left,
 		rc.bottom - rc.top);
 
@@ -47,7 +43,7 @@ BOOL D2DRenderer::D2DInitialize(HWND hWnd)
 
 	if (FAILED(hr))
 		return FALSE;
-		
+
 	hr = CoCreateInstance(
 		CLSID_WICImagingFactory,
 		NULL,
@@ -94,7 +90,7 @@ BOOL D2DRenderer::D2DInitialize(HWND hWnd)
 void D2DRenderer::D2DUninitialize()
 {
 	if (g_pWICFactory) g_pWICFactory->Release();
-	if(pRenderTarget)pRenderTarget->Release();
+	if (pRenderTarget)pRenderTarget->Release();
 	if (pD2DFactorty)pD2DFactorty->Release();
 
 	CoUninitialize();
@@ -104,8 +100,15 @@ void D2DRenderer::BeginDraw()
 {
 	pRenderTarget->BeginDraw();
 }
-void D2DRenderer::Clear(D2D1::ColorF color) {
+
+void D2DRenderer::Clear(D2D1::ColorF color)
+{
 	pRenderTarget->Clear(D2D1::ColorF(color));
+}
+
+void D2DRenderer::EndDraw()
+{
+	pRenderTarget->EndDraw();
 }
 
 HRESULT D2DRenderer::CreateD2DBitmapFromFile(const WCHAR* szFilePath, ID2D1Bitmap** ppID2D1Bitmap)
@@ -167,43 +170,10 @@ HRESULT D2DRenderer::CreateD2DBitmapFromFile(const WCHAR* szFilePath, ID2D1Bitma
 	return hr;
 }
 
-//void D2DRenderer::DrawBitmap(ID2D1Bitmap* pID2D1Bitmap, int x, int y)
-//{
-//	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-//	D2D1_VECTOR_2F pos{ x,y };
-//	D2D1_SIZE_F size = pID2D1Bitmap->GetSize();
-//	D2D1_RECT_F rect = { pos.x- size.width/2 , pos.y- size.height/2, pos.x + size.width/2 ,pos.y + size.height/2};
-//	pRenderTarget->DrawBitmap(pID2D1Bitmap, rect);
-//	//pRenderTarget->DrawBitmap(pID2D1Bitmap);
-//}
-
 void D2DRenderer::DrawBitmap(ID2D1Bitmap* pID2D1Bitmap, D2D_MATRIX_3X2_F mat)
 {
 	pRenderTarget->SetTransform(mat);
 	pRenderTarget->DrawBitmap(pID2D1Bitmap);
-	//pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-}
-
-void D2DRenderer::PrintMatrix(const wchar_t* str, D2D_MATRIX_3X2_F& mat, float left, float top)
-{
-	WCHAR buffer[256] = { 0 };
-	swprintf_s(buffer, L"%.2f, %.2f\n%.2f, %.2f\n%.2f, %.2f\n",
-		mat._11, mat._12, mat._21, mat._22, mat._31, mat._32);
-	OutputDebugString(buffer);
-
-	D2D1::Matrix3x2F matRender = D2D1::Matrix3x2F::Identity();
-	pRenderTarget->SetTransform(matRender);
-
-	g_pBrush->SetColor(D2D1::ColorF(D2D1::ColorF::Blue));
-	pRenderTarget->FillRectangle(D2D1::RectF(left, top, left + 100, top + 150), g_pBrush);
-
-	g_pBrush->SetColor(D2D1::ColorF(D2D1::ColorF::White));
-	pRenderTarget->DrawTextW(str, (UINT32)wcslen(str), g_pDWriteTextFormat, D2D1::RectF(left, top, left + 300, top + 300), g_pBrush);
-	pRenderTarget->DrawTextW(buffer, (UINT32)wcslen(buffer), g_pDWriteTextFormat, D2D1::RectF(left, top + 60, left + 300, top + 60 + 300), g_pBrush);
-}
-
-void D2DRenderer::EndDraw() {
-	pRenderTarget->EndDraw();
 }
 
 void D2DRenderer::DWDrawText(const wchar_t* str, D2D1_RECT_F rect)
@@ -221,6 +191,3 @@ void D2DRenderer::RenderSetTransform(D2D_MATRIX_3X2_F Transform)
 {
 	pRenderTarget->SetTransform(Transform);
 }
-
-
-

@@ -1,4 +1,4 @@
-ï»¿#include <iostream>
+#include <iostream>
 #include <vector>
 #include <random>
 #include <Windows.h>
@@ -10,12 +10,12 @@ vector<int> ItemProb = { 1,3,6,10,10,20,20,30 };
 vector<int> AccumulatedProb;
 vector<char> ItemIndexTable;
 
-uniform_int_distribution<int> uniform_dist(0, 99); // 0ë¶€í„° 99ê¹Œì§€ ê· ë“± ë¶„í¬
-discrete_distribution<int> discreteDist({ 1, 3, 6, 10, 10, 20, 20, 30 }); // í™•ë¥ ì„ ë“±ë¡
+uniform_int_distribution<int> uniform_dist(0, 99); // 0ºÎÅÍ 99±îÁö ±Õµî ºĞÆ÷
+discrete_distribution<int> discreteDist({ 1, 3, 6, 10, 10, 20, 20, 30 }); // È®·üÀ» µî·Ï
 
 char PickItemByAccumulatedProb(mt19937& gen)
 {
-    //ëˆ„ì  í™•ë¥  í…Œì´ë¸”ì„ ì´ìš©í•˜ì—¬ ì•„ì´í…œì„ ì„ íƒí•˜ë„ë¡ ì‘ì„±í•´ ë³´ì„¸ìš”.
+    //´©Àû È®·ü Å×ÀÌºíÀ» ÀÌ¿ëÇÏ¿© ¾ÆÀÌÅÛÀ» ¼±ÅÃÇÏµµ·Ï ÀÛ¼ºÇØ º¸¼¼¿ä.
     int a = uniform_dist(gen);
     for (size_t i = 0; i < AccumulatedProb.size(); i++)
     {
@@ -28,7 +28,7 @@ char PickItemByAccumulatedProb(mt19937& gen)
 
 char PickItemByIndexTable(mt19937& gen)
 {
-    // O(1) ì‹œê°„ì— ì•„ì´í…œì„ ì„ íƒì´ ê°€ëŠ¥í•˜ë„ë¡ ì‘ì„±í•´ ë³´ì„¸ìš”.
+    // O(1) ½Ã°£¿¡ ¾ÆÀÌÅÛÀ» ¼±ÅÃÀÌ °¡´ÉÇÏµµ·Ï ÀÛ¼ºÇØ º¸¼¼¿ä.
     //uniform_dist(gen);
     //int a =ItemIndexTable[uniform_dist(gen)];
 
@@ -37,11 +37,11 @@ char PickItemByIndexTable(mt19937& gen)
 
 char GetItemByDiscreteDist(mt19937& gen)
 {
-    // ì´ì‚° í™•ë¥  ë¶„í¬ë¥¼ ì´ìš©í•˜ì—¬ ì•„ì´í…œì„ ì„ íƒí•˜ë„ë¡ ì‘ì„±í•´ ë³´ì„¸ìš”.
-    return 'A'+ discreteDist(gen);//;
+    // ÀÌ»ê È®·ü ºĞÆ÷¸¦ ÀÌ¿ëÇÏ¿© ¾ÆÀÌÅÛÀ» ¼±ÅÃÇÏµµ·Ï ÀÛ¼ºÇØ º¸¼¼¿ä.
+    return 'A' + discreteDist(gen);//;
 }
 
-// í…ŒìŠ¤íŠ¸ ì½”ë“œ
+// Å×½ºÆ® ÄÚµå
 void Test(const int TEST_COUNT)
 {
     random_device rd;
@@ -64,7 +64,7 @@ void Test(const int TEST_COUNT)
         for (int i = 0; i < 8; i++)
             cout << (char)('A' + i) << " : " << (float)_test1[i] / (float)(TEST_COUNT / 100) << endl;
 
-        cout << "<<<<<<  í…ŒìŠ¤íŠ¸ ê²°ê³¼ 1 :  " << (endTick - startTick) << endl;
+        cout << "<<<<<<  Å×½ºÆ® °á°ú 1 :  " << (endTick - startTick) << endl;
     }
 
     cout << "-------- PickItemByIndexTable --------" << endl << endl;
@@ -81,7 +81,7 @@ void Test(const int TEST_COUNT)
         for (int i = 0; i < 8; i++)
             cout << (char)('A' + i) << " : " << (float)_test1[i] / (float)(TEST_COUNT / 100) << endl;
 
-        cout << "<<<<<<  í…ŒìŠ¤íŠ¸ ê²°ê³¼ 2 :  " << (endTick - startTick) << endl;
+        cout << "<<<<<<  Å×½ºÆ® °á°ú 2 :  " << (endTick - startTick) << endl;
     }
 
     cout << "-------- GetItemByDiscreteDist --------" << endl << endl;
@@ -98,24 +98,24 @@ void Test(const int TEST_COUNT)
         for (int i = 0; i < 8; i++)
             cout << (char)('A' + i) << " : " << (float)_test1[i] / (float)(TEST_COUNT / 100) << endl;
 
-        cout << "<<<<<<  í…ŒìŠ¤íŠ¸ ê²°ê³¼ 3 :  " << (endTick - startTick) << endl;
+        cout << "<<<<<<  Å×½ºÆ® °á°ú 3 :  " << (endTick - startTick) << endl;
     }
 }
 
 void main()
 {
-    // 1. ëˆ„ì í™•ë¥  í…Œì´ë¸” ìƒì„±í•´ ë†“ê¸°
+    // 1. ´©ÀûÈ®·ü Å×ÀÌºí »ı¼ºÇØ ³õ±â
     for (size_t i = 0; i < ItemProb.size(); i++)
     {
         if (i == 0) {
             AccumulatedProb.push_back(ItemProb[i]);
         }
         else {
-            AccumulatedProb.push_back(AccumulatedProb[i-1]+ItemProb[i]);
+            AccumulatedProb.push_back(AccumulatedProb[i - 1] + ItemProb[i]);
         }
-        
+
     }
-    // 2. ì¸ë±ìŠ¤ í…Œì´ë¸” ìƒì„±í•´ ë†“ê¸°   
+    // 2. ÀÎµ¦½º Å×ÀÌºí »ı¼ºÇØ ³õ±â   
     for (size_t i = 0; i < ItemProb.size(); i++)
     {
         for (size_t j = 0; j < ItemProb[i]; j++)
@@ -124,6 +124,6 @@ void main()
         }
     }
 
-    // 3. í…ŒìŠ¤íŠ¸!
+    // 3. Å×½ºÆ®!
     Test(1000000);
 }

@@ -1,5 +1,5 @@
 #pragma once
-#include "framework.h"
+#include "pch.h"
 #include "AnimationAsset.h"
 
 class AnimationInstance
@@ -14,7 +14,9 @@ private:
 	D2D1_RECT_F srcRect;
 	D2D1_RECT_F dstRect;
 public:
-	bool SetAnimationAsset(const wchar_t* FilePath,AnimationAsset::State state);
+	AnimationInstance();
+	~AnimationInstance();
+	HRESULT SetAnimationAsset(const wchar_t* FilePath);
 	void SetPosition(D2D1_VECTOR_2F _position) { position = _position; }
 	void Update(float deltaTime);
 	void Render(ID2D1RenderTarget* pRenderTarget);

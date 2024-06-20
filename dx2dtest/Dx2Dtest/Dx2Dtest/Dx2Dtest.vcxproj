@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DwriteFontSet.h" />
     <ClInclude Include="Dx2Dtest.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="WinGameApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DwriteFontSet.cpp" />
     <ClCompile Include="Dx2Dtest.cpp" />
     <ClCompile Include="WinGameApp.cpp" />
   </ItemGroup>

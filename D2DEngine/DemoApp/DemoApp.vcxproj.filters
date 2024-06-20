@@ -24,29 +24,23 @@
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Dx2Dtest.h">
+    <ClInclude Include="DemoApp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="WinGameApp.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="DwriteFontSet.h">
+    <ClInclude Include="DemoGameApp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Dx2Dtest.cpp">
+    <ClCompile Include="DemoApp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="WinGameApp.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="DwriteFontSet.cpp">
+    <ClCompile Include="DemoGameApp.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Dx2Dtest.rc">
+    <ResourceCompile Include="DemoApp.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -54,7 +48,7 @@
     <Image Include="small.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="Dx2Dtest.ico">
+    <Image Include="DemoApp.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

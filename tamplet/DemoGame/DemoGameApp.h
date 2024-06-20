@@ -14,12 +14,12 @@ public:
 	virtual void Uninitialize() override;
 private:
 	//ID2D1Bitmap* pBitmap = nullptr;
-	float rotate = 0;
+	//float rotate = 0;
 
-	BitmapScene m_Sun;
+	/*BitmapScene m_Sun;
 	BitmapScene m_Earth;
-	BitmapScene m_Moon;
-	//AnimationInstance anione;
+	BitmapScene m_Moon;*/
+	AnimationInstance anione;
 
 	D2D_MATRIX_3X2_F g_matWorldScale = D2D1::Matrix3x2F::Identity();
 	D2D_MATRIX_3X2_F g_matWorldRotation = D2D1::Matrix3x2F::Identity();

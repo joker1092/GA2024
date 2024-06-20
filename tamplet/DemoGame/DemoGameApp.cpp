@@ -4,21 +4,23 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR appName)
 {
 	WinGameApp::Initialize(hInstance, appName);
 
-	m_Sun.Load(L"../Resource/sun.jpg");
-	m_Earth.Load(L"../Resource/earth.jpg");
-	m_Moon.Load(L"../Resource/moon.jpg");
-	m_Sun.SetLocation({ 640,480 });
-	m_Sun.SetScale({1.5,1.5});
-	m_Earth.SetParent(&m_Sun);
-	m_Earth.SetLocation({ 200,200 });
-	//m_Earth.SetLocation({ 0,0 });
-	m_Earth.SetScale({ 0.5,0.5 });
-	m_Moon.SetParent(&m_Earth);
-	m_Moon.SetLocation({ 200,200 });
-	//m_Moon.SetLocation({ 0,0 });
-	m_Moon.SetScale({ 0.5,0.5 });
-	/*anione.SetPosition({ 640,480 });
-	anione.SetAnimationIndex()*/
+	//m_Sun.Load(L"../Resource/sun.jpg");
+	//m_Earth.Load(L"../Resource/earth.jpg");
+	//m_Moon.Load(L"../Resource/moon.jpg");
+	//m_Sun.SetLocation({ 640,480 });
+	//m_Sun.SetScale({1.5,1.5});
+	//m_Earth.SetParent(&m_Sun);
+	//m_Earth.SetLocation({ 200,200 });
+	////m_Earth.SetLocation({ 0,0 });
+	//m_Earth.SetScale({ 0.5,0.5 });
+	//m_Moon.SetParent(&m_Earth);
+	//m_Moon.SetLocation({ 200,200 });
+	////m_Moon.SetLocation({ 0,0 });
+	//m_Moon.SetScale({ 0.5,0.5 });
+	anione.SetPosition({ 640,480 });
+	anione.SetAnimationImage(L"../Resource/ken.bmp");
+	//anione.SetAnimationAsset(L"../Resource/KenDeath.txt", AnimationAsset::DEATH);
+	anione.SetAnimationAsset(L"../Resource/KenIdle.txt", AnimationAsset::IDEL);
 }
 
 
@@ -38,20 +40,22 @@ void DemoGameApp::Update(InputManager* Input)
 		g_posCamera.y += 10;
 	}
 	
-	m_Sun.SetRotation(rotate);
+	/*m_Sun.SetRotation(rotate);
 	m_Sun.Update();
 	m_Earth.SetRotation(rotate);
 	m_Earth.Update();
 	m_Moon.SetRotation(rotate);
 	m_Moon.Update();
-	rotate++;
+	rotate++;*/
+	anione.SetAnimationIndex(1);
 }
 
 void DemoGameApp::Uninitialize()
 {
-	m_Sun.~BitmapScene();
+	anione.~AnimationInstance();
+	/*m_Sun.~BitmapScene();
 	m_Earth.~BitmapScene();
-	m_Moon.~BitmapScene();
+	m_Moon.~BitmapScene();*/
 	WinGameApp::Uninitialize();
 }
 
@@ -87,16 +91,16 @@ void DemoGameApp::Render(D2DRenderer* Render)
 	D2D_MATRIX_3X2_F pBitmapMatrix = pBitmapTransform * pBitmapRotation;*/
 	//Render->DrawBitmap(pBitmap, pBitmapMatrix* Transform);
 
-	m_Sun.Render();
+	/*m_Sun.Render();
 	m_Earth.Render();
-	m_Moon.Render();
+	m_Moon.Render();*/
 
 	/*Render->PrintMatrix(L"Transform", Transform, 700, 100);
 
 	Render->PrintMatrix(L"g_matWorld", g_matWorld, 1000, 100);
 	Render->PrintMatrix(L"g_matCameraInv", g_matCameraInv, 1100, 100);*/
 
-	
+	anione.Render(Render->GetRenderTarget());
 }
 
 
