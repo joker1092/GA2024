@@ -18,21 +18,21 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="DemoApp.h">
+    <ClInclude Include="DemoGame.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="DemoGameApp.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DemoApp.cpp">
+    <ClCompile Include="DemoGame.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="DemoGameApp.cpp">
@@ -40,7 +40,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DemoApp.rc">
+    <ResourceCompile Include="DemoGame.rc">
       <Filter>리소스 파일</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -48,7 +48,7 @@
     <Image Include="small.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-    <Image Include="DemoApp.ico">
+    <Image Include="DemoGame.ico">
       <Filter>리소스 파일</Filter>
     </Image>
   </ItemGroup>

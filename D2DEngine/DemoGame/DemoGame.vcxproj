@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{63238e31-3836-44e6-ba49-82f37c979f39}</ProjectGuid>
-    <RootNamespace>DemoApp</RootNamespace>
+    <ProjectGuid>{45cc1636-ffcb-42ac-98b5-bdde9de91626}</ProjectGuid>
+    <RootNamespace>DemoGame</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,26 +127,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="DemoApp.h" />
+    <ClInclude Include="DemoGame.h" />
     <ClInclude Include="DemoGameApp.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DemoApp.cpp" />
+    <ClCompile Include="DemoGame.cpp" />
     <ClCompile Include="DemoGameApp.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="DemoApp.rc" />
+    <ResourceCompile Include="DemoGame.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="DemoApp.ico" />
+    <Image Include="DemoGame.ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\D2DEngine\D2DEngine.vcxproj">
-      <Project>{9d82accc-6643-42e7-b9e1-fb57799faf45}</Project>
+      <Project>{0afe55da-647d-4d43-8e42-c5a780c0f520}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

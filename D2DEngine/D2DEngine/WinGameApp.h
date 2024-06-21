@@ -1,20 +1,21 @@
 #pragma once
-#include <SDKDDKVer.h>
-#define WIN32_LEAN_AND_MEAN             // 거의 사용되지 않는 내용을 Windows 헤더에서 제외합니다.
-#include <windows.h>
-#include "D2DRenderer.h"
+#include "framework.h"
+#include "D2Drender.h"
+#define MAX_LOADSTRING 100
 
 class WinGameApp
 {
-protected:
-	D2DRenderer* pRender;
-	HINSTANCE m_hInstance = { 0 };
+private :
+	HINSTANCE hInst = { 0 };  // HINSTANCE is a handle to an instance of a module.
 	HWND m_hWnd = { 0 };
+	D2Drender* pD2Drender;
 public:
-	virtual bool Intialize(HINSTANCE hInstance, LPCTSTR appName);
-	virtual void Run();
+	virtual bool Initialize(HINSTANCE hInstance, LPCTSTR szTitle);
+	virtual int Run();
+	virtual void UnInitialize();
 	virtual void Update() = 0;
 	virtual void Render() = 0;
-	virtual void UnIntialize();
+
+	HINSTANCE GetHintance() { return hInst; }
 };
 

@@ -1,30 +1,30 @@
-ï»¿#include <iostream>
+#include <iostream>
 using namespace std;
 
-//String í´ë˜ìŠ¤ë¥¼ êµ¬í˜„í•˜ì„¸ìš”. ( íŠ¹ìˆ˜ë§´ë²„í•¨ìˆ˜, ì—°ì‚°ì ì˜¤ë²„ë¡œë“œ )
+//String Å¬·¡½º¸¦ ±¸ÇöÇÏ¼¼¿ä. ( Æ¯¼ö¸É¹öÇÔ¼ö, ¿¬»êÀÚ ¿À¹ö·Îµå )
 class String
 {
 private:
     char* str;
 public:
-    //ìƒì„±ì	
+    //»ı¼ºÀÚ	
     String() { str = new char[1]; }
-	String(const char* _str){
+    String(const char* _str) {
         str = new char[strlen(_str) + 1];
         strcpy_s(str, strlen(_str) + 1, _str);
-	}
-    //ë³µì‚¬ ìƒì„±ì
-    String(const String& oStr) 
+    }
+    //º¹»ç »ı¼ºÀÚ
+    String(const String& oStr)
     {
         str = new char[strlen(oStr.str) + 1];
         strcpy_s(str, strlen(oStr.str) + 1, oStr.str);
-    }    
+    }
     String(String&& rStr) noexcept
     {
         str = rStr.str;
         rStr.str = nullptr;
     }
-    //ë³µì‚¬ ëŒ€ì… ì—°ì‚°ì
+    //º¹»ç ´ëÀÔ ¿¬»êÀÚ
     String& operator=(const String& oStr) {
         delete[] str;
         str = new char[strlen(oStr.str) + 1];
@@ -41,19 +41,19 @@ public:
         int size = strlen(str) + strlen(oStr.str) + 1;
         char* temp = new char[size];
         strcpy_s(temp, size, str);
-        strcat_s(temp,size, oStr.str);
+        strcat_s(temp, size, oStr.str);
         delete[] str;
         str = temp;
         return *this;
     }
-    //ì—°ì‚°ì í•¨ìˆ˜ + == <<
-    String operator+(const String& oStr) 
+    //¿¬»êÀÚ ÇÔ¼ö + == <<
+    String operator+(const String& oStr)
     {
         int size = strlen(str) + strlen(oStr.str) + 1;
         char* temp = new char[size];
         strcpy_s(temp, size, str);
         strcat_s(temp, size, oStr.str);
-        String tempobj =(temp);
+        String tempobj = (temp);
         delete[] temp;
         return tempobj;
     }
@@ -61,16 +61,16 @@ public:
     {
         return strcmp(str, oStr.str);
     }
-    
+
     friend ostream& operator<<(ostream& o, const String& obj) {
         o << obj.str;
         return o;
     }
 
-	~String()
-	{
+    ~String()
+    {
         delete[] str;
-	}
+    }
 };
 
 
@@ -84,7 +84,7 @@ int main(void)
     String s4 = ""; s4 += s3;
 
     cout << s1 << " " << s2 << " " << s3 << " " << s4 << endl;
-    
+
 
     cout << (s1 == s4) << endl;
 
