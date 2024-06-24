@@ -9,12 +9,24 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 //  용도: 창 클래스를 등록합니다.
 
 
-bool WinGameApp::Initialize(HINSTANCE _hInstance, LPCTSTR _szTitle)
+WinGameApp::WinGameApp()
+{
+    pD2DRender = new D2DRender;
+    pResouceManager = new ResourceManager(pD2DRender);
+}
+
+WinGameApp::~WinGameApp()
+{
+    
+
+}
+
+void WinGameApp::Initialize(HINSTANCE _hInstance, LPCTSTR _szTitle)
 {
     hInst = _hInstance;
     MyRegisterClass(hInst, _szTitle);
 
-    pD2Drender = new D2Drender();
+    
 
     bool bUseConsole = false;
     if (bUseConsole)
@@ -27,16 +39,13 @@ bool WinGameApp::Initialize(HINSTANCE _hInstance, LPCTSTR _szTitle)
     // 애플리케이션 초기화를 수행합니다:
     if (!InitInstance(hInst, m_hWnd,_szTitle))
     {
-        return false;
+        return;
     }
 
-    if (!pD2Drender->D2DIntialize(m_hWnd))
+    if (!pD2DRender->D2DIntialize(m_hWnd))
     {
-        return false;
+        return;
     }
-    
-
-    return false;
 }
 
 int WinGameApp::Run()
@@ -55,10 +64,10 @@ int WinGameApp::Run()
         }
         else {
             Update();
-            pD2Drender->BeginDraw();
-            pD2Drender->Clear(D2D1::ColorF(D2D1::ColorF::Black));
-            Render();
-            pD2Drender->EndDraw();
+            pD2DRender->BeginDraw();
+            pD2DRender->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+            Render(pD2DRender->GetRenderTarget());
+            pD2DRender->EndDraw();
         }
        
     }
@@ -67,7 +76,7 @@ int WinGameApp::Run()
 
 void WinGameApp::UnInitialize()
 {
-    pD2Drender->D2DUnintialize();
+    pD2DRender->D2DUnintialize();
 }
 
 

@@ -8,5 +8,13 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <map>
 
+#include <d2d1.h>
+#include <comdef.h>
+#include <wincodec.h>
+#include <dwrite.h>
+#include <d2d1_1helper.h>
 
+#pragma comment(lib,"d2d1.lib")
+#pragma comment(lib,"dwrite.lib")

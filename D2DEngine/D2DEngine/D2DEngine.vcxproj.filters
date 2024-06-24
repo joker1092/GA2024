@@ -18,10 +18,22 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="D2Drender.h">
+    <ClInclude Include="D2DRender.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="WinGameApp.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BitmapScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ReferenceCounter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -29,10 +41,22 @@
     <ClCompile Include="D2DEngine.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="D2Drender.cpp">
+    <ClCompile Include="D2DRender.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="WinGameApp.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BitmapScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ReferenceCounter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
