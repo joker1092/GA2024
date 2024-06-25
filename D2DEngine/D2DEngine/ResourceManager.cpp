@@ -1,3 +1,4 @@
+#include "AnimationAsset.h"
 #include "ResourceManager.h"
 
 
@@ -47,6 +48,41 @@ void ResourceManager::ReleaseD2DBitmap(std::wstring wstrFilePath)
         if (bitmap->Release()==0)
         {
             mBitmapMap.erase(iter);
+        }
+    }
+}
+
+bool ResourceManager::CreateAnimationAssetFromFile(std::wstring wstrFilePath, AnimationAsset** Animation)
+{
+    if (mAnimationAssetMap.find(wstrFilePath) != mAnimationAssetMap.end()) {
+        *Animation = mAnimationAssetMap[wstrFilePath];
+        (*Animation)->AddRef();
+        return true;
+    }
+    AnimationAsset* pTemp = new AnimationAsset;
+    if (pTemp->LoadAnimation(wstrFilePath))
+    {
+        *Animation = pTemp;
+    }
+    else {
+        delete pTemp;
+        return false;
+    }
+
+
+    mAnimationAssetMap[wstrFilePath] = *Animation;
+    return true;
+}
+
+void ResourceManager::ReleaseAnimationAsset(std::wstring wstrFilePath)
+{
+    std::map<std::wstring, AnimationAsset*>::iterator iter = mAnimationAssetMap.find(wstrFilePath);
+    if (iter != mAnimationAssetMap.end())
+    {
+        AnimationAsset* Animation = mAnimationAssetMap[wstrFilePath];
+        if (Animation->Release() == 0)
+        {
+            mAnimationAssetMap.erase(iter);
         }
     }
 }

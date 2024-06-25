@@ -4,7 +4,15 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 {
 	WinGameApp::Initialize(hInstance, szTitle);
 	//todo
-	Sun.LoadD2DBitmap(L"../Resource/sun.jpg", pD2DRender);
+	bg.LoadD2DBitmap(L"../Resource/midnight.png", pD2DRender);
+	bg.LoadAnimationAsset(L"Background");
+	RECT rc;
+	GetClientRect(m_hWnd, &rc);
+	bg.SetDstRect(D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom));
+	player.LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
+	player.LoadAnimationAsset(L"Run");
+	player.SetDstRect(D2D1::RectF(0, 0, 100, 100));
+	/*Sun.LoadD2DBitmap(L"../Resource/sun.jpg", pD2DRender);
 	Earth.LoadD2DBitmap(L"../Resource/earth.jpg", pD2DRender);
 	Moon.LoadD2DBitmap(L"../Resource/moon.jpg", pD2DRender);
 	Sun.SetLocation({ 640,480 });
@@ -14,19 +22,27 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	Earth.SetLocation({ 200,200 });
 	Moon.SetParant(&Earth);
 	Moon.SetScale({ 0.5,0.5 });
-	Moon.SetLocation({ 200,200 });
+	Moon.SetLocation({ 200,200 });*/
 
 }
 void DemoGameApp::UnInitialize()
 {
 	//todo
+	/*Sun.~BitmapScene();
+	Earth.~BitmapScene();
+	Moon.~BitmapScene();*/
+	bg.~AnimationScene();
+	player.~AnimationScene();
 	WinGameApp::UnInitialize();
 }
 
-void DemoGameApp::Update()
+void DemoGameApp::Update(float deltatime)
 {
+	std::cout << deltatime << std::endl;
 	//todo
-	Sun.SetRotation(rotate);
+	bg.Update(deltatime);
+	player.Update(deltatime);
+	/*Sun.SetRotation(rotate);
 	Sun.Update();
 	Earth.SetRotation(rotate);
 	Earth.Update();
@@ -35,13 +51,15 @@ void DemoGameApp::Update()
 	rotate++;
 	Sun.Update();
 	Earth.Update();
-	Moon.Update();
+	Moon.Update();*/
 }
 
 void DemoGameApp::Render(ID2D1HwndRenderTarget* pRenderTarget)
 {
 	//todo
-	Sun.Render(pRenderTarget);
+	bg.Render(pRenderTarget);
+	player.Render(pRenderTarget);
+	/*Sun.Render(pRenderTarget);
 	Earth.Render(pRenderTarget);
-	Moon.Render(pRenderTarget);
+	Moon.Render(pRenderTarget);*/
 }

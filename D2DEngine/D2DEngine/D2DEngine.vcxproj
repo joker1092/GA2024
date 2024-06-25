@@ -140,21 +140,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimationAsset.h" />
+    <ClInclude Include="AnimationScene.h" />
     <ClInclude Include="BitmapScene.h" />
     <ClInclude Include="D2DRender.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="ReferenceCounter.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="TimeSystem.h" />
     <ClInclude Include="WinGameApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimationAsset.cpp" />
+    <ClCompile Include="AnimationScene.cpp" />
     <ClCompile Include="BitmapScene.cpp" />
     <ClCompile Include="D2DEngine.cpp" />
     <ClCompile Include="D2DRender.cpp" />
     <ClCompile Include="ReferenceCounter.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="TimeSystem.cpp" />
     <ClCompile Include="WinGameApp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

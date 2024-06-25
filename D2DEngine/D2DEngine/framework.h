@@ -8,7 +8,11 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <vector>
 #include <map>
+
+#include <fstream>
+#include <sstream>
 
 #include <d2d1.h>
 #include <comdef.h>

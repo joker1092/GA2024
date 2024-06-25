@@ -36,6 +36,15 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationAsset.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="TimeSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D2DEngine.cpp">
@@ -57,6 +66,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationAsset.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="TimeSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

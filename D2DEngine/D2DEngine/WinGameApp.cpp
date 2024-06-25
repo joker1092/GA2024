@@ -12,13 +12,15 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 WinGameApp::WinGameApp()
 {
     pD2DRender = new D2DRender;
+    pTime = new TimeSystem;
     pResouceManager = new ResourceManager(pD2DRender);
 }
 
 WinGameApp::~WinGameApp()
 {
-    
-
+    delete pResouceManager;
+    delete pTime;
+    delete pD2DRender;
 }
 
 void WinGameApp::Initialize(HINSTANCE _hInstance, LPCTSTR _szTitle)
@@ -28,7 +30,7 @@ void WinGameApp::Initialize(HINSTANCE _hInstance, LPCTSTR _szTitle)
 
     
 
-    bool bUseConsole = false;
+    bool bUseConsole = true;
     if (bUseConsole)
     {
         AllocConsole();
@@ -46,6 +48,8 @@ void WinGameApp::Initialize(HINSTANCE _hInstance, LPCTSTR _szTitle)
     {
         return;
     }
+
+    pTime->InitTime();
 }
 
 int WinGameApp::Run()
@@ -63,7 +67,8 @@ int WinGameApp::Run()
             DispatchMessage(&msg);
         }
         else {
-            Update();
+            pTime->UpdateTime();
+            Update(pTime->GetDeltaTime());
             pD2DRender->BeginDraw();
             pD2DRender->Clear(D2D1::ColorF(D2D1::ColorF::Black));
             Render(pD2DRender->GetRenderTarget());

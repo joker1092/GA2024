@@ -7,12 +7,12 @@ BitmapScene::BitmapScene()
 
 BitmapScene::~BitmapScene()
 {
-	if (pBitmap)
+	/*if (pBitmap)
 	{
 		pBitmap->Release();
 		pBitmap = nullptr;
-	}
-	
+	}*/
+	pRM->ReleaseD2DBitmap(wsBitmapFilePath);
 }
 
 bool BitmapScene::LoadD2DBitmap(const std::wstring strFilePath,D2DRender* pRender)
