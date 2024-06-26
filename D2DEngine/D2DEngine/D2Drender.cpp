@@ -25,9 +25,46 @@ BOOL D2DRender::D2DIntialize(HWND hwnd)
 		return FALSE;
 	}
 
+	hr = DWriteCreateFactory(
+		DWRITE_FACTORY_TYPE_SHARED,
+		__uuidof(pDWriteFactory),
+		reinterpret_cast<IUnknown**>(&pDWriteFactory));
+	if (FAILED(hr))
+		return FALSE;
+
+	hr = pDWriteFactory->CreateTextFormat(
+		L"", // FontName    제어판-모든제어판-항목-글꼴-클릭 으로 글꼴이름 확인가능
+		NULL,
+		DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH_NORMAL,
+		15.0f,   // Font Size
+		L"", //locale
+		&pDWriteTextFormat
+	);
+
+	if (SUCCEEDED(hr))
+	{
+		hr = pRenderTaget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::GreenYellow), &pBrush);
+	}
+
 	hr = CoCreateInstance(CLSID_WICImagingFactory,NULL,CLSCTX_INPROC_SERVER,IID_PPV_ARGS(&pWICFactorry));
 	
 	if (FAILED(hr)) {
+		return FALSE;
+	}
+
+	// Create DXGI factory
+	hr = CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)&m_pDXGIFactory);
+	// VRAM 정보얻기 위한 개체 생성
+	if (FAILED(hr))
+	{
+		return FALSE;
+	}
+
+	m_pDXGIFactory->EnumAdapters(0, reinterpret_cast<IDXGIAdapter**>(&m_pDXGIAdapter));
+	if (FAILED(hr))
+	{
 		return FALSE;
 	}
 
@@ -44,8 +81,17 @@ BOOL D2DRender::D2DIntialize(HWND hwnd)
 
 void D2DRender::D2DUnintialize()
 {
+	
+	if (pBrush)pBrush->Release();
+	if (pDWriteTextFormat)pDWriteTextFormat->Release();
+	if (pDWriteFactory)pDWriteFactory->Release();
+	if (pWICFactorry)pWICFactorry->Release();
 	if (pRenderTaget)pRenderTaget->Release();
 	if (pFactory)pFactory->Release();
+	if (m_pDXGIAdapter)m_pDXGIAdapter->Release();
+	if (m_pDXGIFactory)m_pDXGIFactory->Release();
+
+
 
 	CoUninitialize();
 }
@@ -64,6 +110,25 @@ void D2DRender::EndDraw()
 {
 	pRenderTaget->EndDraw();
 }
+
+void D2DRender::DrawTextRect(const wchar_t* str, D2D1_RECT_F rect)
+{
+	pRenderTaget->DrawText(
+		str, (UINT32)wcslen(str),
+		pDWriteTextFormat,
+		rect,
+		pBrush
+	);
+}
+
+
+size_t D2DRender::GetUsedVRAM()
+{
+	DXGI_QUERY_VIDEO_MEMORY_INFO videoMemoryInfo;
+	m_pDXGIAdapter->QueryVideoMemoryInfo(0, DXGI_MEMORY_SEGMENT_GROUP_LOCAL, &videoMemoryInfo);
+	return videoMemoryInfo.CurrentUsage / 1024 / 1024;
+}
+
 
 
 HRESULT D2DRender::D2DBitmapFromFile(const WCHAR* path, ID2D1Bitmap** ppID2DBitmap) {

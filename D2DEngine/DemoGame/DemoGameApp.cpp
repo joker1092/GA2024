@@ -8,10 +8,17 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	bg.LoadAnimationAsset(L"Background");
 	RECT rc;
 	GetClientRect(m_hWnd, &rc);
-	bg.SetDstRect(D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom));
-	player.LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
+	//bg.SetDstRect(D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom));
+	bg.SetLocation({604	,246 });
+	bg.SetScale({ 3.28,3.06 });
+	//vObjList.push_back(&bg);
+	/*player.LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
 	player.LoadAnimationAsset(L"Run");
-	player.SetDstRect(D2D1::RectF(0, 0, 100, 100));
+	player.SetAnimaitonIndex(1);
+	position = { 200,300 };
+	player.SetLocation(position);*/
+	//vObjList.push_back(&player);
+	
 	/*Sun.LoadD2DBitmap(L"../Resource/sun.jpg", pD2DRender);
 	Earth.LoadD2DBitmap(L"../Resource/earth.jpg", pD2DRender);
 	Moon.LoadD2DBitmap(L"../Resource/moon.jpg", pD2DRender);
@@ -32,16 +39,66 @@ void DemoGameApp::UnInitialize()
 	Earth.~BitmapScene();
 	Moon.~BitmapScene();*/
 	bg.~AnimationScene();
-	player.~AnimationScene();
+	//player.~AnimationScene();
+
+	for (auto& objScene : vObjList)
+	{
+		objScene->~AnimationScene();
+	}
 	WinGameApp::UnInitialize();
 }
 
 void DemoGameApp::Update(float deltatime)
 {
-	std::cout << deltatime << std::endl;
+	/*std::cout <<"delta : " << deltatime << "";
+	std::cout <<"elepse :"<< elepsedTime << std::endl;*/
 	//todo
+
+	
+	/*position.x++;
+	if (position.x > 1240) {
+		position.x = 0;
+	}*/
+	//player.SetLocation(position);
+	if (pInput->IsKey('A'))
+	{
+		AnimationScene* cPlayer = new AnimationScene;
+		cPlayer->LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
+		cPlayer->LoadAnimationAsset(L"Run");
+		cPlayer->SetAnimaitonIndex(1);
+		cPlayer->SetLocation({ 200,100 });
+		vObjList.push_back(cPlayer);
+		//todo : obj add
+	}
+
+	if (pInput->IsKey('D'))
+	{
+		std::cout << "size : " << vObjList.size() << std::endl;
+		if (vObjList.size() >0)
+		{
+			AnimationScene* a = vObjList.back();
+			vObjList.erase(vObjList.end() - 1);
+			a->~AnimationScene();
+		}
+		//todo : obj delete
+	}
+
 	bg.Update(deltatime);
-	player.Update(deltatime);
+	//player.Update(deltatime);
+	if (!vObjList.empty()) {
+		for (auto& objScene : vObjList)
+		{
+			float x = objScene->vRelativeLcation.x;
+			x++;
+			if (x > 1240)
+			{
+				x = 200;
+			}
+			objScene->SetLocation({ x,objScene->vRelativeLcation.y });
+			objScene->Update(deltatime);
+		}
+	}
+
 	/*Sun.SetRotation(rotate);
 	Sun.Update();
 	Earth.SetRotation(rotate);
@@ -56,9 +113,19 @@ void DemoGameApp::Update(float deltatime)
 
 void DemoGameApp::Render(ID2D1HwndRenderTarget* pRenderTarget)
 {
+
 	//todo
 	bg.Render(pRenderTarget);
-	player.Render(pRenderTarget);
+	if (!vObjList.empty())
+	{
+		for (auto& objScene : vObjList)
+		{
+			objScene->Render(pRenderTarget);
+		}
+	}
+	
+	//player.Render(pRenderTarget);
+
 	/*Sun.Render(pRenderTarget);
 	Earth.Render(pRenderTarget);
 	Moon.Render(pRenderTarget);*/

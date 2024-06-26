@@ -7,6 +7,7 @@ class TimeSystem
 	LARGE_INTEGER frequency = { 0 };
 
 	float deltaTime = 0;
+	//float timeScale = 1.f;
 	float timeScale = 1.f;
 	//float timeScale2 = 1.f;
 public:

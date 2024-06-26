@@ -13,12 +13,14 @@ WinGameApp::WinGameApp()
 {
     pD2DRender = new D2DRender;
     pTime = new TimeSystem;
+    pInput = new InputSystem;
     pResouceManager = new ResourceManager(pD2DRender);
 }
 
 WinGameApp::~WinGameApp()
 {
     delete pResouceManager;
+    delete pInput;
     delete pTime;
     delete pD2DRender;
 }
@@ -49,7 +51,12 @@ void WinGameApp::Initialize(HINSTANCE _hInstance, LPCTSTR _szTitle)
         return;
     }
 
+    RECT rc;
+    GetClientRect(m_hWnd, &rc);
     pTime->InitTime();
+    pInput->InitInput(m_hWnd,rc.right-rc.left,rc.bottom-rc.top);
+
+    
 }
 
 int WinGameApp::Run()
@@ -63,16 +70,59 @@ int WinGameApp::Run()
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT)
                 break;
+            else if (msg.message == WM_KEYDOWN)
+            {
+                pInput->KeyDown(msg.wParam);
+                //Input::KeyDown(msg.wParam);
+            }
+            else if (msg.message == WM_KEYUP)
+            {
+                pInput->KeyUp(msg.wParam);
+                //Input::KeyUp(msg.wParam);
+            }
+
+            // 마우스 좌클릭 메시지
+            if (msg.message == WM_LBUTTONDOWN)
+            {
+                pInput->KeyDown(msg.wParam);
+            }
+            else if (msg.message == WM_LBUTTONUP) {
+                pInput->KeyUp(msg.wParam);
+                //Input::KeyUp(msg.wParam);
+            }
+
+            // 마우스 좌클릭 메시지
+            if (msg.message == WM_RBUTTONDOWN)
+            {
+                pInput->KeyDown(msg.wParam);
+                //Input::KeyDown(msg.wParam);
+            }
+            else if (msg.message == WM_RBUTTONUP) {
+                pInput->KeyUp(msg.wParam);
+                //Input::KeyUp(msg.wParam);
+            }
             TranslateMessage(&msg); // 키입력관련 메시지 변환  WM_KEYDOWN -> WM_CHAR
             DispatchMessage(&msg);
         }
         else {
             pTime->UpdateTime();
-            Update(pTime->GetDeltaTime());
-            pD2DRender->BeginDraw();
-            pD2DRender->Clear(D2D1::ColorF(D2D1::ColorF::Black));
-            Render(pD2DRender->GetRenderTarget());
-            pD2DRender->EndDraw();
+            elepsedTime += pTime->GetDeltaTime();
+            if (elepsedTime > 60)
+            {
+                Update(pTime->GetDeltaTime());
+                pD2DRender->BeginDraw();
+                pD2DRender->Clear(D2D1::ColorF(D2D1::ColorF::Black));
+                Render(pD2DRender->GetRenderTarget());
+                std::wstring FrameRate = std::to_wstring(pTime->GetFrameRate());
+                std::wstring vrem = std::to_wstring(pD2DRender->GetUsedVRAM());
+                FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem;
+                const wchar_t* myFrameRate = FrameRate.c_str();
+                pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+                pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(50, 50, 200,200));
+                pD2DRender->EndDraw();
+                elepsedTime -= 60;
+            }
+            pInput->ResetInput();
         }
        
     }
@@ -137,6 +187,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_KEYDOWN:
+        
         //todo : intput
         //if (wParam == VK_F11)
         //{
@@ -146,7 +197,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         //    else
         //        EnterFullscreen(hWnd);
         //}
+        
         break;
+    
     case WM_COMMAND:
     {
         int wmId = LOWORD(wParam);

@@ -1,55 +1,28 @@
 ﻿#include <iostream>
 using namespace std;
 
-class Base
+class First
 {
+private : 
+	char* one;
 public:
-	Base()
-	{
-		cout << "Base()" << endl;
-	}
-
-	~Base()
-	{
-		cout << "~Base()" << endl;
-	}
-	void Show() {
-		cout << "Base() Show()" << endl;
-	}
-
-private:
-
+	First(const char* str) { one = new char[strlen(str) + 1]; };
+	virtual ~First() { cout << "~First()" << endl; delete[] one; };
 };
 
-class Derived: public Base
+class Second : public First
 {
-public:
-	Derived()
-	{
-		cout << "Derived()" << endl;
-	}
-
-	~Derived()
-	{
-		cout << "~Derived()" << endl;
-	}
-
-	void Show(){
-		Base::Show();
-		cout << "Derived() Show()" << endl;
-	}
-
 private:
-
+	char* two;
+public:
+	Second(const char* str1, const char* str2) : First(str1) { two = new char[strlen(str2) + 1]; }
+	~Second() { cout << "~Second()" << endl; delete[] two; }
 };
 
 
-
-int main(void)
-{
-	Derived obj;
-
-	obj.Show();
-
-    return 0;
+int main()
+{	
+	First* ptr = new Second("simple", "complex");
+	delete ptr;
+	return 0;
 }

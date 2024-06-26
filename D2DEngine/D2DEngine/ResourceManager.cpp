@@ -63,6 +63,7 @@ bool ResourceManager::CreateAnimationAssetFromFile(std::wstring wstrFilePath, An
     if (pTemp->LoadAnimation(wstrFilePath))
     {
         *Animation = pTemp;
+        (*Animation)->AddRef();
     }
     else {
         delete pTemp;
@@ -80,6 +81,7 @@ void ResourceManager::ReleaseAnimationAsset(std::wstring wstrFilePath)
     if (iter != mAnimationAssetMap.end())
     {
         AnimationAsset* Animation = mAnimationAssetMap[wstrFilePath];
+        std::cout <<"RefCount: " << Animation->GetRefCount() << std::endl;
         if (Animation->Release() == 0)
         {
             mAnimationAssetMap.erase(iter);

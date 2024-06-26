@@ -2,6 +2,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+using namespace std;
 
 
 void printVector(const std::vector<int>& numbers)
@@ -13,146 +14,91 @@ void printVector(const std::vector<int>& numbers)
     std::cout << std::endl;
 }
 
+void PrintHint(std::vector<int>& numbers, int low, int high) {
 
-void MySort(std::vector<int>& numbers)
-{
-    /*for (size_t i = 0; i < numbers.size()-1; i++)
+    for (const auto& number : numbers)
     {
-        for (size_t j = i+1; j < numbers.size(); j++)
-        {
-            if (numbers[i]>numbers[j])
-            {
-                int temp = numbers[i];
-                numbers[i] = numbers[j];
-                numbers[j] = temp;
-            }
-        }
-    }*/
-
-    /*for (size_t i = 0; i < numbers.size() - 1; i++)
-    {
-        int small = numbers[i];
-        int index = i;
-        for (size_t j = i; j < numbers.size() ; j++)
-        {
-            if (small > numbers[j]) {
-                small = numbers[j];
-                index = j;
-            }
-        }
-        int temp = numbers[i];
-        numbers[i] = small;
-        numbers[index] = temp;
-    }*/
-
-    for (size_t i = 0; i < numbers.size(); i++)
-    {
-        int count = 0;
-        for (size_t j = 0; j < numbers.size() - 1 - i; j++)
-        {
-            if (numbers[j] > numbers[j + 1])
-            {
-                int temp = numbers[j];
-                numbers[j] = numbers[j + 1];
-                numbers[j + 1] = temp;
-                count++;
-            }
-        }
-        if (count == 0) break;
+        std::cout << number << " ";
     }
+    std::cout << low << " ";
+    std::cout << high << " ";
+    std::cout << std::endl;
 }
 
-int BubbleSort(std::vector<int>& numbers)
+
+
+
+void CountingSort(std::vector<int>& numbers)
 {
-    int loof = 0;
+    int max = *std::max_element(numbers.begin(), numbers.end()); //최대값
+    int min = *std::min_element(numbers.begin(), numbers.end()); //최소값
+    int range = max - min + 1; //최대 최소 사이의 겟수
+
+    std::vector<int> count(range), output(numbers.size()); //range 겟수 만큼의 배열과 원본 크기 만큼의 배열을 만들어
+
     for (int i = 0; i < numbers.size(); i++)
     {
-        int count = 0;
-        for (int j = 0; j < numbers.size() - 1 - i; j++)
-        {
-            if (numbers[j] > numbers[j + 1])
-            {
-                std::swap(numbers[j], numbers[j + 1]);
-                count++;
-                loof++;
-            }
-        }
-        if (count == 0) break;
+        count[numbers[i] - min]++; //range 배열에 해당하는 위치 값의 겟수를 센다
     }
-
-    return loof;
+    for (int i = 1; i < count.size(); i++)
+    {
+        count[i] += count[i - 1];  //최소 값에서 부터 최대값 까지 겟수를 누적
+    }
+    for (int i = numbers.size() - 1; i >= 0; i--)
+    {
+        output[count[numbers[i] - min] - 1] = numbers[i]; //출력 배열에 겟 수 센것 만큼 순번 대로 줄여가며 해당 하는 원본 배열의 값을 넣음
+        count[numbers[i] - min]--;
+    }
+    for (int i = 0; i < numbers.size(); i++)
+    {
+        numbers[i] = output[i]; //출력배열 배출
+    }
 }
 
-int SelectSort(std::vector<int>& numbers)
+
+void MergeSort(std::vector<int>& numbers, int low, int high)
 {
-    int count = 0;
-    //int loof = 0;
-    for (size_t i = 0; i < numbers.size() - 1; i++)
+    PrintHint(numbers, low, high);
+
+    if (low >= high) return;
+
+    int mid = (low + high) / 2;
+    MergeSort(numbers, low, mid);
+    MergeSort(numbers, mid + 1, high);
+
+    //Merge !!!
+    std::vector<int> temp(numbers.size());
+    int i = low;
+    int j = mid + 1;
+    int k = low;
+    while (i <= mid && j <= high)
     {
-        int index = i;
-        for (size_t j = i + 1; j < numbers.size(); j++)
+        if (numbers[i] < numbers[j])
         {
-            if (numbers[i] > numbers[j]) {
-                index = j;
-            }
-            //loof++;
+            temp[k++] = numbers[i++];
         }
-        if (i != index) {
-            int temp = numbers[i];
-            numbers[i] = numbers[index];
-            numbers[index] = temp;
-            count++;
+        else
+        {
+            temp[k++] = numbers[j++];
         }
     }
-
-    return count;
-}
-int InsertionSort(std::vector<int>& numbers) {
-    int count = 0;
-    for (size_t i = 1; i < numbers.size(); i++) {
-        for (size_t j = i; j > 0; j--)
-        {
-            if (numbers[j] < numbers[j - 1])
-            {
-                std::swap(numbers[j], numbers[j - 1]);
-                count++;
-            }
-            else {
-                break;
-            }
-        }
-    }
-
-    return count;
-}
-
-int partition(std::vector<int>& numbers, int low, int high) {
-    int pivot = numbers[high];
-
-    int i = (low - 1);
-
-    for (size_t j = low; j <= high; j++)
+    while (i <= mid)
     {
-        //todo
-        if (numbers[j] < pivot) {
-            //i = j + 1;
-            i++;
-            std::swap(numbers[i], numbers[j]);
-        }
+        temp[k++] = numbers[i++];
     }
-    std::swap(numbers[i + 1], numbers[high]);
-    printVector(numbers);
-    return (i + 1);
+    while (j <= high)
+    {
+        temp[k++] = numbers[j++];
+    }
+    for (int i = low; i <= high; i++)
+    {
+        numbers[i] = temp[i];
+    }
+
+    std::cout << "Merge : ";
+    PrintHint(numbers, low, high);
 }
 
-void QuickSort(std::vector<int>& numbers, int low, int high) {
-
-    if (low > high) return;
-    int pi = partition(numbers, low, high);
-
-    QuickSort(numbers, low, pi - 1);
-    QuickSort(numbers, pi + 1, high);
-}
 
 int main()
 {
@@ -182,7 +128,7 @@ int main()
 
         printVector(numbers);
 
-        QuickSort(numbers, 0, numbers.size() - 1);
+        MergeSort(numbers, 0, numbers.size() - 1);
         //std::cout << "count : " << InsertionSort(numbers) << std::endl;
 
         printVector(numbers);

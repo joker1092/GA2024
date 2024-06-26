@@ -39,19 +39,21 @@ void AnimationScene::Update(float deltatime)
 		//nFrameTime -= curFrame.Duration;
 		nFrameTime = 0;
 	}
+	
+	BitmapScene::Update();
 }
 
 void AnimationScene::Render(ID2D1HwndRenderTarget* pRenderTarget)
 {
+	pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
 	if (pBitmap==nullptr)
 	{
 		return;
 	}
 	MOTION* pMotion = pAnimationAsset->GetMotionInfo(nMotionIndex);
 	FRAME_INFO Frame = pMotion->Frames[curFrameIndex];
-	//DstRect = D2D1::RectF(0, 0, Frame.Source.right - Frame.Source.left, Frame.Source.bottom - Frame.Source.top);
 	SrcRect = Frame.Source;
+	DstRect = { vRelativeLcation.x,vRelativeLcation.y , vRelativeLcation.x + Frame.Source.right - Frame.Source.left,vRelativeLcation.y + Frame.Source.bottom - Frame.Source.top };
 	pRenderTarget->SetTransform(mWorldTransform);
 	pRenderTarget->DrawBitmap(pBitmap, DstRect, 1.f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, SrcRect);
-
 }

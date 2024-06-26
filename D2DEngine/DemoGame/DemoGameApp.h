@@ -1,5 +1,6 @@
 #pragma once
 #include "../D2DEngine/WinGameApp.h"
+#include "../D2DEngine/Scene.h"
 #include "../D2DEngine/BitmapScene.h"
 #include "../D2DEngine/AnimationScene.h"
 class DemoGameApp :public WinGameApp
@@ -9,7 +10,9 @@ class DemoGameApp :public WinGameApp
     BitmapScene Moon;*/
     AnimationScene bg;
     AnimationScene player;
+    std::vector<AnimationScene*> vObjList;
 public:
+    D2D1_VECTOR_2F position;
     //float rotate = 0;
     virtual void Initialize(HINSTANCE hInstance, LPCTSTR szTitle) override;
     virtual void UnInitialize();

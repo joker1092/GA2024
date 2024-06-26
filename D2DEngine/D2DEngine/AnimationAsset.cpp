@@ -53,7 +53,7 @@ bool AnimationAsset::LoadAnimation(std::wstring FilePath)
 	if (FilePath == std::wstring(L"Run"))
 	{
 		std::wstring path = L"../Resource/" + FilePath + L".csv";
-		if (LoadAnimationFromFile(0, path.c_str()) == false) {
+		if (LoadAnimationFromFile(1, path.c_str()) == false) {
 			return false;
 		}
 	}
