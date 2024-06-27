@@ -46,7 +46,7 @@ bool AnimationAsset::LoadAnimation(std::wstring FilePath)
 				std::getline(wss, token, L',');
 				vMAnimations[index].Frames[i].Center.y = (float)_wtoi(token.c_str());
 				std::getline(wss, token, L',');
-				vMAnimations[index].Frames[i].Duration = (float)_wtoi(token.c_str());
+				vMAnimations[index].Frames[i].Duration = (float)_wtof(token.c_str());
 			}
 		}
 	}
@@ -99,6 +99,8 @@ bool AnimationAsset::LoadAnimationFromFile(int index, const wchar_t* filename)
 			vMAnimations[index].Frames[i].Center.x = (float)_wtoi(token.c_str());
 			std::getline(wss, token, L',');
 			vMAnimations[index].Frames[i].Center.y = (float)_wtoi(token.c_str());
+			std::getline(wss, token, L',');
+			vMAnimations[index].Frames[i].Duration = (float)_wtof(token.c_str());
 		}
 	}
 	return true;

@@ -10,7 +10,7 @@ void TimeSystem::UpdateTime()
 {
     QueryPerformanceCounter(&currentTime);
 
-    deltaTime = (currentTime.QuadPart - previousTime.QuadPart) / (frequency.QuadPart / 1000.f);
+    deltaTime = (currentTime.QuadPart - previousTime.QuadPart) / (frequency.QuadPart / 1000.f)/1000.f;
     previousTime = currentTime;
 }
 

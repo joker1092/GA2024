@@ -8,7 +8,7 @@ class TimeSystem
 
 	float deltaTime = 0;
 	//float timeScale = 1.f;
-	float timeScale = 1.f;
+	float timeScale = 1.0f;
 	//float timeScale2 = 1.f;
 public:
 	void InitTime();

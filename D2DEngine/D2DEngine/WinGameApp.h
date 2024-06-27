@@ -4,6 +4,7 @@
 #include "TimeSystem.h"
 #include "InputSystem.h"
 #include "ResourceManager.h"
+#include "Camera.h"
 #define MAX_LOADSTRING 100
 
 class WinGameApp
@@ -20,6 +21,7 @@ public:
 	ResourceManager* pResouceManager;
 	TimeSystem* pTime;
 	InputSystem* pInput;
+	Camera* pCamera;
 	virtual void Initialize(HINSTANCE hInstance, LPCTSTR szTitle);
 	virtual int Run();
 	virtual void UnInitialize();

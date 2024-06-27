@@ -143,6 +143,7 @@
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationScene.h" />
     <ClInclude Include="BitmapScene.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="D2DRender.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InputSystem.h" />
@@ -156,6 +157,7 @@
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationScene.cpp" />
     <ClCompile Include="BitmapScene.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="D2DEngine.cpp" />
     <ClCompile Include="D2DRender.cpp" />
     <ClCompile Include="InputSystem.cpp" />

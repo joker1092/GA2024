@@ -6,18 +6,23 @@ class AnimationScene :
     public BitmapScene
 {
     AnimationAsset* pAnimationAsset;
-    int curFrameIndex = 0;
+    
     int prevFrameIndex = 0;
     int nMotionIndex = 0;
     float nFrameTime = 0;
     D2D1_RECT_F SrcRect;
     D2D1_RECT_F DstRect;
+    
+    
+    D2D1_MATRIX_3X2_F mFrameTransform;
     std::wstring AnimationFilePath;
 
 public:
     AnimationScene();
     virtual ~AnimationScene();
-    
+    bool bMiror;
+    int curFrameIndex = 0;
+    void SetMiror(bool miror) { bMiror = miror; }
     bool LoadAnimationAsset(const wchar_t* filePath);
     void SetAnimaitonIndex(int index);
     void Update(float deltatime);

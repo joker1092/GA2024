@@ -1,22 +1,34 @@
 #include "DemoGameApp.h"
 
+std::random_device rd;
+std::mt19937 gen(rd());
+std::uniform_int_distribution<long> uniform_dist(100, 600); // 0부터 99까지 균등 분포
+std::uniform_int_distribution<int> miror(0, 1); // 0부터 99까지 균등 분포
+
 void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 {
 	WinGameApp::Initialize(hInstance, szTitle);
 	//todo
+	
 	bg.LoadD2DBitmap(L"../Resource/midnight.png", pD2DRender);
 	bg.LoadAnimationAsset(L"Background");
 	RECT rc;
 	GetClientRect(m_hWnd, &rc);
 	//bg.SetDstRect(D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom));
-	bg.SetLocation({604	,246 });
-	bg.SetScale({ 3.28,3.06 });
+	bg.SetLocation({ 0,0 });
+	bg.SetScale({1,1});
 	//vObjList.push_back(&bg);
-	/*player.LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
+	player.LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
 	player.LoadAnimationAsset(L"Run");
 	player.SetAnimaitonIndex(1);
-	position = { 200,300 };
-	player.SetLocation(position);*/
+	player.SetMiror(false);
+	player.SetLocation({ 800, 400 });
+
+	/*player2.LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
+	player2.LoadAnimationAsset(L"Run");
+	player2.SetAnimaitonIndex(1);
+	player2.SetMiror(true);
+	player2.SetLocation({ 800, 500 });*/
 	//vObjList.push_back(&player);
 	
 	/*Sun.LoadD2DBitmap(L"../Resource/sun.jpg", pD2DRender);
@@ -39,8 +51,8 @@ void DemoGameApp::UnInitialize()
 	Earth.~BitmapScene();
 	Moon.~BitmapScene();*/
 	bg.~AnimationScene();
-	//player.~AnimationScene();
-
+	player.~AnimationScene();
+	//player2.~AnimationScene();
 	for (auto& objScene : vObjList)
 	{
 		objScene->~AnimationScene();
@@ -50,8 +62,9 @@ void DemoGameApp::UnInitialize()
 
 void DemoGameApp::Update(float deltatime)
 {
-	/*std::cout <<"delta : " << deltatime << "";
-	std::cout <<"elepse :"<< elepsedTime << std::endl;*/
+	std::cout <<"delta : " << deltatime << ""<< std::endl;
+	std::cout << player.curFrameIndex << std::endl;
+	//std::cout <<"elepse :"<< elepsedTime << std::endl;*/
 	//todo
 
 	
@@ -66,7 +79,11 @@ void DemoGameApp::Update(float deltatime)
 		cPlayer->LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
 		cPlayer->LoadAnimationAsset(L"Run");
 		cPlayer->SetAnimaitonIndex(1);
-		cPlayer->SetLocation({ 200,100 });
+		cPlayer->SetMiror(miror(gen));
+		
+		float x=uniform_dist(gen);
+		float y = uniform_dist(gen);
+		cPlayer->SetLocation({ (float)x,(float)y });
 		vObjList.push_back(cPlayer);
 		//todo : obj add
 	}
@@ -84,16 +101,31 @@ void DemoGameApp::Update(float deltatime)
 	}
 
 	bg.Update(deltatime);
-	//player.Update(deltatime);
+	player.Update(deltatime);
+	
+	//player2.Update(deltatime);
 	if (!vObjList.empty()) {
 		for (auto& objScene : vObjList)
 		{
 			float x = objScene->vRelativeLcation.x;
-			x++;
-			if (x > 1240)
+			if (objScene->bMiror)
 			{
-				x = 200;
+				//std::cout << "x" << x << std::endl;
+				--x;
+				if (x < 200)
+				{
+					x = 1200;
+				}
+				
 			}
+			else {
+				x++;
+				if (x > 1200)
+				{
+					x = 200;
+				}
+			}
+			
 			objScene->SetLocation({ x,objScene->vRelativeLcation.y });
 			objScene->Update(deltatime);
 		}
@@ -124,7 +156,8 @@ void DemoGameApp::Render(ID2D1HwndRenderTarget* pRenderTarget)
 		}
 	}
 	
-	//player.Render(pRenderTarget);
+	player.Render(pRenderTarget);
+	//player2.Render(pRenderTarget);
 
 	/*Sun.Render(pRenderTarget);
 	Earth.Render(pRenderTarget);

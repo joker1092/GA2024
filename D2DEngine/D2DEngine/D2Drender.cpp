@@ -121,6 +121,11 @@ void D2DRender::DrawTextRect(const wchar_t* str, D2D1_RECT_F rect)
 	);
 }
 
+void D2DRender::DrawRect(D2D1_RECT_F rect)
+{
+	pRenderTaget->DrawRectangle(rect, pBrush, 1.0f);
+}
+
 
 size_t D2DRender::GetUsedVRAM()
 {

@@ -14,12 +14,14 @@ WinGameApp::WinGameApp()
     pD2DRender = new D2DRender;
     pTime = new TimeSystem;
     pInput = new InputSystem;
+    pCamera = new Camera;
     pResouceManager = new ResourceManager(pD2DRender);
 }
 
 WinGameApp::~WinGameApp()
 {
     delete pResouceManager;
+    delete pCamera;
     delete pInput;
     delete pTime;
     delete pD2DRender;
@@ -107,21 +109,25 @@ int WinGameApp::Run()
         else {
             pTime->UpdateTime();
             elepsedTime += pTime->GetDeltaTime();
-            if (elepsedTime > 60)
-            {
-                Update(pTime->GetDeltaTime());
-                pD2DRender->BeginDraw();
-                pD2DRender->Clear(D2D1::ColorF(D2D1::ColorF::Black));
-                Render(pD2DRender->GetRenderTarget());
-                std::wstring FrameRate = std::to_wstring(pTime->GetFrameRate());
-                std::wstring vrem = std::to_wstring(pD2DRender->GetUsedVRAM());
-                FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem;
-                const wchar_t* myFrameRate = FrameRate.c_str();
-                pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-                pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(50, 50, 200,200));
-                pD2DRender->EndDraw();
-                elepsedTime -= 60;
-            }
+            
+            Update(pTime->GetDeltaTime());
+            pD2DRender->BeginDraw();
+            pD2DRender->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
+            pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+            Render(pD2DRender->GetRenderTarget());
+            pD2DRender->DrawRect({ 0,0,10,10 });
+            pD2DRender->DrawRect({ 1270,0,1280,10 });
+            pD2DRender->DrawRect({ 0,950,10,960 });
+            pD2DRender->DrawRect({ 1270,950,1280,960 });
+            std::wstring FrameRate = std::to_wstring(pTime->GetFrameRate());
+            std::wstring vrem = std::to_wstring(pD2DRender->GetUsedVRAM());
+            std::wstring comment = L"추가 : A , 삭제 : D";
+            FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem+L"\n"+comment;
+            const wchar_t* myFrameRate = FrameRate.c_str();
+            pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+            pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(50, 50, 200,200));
+            pD2DRender->EndDraw();
+            
             pInput->ResetInput();
         }
        
@@ -165,8 +171,9 @@ BOOL InitInstance(HINSTANCE hInstance,HWND& m_hWnd, LPCTSTR _szTitle)
 {
 
     m_hWnd = CreateWindowW(_szTitle, _szTitle, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
-
+        0, 0, 1280, 960, nullptr, nullptr, hInstance, nullptr);
+    /*m_hWnd = CreateWindowW(_szTitle, _szTitle, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT,0,CW_USEDEFAULT,0, nullptr, nullptr, hInstance, nullptr); */
     if (!m_hWnd)
     {
         return FALSE;

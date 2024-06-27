@@ -26,6 +26,7 @@ public:
 	void Clear(D2D1::ColorF(color));
 	void EndDraw();
 	void DrawTextRect(const wchar_t* str, D2D1_RECT_F rect);
+	void DrawRect(D2D1_RECT_F rect);
 	size_t GetUsedVRAM();
 	ID2D1HwndRenderTarget* GetRenderTarget() { return pRenderTaget; }
 
