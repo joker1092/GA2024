@@ -1,14 +1,14 @@
-ï»¿#include <iostream>
+#include <iostream>
 using namespace std;
 //---------------------------------------------------------------------------------------
-//ì•„ì´í…œ í´ë˜ìŠ¤ ì„¤ê³„ ( ë¬´ê¸°, ë°©ì–´êµ¬, ë°˜ì§€, ì‹ ë°œ ) ( ìƒì† í™œìš© )
+//¾ÆÀÌÅÛ Å¬·¡½º ¼³°è ( ¹«±â, ¹æ¾î±¸, ¹İÁö, ½Å¹ß ) ( »ó¼Ó È°¿ë )
 class Item {
 	int index;
 	char name[40];
 	int level;
 	char grade;
 public:
-	Item() { index = 0; level = 0; grade = 'D'; memset(name, '\0',40); }
+	Item() { index = 0; level = 0; grade = 'D'; memset(name, '\0', 40); }
 	Item(const char* _name, int _level, char _grade, int _index = 0) {
 		index = _index;
 		int namesize = strlen(_name) + 1;
@@ -16,7 +16,7 @@ public:
 		level = _level;
 		grade = _grade;
 	}
-	~Item(){}
+	~Item() {}
 	void SetGrade(char _grade) {
 		grade = _grade;
 	}
@@ -49,7 +49,7 @@ public:
 			break;
 		}
 	}
- 	virtual void Show() {
+	virtual void Show() {
 		cout << index << "," << name << "," << level << ",'" << grade << "'";
 	}
 	bool operator==(Item& other) {
@@ -64,7 +64,7 @@ class Weapon : public Item {
 	int atk;
 public:
 	Weapon() :Item::Item() { atk = 10; }
-	Weapon(const char* _name, int _level, char _grade, int _index = 0) :Item(_name, _level, _grade, _index) 
+	Weapon(const char* _name, int _level, char _grade, int _index = 0) :Item(_name, _level, _grade, _index)
 	{
 		switch (_grade)
 		{
@@ -152,7 +152,7 @@ public:
 	}
 };
 
-//ì•„ì´í…œì„ ì¶”ê°€ í•˜ê³  ëª©ë¡ ë³´ì—¬ì£¼ê¸°. (ë™ì í• ë‹¹)
+//¾ÆÀÌÅÛÀ» Ãß°¡ ÇÏ°í ¸ñ·Ï º¸¿©ÁÖ±â. (µ¿ÀûÇÒ´ç)
 class ItemManager
 {
 	int index;
@@ -170,11 +170,11 @@ public:
 		}
 	};
 
-	Item* ItemIdentity(int identity, const char* name, int level, char grade,int index) {
+	Item* ItemIdentity(int identity, const char* name, int level, char grade, int index) {
 		switch (identity)
 		{
 		case 1:
-			return new Weapon(name,level,grade,index);
+			return new Weapon(name, level, grade, index);
 		case 2:
 			return new Armor(name, level, grade, index);
 		case 3:
@@ -184,7 +184,7 @@ public:
 		default:
 			return new Item(name, level, grade, index);
 		}
-		
+
 	}
 	void Add() {
 		bool isAdd = false;
@@ -196,20 +196,20 @@ public:
 		}
 		if (!isAdd)
 		{
-			cout << "ì•„ì´í…œì´ ë„ˆë¬´ ë§ìŠµë‹ˆë‹¤. ì‚­ì œ í•´ì£¼ì„¸ìš”" << endl;
+			cout << "¾ÆÀÌÅÛÀÌ ³Ê¹« ¸¹½À´Ï´Ù. »èÁ¦ ÇØÁÖ¼¼¿ä" << endl;
 			return;
 		}
-		cout << "ì•„ì´í…œì„ ì…ë ¥í•˜ì„¸ìš”. (ì¢…ë¥˜(1:ë¬´ê¸° 2:ë°©ì–´êµ¬: 3:ë°˜ì§€ 4:ì‹ ë°œ), ì´ë¦„, ë ˆë²¨, ë“±ê¸‰ ) ex)1 ë‹¨ê²€  1   A" << endl;
+		cout << "¾ÆÀÌÅÛÀ» ÀÔ·ÂÇÏ¼¼¿ä. (Á¾·ù(1:¹«±â 2:¹æ¾î±¸: 3:¹İÁö 4:½Å¹ß), ÀÌ¸§, ·¹º§, µî±Ş ) ex)1 ´Ü°Ë  1   A" << endl;
 		int identity;
 		char name[40];
 		int level;
 		char grade;
 		const char* pcchar = name;
-		
+
 		cin >> identity >> name >> level >> grade;
-		
-		Item* item = ItemIdentity(identity,pcchar, level, grade, index);
-		if (item!=nullptr)
+
+		Item* item = ItemIdentity(identity, pcchar, level, grade, index);
+		if (item != nullptr)
 		{
 			for (size_t i = 0; i < 100; i++)
 			{
@@ -222,7 +222,7 @@ public:
 			}
 		}
 		else {
-			cout << "ì˜ëª» ì…ë ¥ í•˜ì…¨ìŠµë‹ˆë‹¤." << endl;
+			cout << "Àß¸ø ÀÔ·Â ÇÏ¼Ì½À´Ï´Ù." << endl;
 		}
 	};
 	void remove() {
@@ -235,11 +235,11 @@ public:
 		}
 		if (!isRemove)
 		{
-			cout << "ì•„ì´í…œì´ ì—†ìŠµë‹ˆë‹¤. ì¶”ê°€ í•´ì£¼ì„¸ìš”" << endl;
+			cout << "¾ÆÀÌÅÛÀÌ ¾ø½À´Ï´Ù. Ãß°¡ ÇØÁÖ¼¼¿ä" << endl;
 			return;
 		}
 		int input;
-		cout << "ì‚­ì œ í•  ì•„ì´í…œ ì…ë ¥: ";
+		cout << "»èÁ¦ ÇÒ ¾ÆÀÌÅÛ ÀÔ·Â: ";
 		cin >> input;
 		for (size_t i = 0; i < 100; i++)
 		{
@@ -267,7 +267,7 @@ public:
 		}
 	}
 	void GradeUp() {
-		cout << "í•©ì„± ì¬ë£Œë¥¼ ì…ë ¥í•˜ì„¸ìš”.(ë™ì¼í•œ ë“±ê¸‰ì˜ ë‘ ì•„ì´í…œì˜ ë²ˆí˜¸)" << endl;
+		cout << "ÇÕ¼º Àç·á¸¦ ÀÔ·ÂÇÏ¼¼¿ä.(µ¿ÀÏÇÑ µî±ŞÀÇ µÎ ¾ÆÀÌÅÛÀÇ ¹øÈ£)" << endl;
 		int a;
 		int b;
 		Item* item1 = nullptr;
@@ -275,7 +275,7 @@ public:
 		cin >> a;
 		cin >> b;
 		if (a == b) {
-			cout << "ì˜ ëª» ì…ë ¥í•˜ì…¨ìŠµë‹ˆë‹¤." << endl;
+			cout << "Àß ¸ø ÀÔ·ÂÇÏ¼Ì½À´Ï´Ù." << endl;
 			return;
 		}
 
@@ -288,7 +288,7 @@ public:
 					item1 = list[i];
 					if (item1->GetGrade() == 'S')
 					{
-						cout << "ìµœê³  ë“±ê¸‰ì˜ ì•„ì´í…œì…ë‹ˆë‹¤." << endl;
+						cout << "ÃÖ°í µî±ŞÀÇ ¾ÆÀÌÅÛÀÔ´Ï´Ù." << endl;
 						return;
 					}
 				}
@@ -297,31 +297,31 @@ public:
 					item2 = list[i];
 					if (item2->GetGrade() == 'S')
 					{
-						cout << "ìµœê³  ë“±ê¸‰ì˜ ì•„ì´í…œì…ë‹ˆë‹¤." << endl;
+						cout << "ÃÖ°í µî±ŞÀÇ ¾ÆÀÌÅÛÀÔ´Ï´Ù." << endl;
 						return;
 					}
 				}
 			}
 		}
 		if (item1->GetGrade() != item2->GetGrade()) {
-			cout << "ë“±ê¸‰ì´ ê°™ì§€ ì•ŠìŠµë‹ˆë‹¤." << endl;
+			cout << "µî±ŞÀÌ °°Áö ¾Ê½À´Ï´Ù." << endl;
 			return;
 		}
-		
+
 		int identity;
 		if (typeid(*item1) == typeid(Weapon))
 			identity = 1;
-		else if (typeid(*item1) == typeid(Armor)) 
+		else if (typeid(*item1) == typeid(Armor))
 			identity = 2;
-		else if (typeid(*item1) == typeid(Ring)) 
+		else if (typeid(*item1) == typeid(Ring))
 			identity = 3;
 		else if (typeid(*item1) == typeid(Shoes))
 			identity = 4;
-		else 
+		else
 			identity = 0;
 
 		item1->GradeUp();
-		cout << "í•©ì„±ê²°ê³¼ : " << index << "," << item1->GetName() << "," << 1 << "," << item1->GetGrade() << endl;
+		cout << "ÇÕ¼º°á°ú : " << index << "," << item1->GetName() << "," << 1 << "," << item1->GetGrade() << endl;
 		const char* p = item1->GetName();
 		//Item* item = new Item(p, 1, item1->GetGrade(), index);
 		Item* item = ItemIdentity(identity, p, 1, item1->GetGrade(), index);
@@ -341,8 +341,8 @@ public:
 		print();
 		int input;
 		Item* item1 = nullptr;
-		cout << "ë ˆë²¨ì—…(ì•„ì´í…œ ìµœëŒ€ë ˆë²¨ì€ 10)" << endl;
-		cout << "ë ˆë²¨ì—… í•  ì•„ì´í…œ ì…ë ¥: ";
+		cout << "·¹º§¾÷(¾ÆÀÌÅÛ ÃÖ´ë·¹º§Àº 10)" << endl;
+		cout << "·¹º§¾÷ ÇÒ ¾ÆÀÌÅÛ ÀÔ·Â: ";
 		cin >> input;
 
 		for (size_t i = 0; i < 100; i++)
@@ -354,7 +354,7 @@ public:
 					item1 = list[i];
 					if (item1->GetLevel() == 10)
 					{
-						cout << "ì•„ì´í…œì´ ìµœëŒ€ë˜ë°¸ì…ë‹ˆë‹¤." << endl;
+						cout << "¾ÆÀÌÅÛÀÌ ÃÖ´ë·¡¹ëÀÔ´Ï´Ù." << endl;
 						return;
 					}
 					else {
@@ -362,12 +362,12 @@ public:
 						item1->SetLevel(++lev);
 					}
 				}
-					
+
 			}
 		}
 	}
 	void print() {
-		cout << "ëª©ë¡: " << endl;
+		cout << "¸ñ·Ï: " << endl;
 		for (size_t i = 0; i < 100; i++)
 		{
 			if (list[i] == nullptr) {
@@ -377,14 +377,14 @@ public:
 		}
 	}
 };
-//ê¸°ë³¸ ì¸í„°í˜ì´ìŠ¤
-//1. ì•„ì´í…œ ì¶”ê°€  2, ì‚­ì œ  3. ë ˆë²¨ì—…  4 í•©ì„±  5 ëª©ë¡ë³´ê¸° (0, ë‚˜ê°€ê¸°)
+//±âº» ÀÎÅÍÆäÀÌ½º
+//1. ¾ÆÀÌÅÛ Ãß°¡  2, »èÁ¦  3. ·¹º§¾÷  4 ÇÕ¼º  5 ¸ñ·Ïº¸±â (0, ³ª°¡±â)
 int main(void) {
-	int input=-1;
+	int input = -1;
 	ItemManager g_im;
-	while (input !=0)
+	while (input != 0)
 	{
-		cout << "1. ì•„ì´í…œ ì¶”ê°€  2, ì‚­ì œ  3. ë ˆë²¨ì—…  4 í•©ì„±  5 ëª©ë¡ë³´ê¸° (0, ë‚˜ê°€ê¸°)" << endl;
+		cout << "1. ¾ÆÀÌÅÛ Ãß°¡  2, »èÁ¦  3. ·¹º§¾÷  4 ÇÕ¼º  5 ¸ñ·Ïº¸±â (0, ³ª°¡±â)" << endl;
 		cin >> input;
 		switch (input)
 		{
@@ -412,41 +412,42 @@ int main(void) {
 
 
 //EX)
-//ì•„ì´í…œì„ ì…ë ¥í•˜ì„¸ìš”. (ê³ ìœ ì•„ì´ë””, ì´ë¦„, ë ˆë²¨, ë“±ê¸‰ )
+//¾ÆÀÌÅÛÀ» ÀÔ·ÂÇÏ¼¼¿ä. (°íÀ¯¾ÆÀÌµğ, ÀÌ¸§, ·¹º§, µî±Ş )
 //
-//ì•„ì´í…œ ì¶”ê°€: ë‹¨ê²€, 1, 'A'
+//¾ÆÀÌÅÛ Ãß°¡: ´Ü°Ë, 1, 'A'
 //
-//ëª©ë¡: 
-//1, ë‹¨ê²€, 1, 'A'
+//¸ñ·Ï: 
+//1, ´Ü°Ë, 1, 'A'
 //
-//ì•„ì´í…œ ì¶”ê°€: ê°‘ì˜·, 1, 'B'
+//¾ÆÀÌÅÛ Ãß°¡: °©¿Ê, 1, 'B'
 //
-//ëª©ë¡: 
-//1, ë‹¨ê²€, 1, 'A'
-//2, ê°‘ì˜·, 1, 'B'
+//¸ñ·Ï: 
+//1, ´Ü°Ë, 1, 'A'
+//2, °©¿Ê, 1, 'B'
 //
-//ì•„ì´í…œ ì¶”ê°€: ê°‘ì˜·, 1, 'B'
+//¾ÆÀÌÅÛ Ãß°¡: °©¿Ê, 1, 'B'
 //
-//ëª©ë¡: 
-//1, ë‹¨ê²€, 1, 'A'
-//2, ê°‘ì˜·, 1, 'B'
-//3, ê°‘ì˜·, 1, 'B'
+//¸ñ·Ï: 
+//1, ´Ü°Ë, 1, 'A'
+//2, °©¿Ê, 1, 'B'
+//3, °©¿Ê, 1, 'B'
 
-//íŠ¹ì • ì•„ì´í…œ ë ˆë²¨ì—… í•˜ê¸° ( ìµœëŒ€ë ˆë²¨ì€ 10)
+//Æ¯Á¤ ¾ÆÀÌÅÛ ·¹º§¾÷ ÇÏ±â ( ÃÖ´ë·¹º§Àº 10)
 //
-//ë ˆë²¨ì—… í•  ì•„ì´í…œ ì…ë ¥: 1
+//·¹º§¾÷ ÇÒ ¾ÆÀÌÅÛ ÀÔ·Â: 1
 //
-//ëª©ë¡: 
-//1, ë‹¨ê²€, 2, 'A'
-//2, ê°‘ì˜·, 1, 'B'
-//3, ê°‘ì˜·, 1, 'B'
+//¸ñ·Ï: 
+//1, ´Ü°Ë, 2, 'A'
+//2, °©¿Ê, 1, 'B'
+//3, °©¿Ê, 1, 'B'
 
-//ì•„ì´í…œ í•©ì„± í•˜ê¸°  ( ì•„ì´í…œ 2ê°œ ì…ë ¥ - ë“±ê¸‰ ë†’ì€ ì•„ì´í…œ í•˜ë‚˜)  (S, A, B, C ë“±ê¸‰)
+//¾ÆÀÌÅÛ ÇÕ¼º ÇÏ±â  ( ¾ÆÀÌÅÛ 2°³ ÀÔ·Â - µî±Ş ³ôÀº ¾ÆÀÌÅÛ ÇÏ³ª)  (S, A, B, C µî±Ş)
 //
-//ì¬ë£Œ: 2 3
+//Àç·á: 2 3
 //
-//ëª©ë¡: 
-//1, ë‹¨ê²€, 2, 'A'
-//4, ê°‘ì˜·, 1, 'A'        
+//¸ñ·Ï: 
+//1, ´Ü°Ë, 2, 'A'
+//4, °©¿Ê, 1, 'A'        
 
 
+	
