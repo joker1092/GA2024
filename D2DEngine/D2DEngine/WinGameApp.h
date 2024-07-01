@@ -4,7 +4,7 @@
 #include "TimeSystem.h"
 #include "InputSystem.h"
 #include "ResourceManager.h"
-#include "Camera.h"
+#include "World.h"
 #define MAX_LOADSTRING 100
 
 class WinGameApp
@@ -17,16 +17,18 @@ protected:
 public:
 	WinGameApp();
 	~WinGameApp();
-	D2DRender* pD2DRender;
-	ResourceManager* pResouceManager;
-	TimeSystem* pTime;
-	InputSystem* pInput;
-	Camera* pCamera;
+	D2DRender* pD2DRender = nullptr;
+	ResourceManager* pResouceManager = nullptr;
+	TimeSystem* pTime = nullptr;
+	InputSystem* pInput = nullptr;
+	World* m_pWorld = nullptr;
 	virtual void Initialize(HINSTANCE hInstance, LPCTSTR szTitle);
 	virtual int Run();
 	virtual void UnInitialize();
-	virtual void Update(float deltatime) = 0;
-	virtual void Render(ID2D1HwndRenderTarget* pRenderTarget) = 0;
+	virtual void Update(float deltatime);
+	void RectPoint();
+	void DrawInfoRect();
+	virtual void Render(ID2D1RenderTarget* pRenderTarget);
 	HINSTANCE GetHintance() { return hInst; }
 };
 

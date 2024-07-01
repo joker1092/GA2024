@@ -28,7 +28,7 @@ void AnimationScene::Update(float deltatime)
 {
 	//std::cout << deltatime << std::endl;
 	//std::cout << curFrameIndex << std::endl;
-	BitmapScene::Update();
+	BitmapScene::Update(deltatime);
 	nFrameTime += deltatime;
 	MOTION* pMotion = pAnimationAsset->GetMotionInfo(nMotionIndex);
 	FRAME_INFO& curFrame = pMotion->Frames[curFrameIndex];
@@ -50,10 +50,10 @@ void AnimationScene::Update(float deltatime)
 	}
 }
 
-void AnimationScene::Render(ID2D1HwndRenderTarget* pRenderTarget)
+void AnimationScene::Render(ID2D1RenderTarget* pRenderTarget)
 {
 	//pRenderTarget->SetTransform(D2D1::Matrix3x2F::Identity());
-	if (pBitmap==nullptr)
+	if (pBitmap == nullptr)
 	{
 		return;
 	}

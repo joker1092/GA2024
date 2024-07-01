@@ -20,5 +20,13 @@ public:
 	void SetRotation(float Rotation) { fRelativeRotation = Rotation; }
 	void SetLocation(D2D1_VECTOR_2F Location) { vRelativeLcation = Location; }
 	void SetParant(Scene* _pParentScene) {pParentScene = _pParentScene;}
+	D2D1_VECTOR_2F GetWorldLocation()
+	{
+		D2D1_VECTOR_2F out;
+		out.x = mWorldTransform._31;
+		out.y = mWorldTransform._32;
+		return out;
+	}
 };
 
+ 

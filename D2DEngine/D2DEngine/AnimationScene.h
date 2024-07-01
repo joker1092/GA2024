@@ -26,7 +26,7 @@ public:
     bool LoadAnimationAsset(const wchar_t* filePath);
     void SetAnimaitonIndex(int index);
     void Update(float deltatime);
-    void Render(ID2D1HwndRenderTarget* pRenderTarget);
+    void Render(ID2D1RenderTarget* pRenderTarget);
     void SetDstRect(D2D1_RECT_F rect) { DstRect = rect; }
 };
 

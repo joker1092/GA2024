@@ -1,14 +1,17 @@
 #pragma once
 #include "framework.h"
+#include "Scene.h"
+#include "AABB.h"
+#include "Component.h"
 
-class Camera
+class Camera:public Scene, public Component
 {
-	D2D_MATRIX_3X2_F Transform;
 public:
-	Camera() { Transform = D2D1::Matrix3x2F::Identity(); }
-	~Camera() {}
-	D2D_MATRIX_3X2_F GetCameraTransform() { return Transform; }
-	void CameraUpdate(float deltatime);
-	void TreckingTarget();
+	Camera();
+	virtual ~Camera();
+
+	AABB m_ViewBoundBox;
+
+	virtual void Update(float deltaTime);
 };
 

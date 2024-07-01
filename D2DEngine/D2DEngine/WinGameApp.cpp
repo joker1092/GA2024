@@ -14,14 +14,14 @@ WinGameApp::WinGameApp()
     pD2DRender = new D2DRender;
     pTime = new TimeSystem;
     pInput = new InputSystem;
-    pCamera = new Camera;
     pResouceManager = new ResourceManager(pD2DRender);
+    m_pWorld = new World; // Default World
 }
 
 WinGameApp::~WinGameApp()
 {
+    delete m_pWorld;
     delete pResouceManager;
-    delete pCamera;
     delete pInput;
     delete pTime;
     delete pD2DRender;
@@ -111,23 +111,8 @@ int WinGameApp::Run()
             elepsedTime += pTime->GetDeltaTime();
             
             Update(pTime->GetDeltaTime());
-            pD2DRender->BeginDraw();
-            pD2DRender->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
-            pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-            Render(pD2DRender->GetRenderTarget());
-            pD2DRender->DrawRect({ 0,0,10,10 });
-            pD2DRender->DrawRect({ 1270,0,1280,10 });
-            pD2DRender->DrawRect({ 0,950,10,960 });
-            pD2DRender->DrawRect({ 1270,950,1280,960 });
-            std::wstring FrameRate = std::to_wstring(pTime->GetFrameRate());
-            std::wstring vrem = std::to_wstring(pD2DRender->GetUsedVRAM());
-            std::wstring comment = L"추가 : A , 삭제 : D";
-            FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem+L"\n"+comment;
-            const wchar_t* myFrameRate = FrameRate.c_str();
-            pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-            pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(50, 50, 200,200));
-            pD2DRender->EndDraw();
             
+            Render(pD2DRender->GetRenderTarget());
             pInput->ResetInput();
         }
        
@@ -137,7 +122,40 @@ int WinGameApp::Run()
 
 void WinGameApp::UnInitialize()
 {
+
     pD2DRender->D2DUnintialize();
+}
+
+void WinGameApp::Update(float deltatime)
+{
+    m_pWorld->Update(deltatime);
+}
+
+void WinGameApp::RectPoint() {
+    pD2DRender->DrawRect({ 0,0,10,10 });
+    pD2DRender->DrawRect({ 1270,0,1280,10 });
+    pD2DRender->DrawRect({ 0,950,10,960 });
+    pD2DRender->DrawRect({ 1270,950,1280,960 });
+}
+
+void WinGameApp::DrawInfoRect() {
+    std::wstring FrameRate = std::to_wstring(pTime->GetFrameRate());
+    std::wstring vrem = std::to_wstring(pD2DRender->GetUsedVRAM());
+    std::wstring comment = L"추가 : A , 삭제 : D";
+    FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem + L"\n" + comment;
+    const wchar_t* myFrameRate = FrameRate.c_str();
+    pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
+    pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(50, 50, 200, 200));
+}
+
+void WinGameApp::Render(ID2D1RenderTarget* pRenderTarget)
+{
+    pRenderTarget->BeginDraw();
+    pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
+    m_pWorld->Render(pRenderTarget);
+    RectPoint();
+    DrawInfoRect();
+    pRenderTarget->EndDraw();
 }
 
 
