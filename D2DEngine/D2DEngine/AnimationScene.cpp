@@ -1,5 +1,6 @@
 #include "AnimationScene.h"
 
+class GameObject;
 AnimationScene::AnimationScene()
 {
 }

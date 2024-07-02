@@ -23,9 +23,10 @@ void GameObject::Update(float deltaTime)
 		pComponent->Update(deltaTime);
 	}
 
-	if (m_pRootScene)
+	if (m_pRootScene) {
 		m_BoundBox.m_Center = m_pRootScene->GetWorldLocation();
-		//m_BoundBox.m_Extent = D2D1::SizeF(0, 0);
+		m_BoundBox.m_Extent = m_pRootScene->GetExtent();
+	}	
 }
 
 void GameObject::Render(ID2D1RenderTarget* pRenderTarget)

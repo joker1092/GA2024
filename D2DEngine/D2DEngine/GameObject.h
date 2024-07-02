@@ -6,9 +6,10 @@
 class Component;
 class Scene;
 class World;
-class GameObject
-{
+class GameObject{
 public:
+	GameObject();
+	virtual ~GameObject();
 	enum ZOrder
 	{
 		DISABELED,
@@ -19,10 +20,6 @@ public:
 		EFFECT,
 		UI,
 	};
-
-	GameObject();
-	virtual ~GameObject();
-
 	std::vector<Component*> m_OwnedComponents;	// 소유한 컴포넌트들
 	Scene* m_pRootScene = nullptr;				// 컴포넌트 중에 어느게 루트인지 설정
 	World* m_pOwner = nullptr;					// 이 게임 오브젝트가 속한 월드

@@ -28,7 +28,7 @@ public:
 		out.y = mWorldTransform._32;
 		return out;
 	}
-	//virtual D2D1_VECTOR_2F GetWorldLocation() = 0;
+	virtual D2D1_VECTOR_2F GetExtent() { return { 0,0 }; }
 };
 
  

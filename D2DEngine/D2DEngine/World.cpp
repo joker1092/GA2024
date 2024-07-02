@@ -12,7 +12,7 @@ World::World()
 	SetCullingBound(&m_CullingBoundDefault);
 	// 카메라를 생성한다.
 	m_pCamera = new Camera();
-	m_pCamera->SetLocation({ m_pCamera->GetViewBoundBox()->m_Center.x,m_pCamera->GetViewBoundBox()->m_Center.y });
+	m_pCamera->SetLocation({ width / 2, height / 2 });
 }
 
 World::~World()
@@ -73,3 +73,4 @@ void World::Clear()
 {
 	m_GameObjects.clear();
 }
+
