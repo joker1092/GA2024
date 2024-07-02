@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include "AABB.h"
+#include "Camera.h"
 
 // 게임의 세계를 나타내는 클래스
 // GameObect타입으로 생성된 객체들을 관리하여 Update, Render를 호출한다.
@@ -9,16 +10,25 @@ class World
 public:
 	World();
 	virtual ~World();
-
+	int objectCount = 0;
+	int renderCount = 0;
 	std::list<GameObject*> m_GameObjects;
+	std::vector< GameObject*> m_RenderQueue;
 	AABB* m_pCullingBound = nullptr;
 	AABB m_CullingBoundDefault;
+	
 public:
 	void Update(float deltaTime);
-	void Render(ID2D1RenderTarget* pRenderTarget);
+	void Render(ID2D1RenderTarget* pRenderTarget, ID2D1SolidColorBrush* brush);
 	void Clear();
 	void SetCullingBound(AABB* pBound) { m_pCullingBound = pBound; }
+	Camera* m_pCamera = nullptr;
 	// 템플릿 함수로 GameObject를 생성한다.
+
+	Camera* GetCamera() { return m_pCamera; }
+
+
+
 	template<typename T>
 	T* CreateGameObject()
 	{

@@ -3,10 +3,11 @@
 #include "../D2DEngine/Scene.h"
 #include "../D2DEngine/BitmapScene.h"
 #include "../D2DEngine/AnimationScene.h"
+#include "../D2DEngine/Camera.h"
+
 #include <random>
 class DemoGameApp :public WinGameApp
 {
-    
     GameObject* backGound;
     GameObject* player;
     AnimationScene* animeSceneBG;

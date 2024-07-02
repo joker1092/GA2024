@@ -132,28 +132,38 @@ void WinGameApp::Update(float deltatime)
 }
 
 void WinGameApp::RectPoint() {
+    //1920,1280
     pD2DRender->DrawRect({ 0,0,10,10 });
-    pD2DRender->DrawRect({ 1270,0,1280,10 });
-    pD2DRender->DrawRect({ 0,950,10,960 });
-    pD2DRender->DrawRect({ 1270,950,1280,960 });
+    pD2DRender->DrawRect({ 1890,0,1900,10 });
+    pD2DRender->DrawRect({ 0,1230,10,1240 });
+    pD2DRender->DrawRect({ 1890,1230,1900,1240 });
 }
 
 void WinGameApp::DrawInfoRect() {
     std::wstring FrameRate = std::to_wstring(pTime->GetFrameRate());
     std::wstring vrem = std::to_wstring(pD2DRender->GetUsedVRAM());
     std::wstring comment = L"추가 : A , 삭제 : D";
-    FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem + L"\n" + comment;
+    std::wstring objcount = L"Object Count : " + std::to_wstring(m_pWorld->objectCount);
+    std::wstring rendercount = L"render Count : " + std::to_wstring(m_pWorld->renderCount);
+    FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem + L"\n" + comment + L"\n" + objcount + L"\n" + rendercount;
     const wchar_t* myFrameRate = FrameRate.c_str();
     pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
-    pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(50, 50, 200, 200));
+    pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(400, 200, 800, 400));
 }
 
 void WinGameApp::Render(ID2D1RenderTarget* pRenderTarget)
 {
     pRenderTarget->BeginDraw();
     pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
-    m_pWorld->Render(pRenderTarget);
     RectPoint();
+    pD2DRender->DrawRect(
+        { m_pWorld->GetCamera()->GetViewBoundBox()->GetMinX(),
+        m_pWorld->GetCamera()->GetViewBoundBox()->GetMinY(),
+        m_pWorld->GetCamera()->GetViewBoundBox()->GetMaxX(),
+        m_pWorld->GetCamera()->GetViewBoundBox()->GetMaxY()}
+    );
+    m_pWorld->Render(pRenderTarget, pD2DRender->getBrush());
+    
     DrawInfoRect();
     pRenderTarget->EndDraw();
 }
@@ -189,7 +199,7 @@ BOOL InitInstance(HINSTANCE hInstance,HWND& m_hWnd, LPCTSTR _szTitle)
 {
 
     m_hWnd = CreateWindowW(_szTitle, _szTitle, WS_OVERLAPPEDWINDOW,
-        0, 0, 1280, 960, nullptr, nullptr, hInstance, nullptr);
+        0, 0, 1920, 1280, nullptr, nullptr, hInstance, nullptr);
     /*m_hWnd = CreateWindowW(_szTitle, _szTitle, WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT,0,CW_USEDEFAULT,0, nullptr, nullptr, hInstance, nullptr); */
     if (!m_hWnd)

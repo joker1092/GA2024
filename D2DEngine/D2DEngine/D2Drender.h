@@ -29,7 +29,7 @@ public:
 	void DrawRect(D2D1_RECT_F rect);
 	size_t GetUsedVRAM();
 	ID2D1HwndRenderTarget* GetRenderTarget() { return pRenderTaget; }
-
+	ID2D1SolidColorBrush* getBrush() { return pBrush; }
 	HRESULT D2DBitmapFromFile(const WCHAR* path, ID2D1Bitmap** ppID2DBitmap);
 };
 

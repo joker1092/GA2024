@@ -2,10 +2,11 @@
 
 Camera::Camera()
 {
-	float width = 640;
-	float height = 480;
+	float width = 1920;
+	float height = 1280;
 
 	m_ViewBoundBox.SetExtent(width / 2, height / 2);
+
 }
 
 Camera::~Camera()
@@ -14,6 +15,7 @@ Camera::~Camera()
 
 void Camera::Update(float deltaTime)
 {
-	Scene::UpdateTrasform();
+	Scene::UpdateTrasform();	
 	m_ViewBoundBox.m_Center = GetWorldLocation();
 }
+

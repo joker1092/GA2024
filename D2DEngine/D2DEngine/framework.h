@@ -11,6 +11,9 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <queue>
+#include <algorithm>
+#include <utility>
 
 #include <fstream>
 #include <sstream>
