@@ -25,6 +25,7 @@ void World::Update(float deltaTime)
 {
 	// 카메라의 업데이트를 먼저하고
 	m_pCamera->Update(deltaTime);
+	SetCullingBound(m_pCamera->GetViewBoundBox());
 	for (auto& obj : m_GameObjects)
 	{
 		obj->Update(deltaTime);
@@ -47,7 +48,7 @@ void World::Render(ID2D1RenderTarget* pRenderTarget, ID2D1SolidColorBrush* brush
 	// 컬링 테스트를 하기 위해서
 
 
-	SetCullingBound(m_pCamera->GetViewBoundBox());
+	
 	objectCount= m_GameObjects.size();
 	for (auto& obj : m_GameObjects) {
 		
@@ -59,6 +60,8 @@ void World::Render(ID2D1RenderTarget* pRenderTarget, ID2D1SolidColorBrush* brush
 	// 카메라의 역행렬을 구해서
 	D2D_MATRIX_3X2_F mat = m_pCamera->GetCameraMatrix();
 	D2D1InvertMatrix(&mat);
+	D2D1_RECT_F boundRect = { m_pCullingBound->GetMinX(),m_pCullingBound->GetMinY(),m_pCullingBound->GetMaxX(),m_pCullingBound->GetMaxY() };
+	pRenderTarget->DrawRectangle(boundRect, brush, 1.0f);
 	renderCount = m_RenderQueue.size();
 	for (auto& obj : m_RenderQueue){
 		obj->m_pRootScene->mWorldTransform = obj->m_pRootScene->mWorldTransform * mat;

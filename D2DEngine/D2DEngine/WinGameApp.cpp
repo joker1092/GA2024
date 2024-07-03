@@ -155,13 +155,7 @@ void WinGameApp::Render(ID2D1RenderTarget* pRenderTarget)
 {
     pRenderTarget->BeginDraw();
     pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
-    RectPoint();
-    pD2DRender->DrawRect(
-        { m_pWorld->GetCamera()->GetViewBoundBox()->GetMinX(),
-        m_pWorld->GetCamera()->GetViewBoundBox()->GetMinY(),
-        m_pWorld->GetCamera()->GetViewBoundBox()->GetMaxX(),
-        m_pWorld->GetCamera()->GetViewBoundBox()->GetMaxY()}
-    );
+   
     m_pWorld->Render(pRenderTarget, pD2DRender->getBrush());
     
     DrawInfoRect();
