@@ -24,8 +24,11 @@ void GameObject::Update(float deltaTime)
 	}
 
 	if (m_pRootScene) {
-		m_BoundBox.m_Center = m_pRootScene->GetWorldLocation();
-		m_BoundBox.m_Extent = m_pRootScene->GetExtent();
+		m_BoundBox.m_Extent = { m_pRootScene->width / 2, m_pRootScene->height / 2 };
+		float x = m_pRootScene->GetWorldLocation().x + m_pRootScene->width / 2;
+		float y = m_pRootScene->GetWorldLocation().y + m_pRootScene->height / 2;
+		//m_BoundBox.m_Center = m_pRootScene->GetWorldLocation();
+		m_BoundBox.m_Center = { x,y };
 	}	
 }
 

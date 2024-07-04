@@ -18,6 +18,46 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="AnimationAsset.cpp" />
+    <ClCompile Include="AnimationScene.cpp" />
+    <ClCompile Include="BitmapScene.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="D2DEngine.cpp" />
+    <ClCompile Include="D2DRender.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="ReferenceCounter.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="TimeSystem.cpp" />
+    <ClCompile Include="WinGameApp.cpp" />
+    <ClCompile Include="World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AABB.h" />
+    <ClInclude Include="AnimationAsset.h" />
+    <ClInclude Include="AnimationScene.h" />
+    <ClInclude Include="BitmapScene.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="D2DRender.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="ReferenceCounter.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="TimeSystem.h" />
+    <ClInclude Include="WinGameApp.h" />
+    <ClInclude Include="World.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -139,45 +179,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="AABB.h" />
-    <ClInclude Include="AnimationAsset.h" />
-    <ClInclude Include="AnimationScene.h" />
-    <ClInclude Include="BitmapScene.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="D2DRender.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="InputSystem.h" />
-    <ClInclude Include="ReferenceCounter.h" />
-    <ClInclude Include="ResourceManager.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="TimeSystem.h" />
-    <ClInclude Include="WinGameApp.h" />
-    <ClInclude Include="World.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="AABB.cpp" />
-    <ClCompile Include="AnimationAsset.cpp" />
-    <ClCompile Include="AnimationScene.cpp" />
-    <ClCompile Include="BitmapScene.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="D2DEngine.cpp" />
-    <ClCompile Include="D2DRender.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="InputSystem.cpp" />
-    <ClCompile Include="ReferenceCounter.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="TimeSystem.cpp" />
-    <ClCompile Include="WinGameApp.cpp" />
-    <ClCompile Include="World.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

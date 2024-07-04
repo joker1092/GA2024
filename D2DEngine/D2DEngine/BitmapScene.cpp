@@ -25,18 +25,20 @@ bool BitmapScene::LoadD2DBitmap(const std::wstring strFilePath,D2DRender* pRende
 	
 
 	wsBitmapFilePath = strFilePath;
-
+	
 	return true;
 }
 
 void BitmapScene::Update(float deltaTime)
 {
-	UpdateTrasform();
+	UpdateTrasnform();
 }
 
 void BitmapScene::Render(ID2D1RenderTarget* pRenderTarget)
 {
 	if (pBitmap == nullptr)return;
-	pRenderTarget->SetTransform(mInvertCenterMat * mWorldTransform);
+	width = pBitmap->GetSize().width;
+	height = pBitmap->GetSize().height;
+	pRenderTarget->SetTransform(m_WorldTransform);
 	pRenderTarget->DrawBitmap(pBitmap);
 }

@@ -1,5 +1,19 @@
 #include "D2DRender.h"
 
+D2DRender::D2DRender()
+{
+	Instance = this;
+}
+
+D2DRender::~D2DRender()
+{
+}
+
+D2D1_MATRIX_3X2_F D2DRender::m_CameraTransform = D2D1::Matrix3x2F::Identity();
+
+D2DRender* D2DRender::Instance = nullptr;
+
+
 BOOL D2DRender::D2DIntialize(HWND hwnd)
 {
 	HRESULT hr = S_OK;

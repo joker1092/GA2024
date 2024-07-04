@@ -1,31 +1,38 @@
 #include "Scene.h"
+#include "D2DRender.h"
 
 Scene::Scene()
 {
-	mRelativeTransform = mWorldTransform = D2D1::Matrix3x2F::Identity();
+	D2DRender* pD2DRender = D2DRender::Instance;
+	m_RelativeTransform = m_WorldTransform = D2D1::Matrix3x2F::Identity();
 }
 
 Scene::~Scene()
 {
 }
 
-void Scene::UpdateTrasform()
+void Scene::UpdateTrasnform()
 {
-	mInvertCenterMat = D2D1::Matrix3x2F::Translation(-pCentorPoint.x, -pCentorPoint.y);
-	/*mInvertCenterMat = D2D1::Matrix3x2F::Translation(-pCentorPoint.x, -pCentorPoint.y);
+	m_RelativeTransform = D2D1::Matrix3x2F::Scale(D2D1::SizeF(m_RelativeScale.x, m_RelativeScale.y)) *
+		D2D1::Matrix3x2F::Rotation(m_RelativeRotation) *
+		D2D1::Matrix3x2F::Translation(m_RelativeLocation.x, m_RelativeLocation.y);
 
-	mRelativeTransform = mInvertCenterMat*D2D1::Matrix3x2F::Scale(D2D1::SizeF(vRelativeScale.x, vRelativeScale.y)) *
-		D2D1::Matrix3x2F::Rotation(fRelativeRotation) *
-		D2D1::Matrix3x2F::Translation(vRelativeLcation.x, vRelativeLcation.y);*/
-	mRelativeTransform= D2D1::Matrix3x2F::Scale(vRelativeScale.x, vRelativeScale.y) *
-		D2D1::Matrix3x2F::Rotation(fRelativeRotation) *
-		D2D1::Matrix3x2F::Translation(vRelativeLcation.x, vRelativeLcation.y);
-	if (pParentScene!= nullptr)
-	{
-		mWorldTransform = mRelativeTransform  * pParentScene->mWorldTransform;
-	}
-	else {
-		mWorldTransform = mRelativeTransform;
-	}
+	if (m_pParentScene != nullptr)
+		m_WorldTransform = m_RelativeTransform * m_pParentScene->m_WorldTransform;
+	else
+		m_WorldTransform = m_RelativeTransform;
 }
 
+void Scene::Update(float deltaTime)
+{
+	UpdateTrasnform();
+}
+
+
+void Scene::Render(ID2D1RenderTarget* pRenderTarget)
+{
+
+	//pRenderTarget->SetTransform(m_WorldTransform);
+	//pRenderTarget->DrawRectangle(D2D1::RectF(-2, -2, 2, 2), pD2DRender->pBrush);
+
+}

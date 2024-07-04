@@ -6,7 +6,7 @@
 
 class D2DRender;
 
-class BitmapScene : public Scene, public Component
+class BitmapScene : public Scene
 {
 public:
 	BitmapScene();

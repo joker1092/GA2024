@@ -2,32 +2,37 @@
 #include "framework.h"
 #include "BitmapScene.h"
 #include "AnimationAsset.h"
-class AnimationScene :
-    public BitmapScene
+class AnimationAsset;
+struct MOTION;
+
+class AnimationScene : public BitmapScene
 {
-    AnimationAsset* pAnimationAsset;
-    
-    int prevFrameIndex = 0;
-    int nMotionIndex = 0;
-    float nFrameTime = 0;
-    D2D1_RECT_F SrcRect;
-    D2D1_RECT_F DstRect;
-    
-    
-    D2D1_MATRIX_3X2_F mFrameTransform;
-    std::wstring AnimationFilePath;
 
 public:
+
     AnimationScene();
     virtual ~AnimationScene();
-    bool bMiror;
-    int curFrameIndex = 0;
-    void SetMiror(bool miror) { bMiror = miror; }
-    bool LoadAnimationAsset(const wchar_t* filePath);
-    void SetAnimaitonIndex(int index);
-    void Update(float deltatime);
-    void Render(ID2D1RenderTarget* pRenderTarget);
-    void SetDstRect(D2D1_RECT_F rect) { DstRect = rect;  }
-    virtual D2D1_VECTOR_2F GetExtent() { return D2D1::Vector2F((DstRect.right-DstRect.left)/2, (DstRect.bottom - DstRect.top)/2); }
+
+    AnimationAsset* pAnimationAsset = nullptr;
+    
+    // 인스턴스마다 다른 애니메이션 정보
+    MOTION* m_pAnimationInfo = nullptr;	// 현재 애니메이션 프레임 정보
+    std::wstring m_strAnimationAssetFilePath;    // 애니메이션 정보 파일 이름
+    float m_FrameTime = 0.0f;	// 프레임 진행시간
+    int m_FrameIndexCurr = -1;		// 현재 프레임 인덱스
+    int m_FrameIndexPrev = -1;		// 이전 프레임 인덱스
+    int m_AnimationIndex = -1;	// 현재 애니메이션 인덱스
+    D2D1_RECT_F m_SrcRect;		// D2D1Bitmap의 Source 영역
+    D2D1_RECT_F m_DstRect;		// RenderTarget의 Destination 영역		
+
+    bool m_bMirror;				// 좌우 반전 여부
+    D2D1_MATRIX_3X2_F	m_ImageTransform;	// 반대 방향으로 뒤집기 위한 행렬 Scale.x = -1.0f 
+
+    bool LoadAnimationAsset(const std::wstring strFilePath);
+    virtual void Update(float fTimeElapsed);
+    //virtual void Render(ID2D1HwndRenderTarget* pRenderTarget);
+    virtual void Render(ID2D1RenderTarget* pRenderTarget);
+    void SetAnimation(int index, bool mirror);
+    
 };
 

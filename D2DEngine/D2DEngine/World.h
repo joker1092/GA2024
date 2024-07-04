@@ -48,6 +48,7 @@ public:
 				return iter;
 			}
 		}
+		return iter;
 	}
 
 

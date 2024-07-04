@@ -2,7 +2,7 @@
 
 std::random_device rd;
 std::mt19937 gen(rd());
-std::uniform_int_distribution<long> uniform_dist(100, 600); // 0부터 99까지 균등 분포
+std::uniform_int_distribution<long> uniform_dist(0, 1200); // 0부터 99까지 균등 분포
 std::uniform_int_distribution<int> miror(0, 1); // 0부터 99까지 균등 분포
 
 void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
@@ -20,15 +20,15 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	backGound->m_ZOrder = GameObject::ZOrder::BACKGROUND;
 	animeSceneBG->LoadD2DBitmap(L"../Resource/midnight.png", pD2DRender);
 	animeSceneBG->LoadAnimationAsset(L"Background");
+	animeSceneBG->SetAnimation(0, false);
 	player = m_pWorld->CreateGameObject<GameObject>();
 	animeScenePlayer = player->CreateComponent<AnimationScene>();
 	player->SetRootScene(animeScenePlayer);
 	backGound->m_ZOrder = GameObject::ZOrder::PLAYER;
 	animeScenePlayer->LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
 	animeScenePlayer->LoadAnimationAsset(L"Run");
-	animeScenePlayer->SetAnimaitonIndex(1);
-	animeScenePlayer->SetMiror(false);
-	animeScenePlayer->SetLocation({ 800, 400 });
+	animeScenePlayer->SetAnimation(1,false);
+	animeScenePlayer->m_RelativeLocation = { 200, 400 };
 }
 
 void DemoGameApp::UnInitialize()
@@ -67,19 +67,19 @@ void DemoGameApp::Update(float deltatime)
 	//방향에 따른 카메라 이동
 	if (pInput->IsKey(VK_LEFT))
 	{
-		m_pWorld->GetCamera()->vRelativeLcation.x -= 1;
+		m_pWorld->GetCamera()->m_RelativeLocation.x -= 1;
 	}
 	if (pInput->IsKey(VK_RIGHT))
 	{
-		m_pWorld->GetCamera()->vRelativeLcation.x += 1;
+		m_pWorld->GetCamera()->m_RelativeLocation.x += 1;
 	}
 	if (pInput->IsKey(VK_UP))
 	{
-		m_pWorld->GetCamera()->vRelativeLcation.y -= 1;
+		m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
 	}
 	if (pInput->IsKey(VK_DOWN))
 	{
-		m_pWorld->GetCamera()->vRelativeLcation.y += 1;
+		m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
 	}
 
 	
@@ -92,12 +92,13 @@ void DemoGameApp::Update(float deltatime)
 		cObjPlayer->SetRootScene(cPlayer);
 		cPlayer->LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
 		cPlayer->LoadAnimationAsset(L"Run");
-		cPlayer->SetAnimaitonIndex(1);
-		cPlayer->SetMiror(miror(gen));
+		cPlayer->SetAnimation(1, miror(gen));
 		backGound->m_ZOrder = GameObject::ZOrder::ENEMY;
 		float x=uniform_dist(gen);
 		float y = uniform_dist(gen);
-		cPlayer->SetLocation({ (float)x,(float)y });
+		cPlayer->m_RelativeLocation.x = x;
+		cPlayer->m_RelativeLocation.y = y;
+		
 		vObjList.push_back(cObjPlayer);
 		//todo : obj add
 	}
@@ -123,30 +124,31 @@ void DemoGameApp::Update(float deltatime)
 		for (auto& objScene : vObjList)
 		{
 			AnimationScene* animeScnene = dynamic_cast<AnimationScene*>(objScene->m_pRootScene);
-			float x = animeScnene->vRelativeLcation.x;
+			float x = animeScnene->m_RelativeLocation.x;
 			
-			if (animeScnene->bMiror)
-			{
-				//std::cout << "x" << x << std::endl;
-				--x;
-				if (x < 200)
-				{
-					x = 1200;
-				}
-				
-			}
-			else {
-				x++;
-				if (x > 1200)
-				{
-					x = 200;
-				}
-			}
+			//if (animeScnene->m_bMirror)
+			//{
+			//	//std::cout << "x" << x << std::endl;
+			//	--x;
+			//	if (x < 200)
+			//	{
+			//		x = 1200;
+			//	}
+			//	
+			//}
+			//else {
+			//	x++;
+			//	if (x > 1200)
+			//	{
+			//		x = 200;
+			//	}
+			//}
 			
-			animeScnene->SetLocation({ x,animeScnene->vRelativeLcation.y });
+			animeScnene->m_RelativeLocation.x = x;
 			animeScnene->Update(deltatime);
 		}
 	}
+	
 	WinGameApp::Update(deltatime);
 }
 
