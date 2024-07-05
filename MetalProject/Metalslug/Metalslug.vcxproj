@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4038988d-4a01-4ce8-a70f-c6f2f6700fcc}</ProjectGuid>
-    <RootNamespace>D2DEngine</RootNamespace>
+    <ProjectGuid>{d457e84e-6ca5-468f-8073-bd8b00e6a9b4}</ProjectGuid>
+    <RootNamespace>Metalslug</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -40,7 +40,7 @@
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -127,26 +127,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="D2DEngine.h" />
-    <ClInclude Include="D2DRenderer.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="InputManager.h" />
+    <ClInclude Include="Metalslug.h" />
+    <ClInclude Include="MetalSlugWin.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="WinGameApp.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="D2DEngine.cpp" />
-    <ClCompile Include="D2DRenderer.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="WinGameApp.cpp" />
+    <ClCompile Include="Metalslug.cpp" />
+    <ClCompile Include="MetalSlugWin.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="D2DEngine.rc" />
+    <ResourceCompile Include="Metalslug.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="D2DEngine.ico" />
+    <Image Include="Metalslug.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MetalProject\MetalProject.vcxproj">
+      <Project>{ce87b105-4120-42aa-bd43-670a0fa69724}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

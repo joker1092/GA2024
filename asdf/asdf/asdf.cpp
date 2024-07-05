@@ -1,84 +1,84 @@
 ﻿#include <iostream>
 #include <string>
 using namespace std;
+//템플릿
 
-const char* acount = "1234-5678";
-int  sid = 1122;
-int balance = 1000;
+//Generic Programming
+//일반화 프로그래밍
+//하나의 함수나 클래스를 여러 자료형에 대해 사용할 수 있도록 하는 프로그래밍 기법
+//C++에서는 템플릿을 이용하여 구현
 
-class MyExeption
-{
+//템플릿 함수
+//함수를 정의할 때 자료형을 일반화시킨다.
+
+//템플릿 함수 정의
+//t는 템플릿 매개변수
+// 
+// 컴파일러는 템플릿 함수를 기반으로 같은 형태의 함수를 생성한다.
+// 템플릿 함수는 템플릿 매개변수에 따라 여러 형태의 함수로 생성된다.
+// 이렇게 생성된 함수를 템플릿 함수라고 한다.
+// 이렇게 함수가 생성되는 것을 함수의 인스턴스화라고 한다.
+// 
+// ==============================================================
+// 
+// 템플릿 클래스
+// 다양한 자료형이 처리되는 클래스에서 사용
+// 
+// 
+// 형식매개변수의 자동 추론 - decltype(auto)
+//
+//템플릿 특수화
+//특정 자료형에 대해 템플릿 함수를 재정의하는 것
+//템플릿 특수화는 템플릿 함수의 특수한 경우에 대해 별도로 정의하는 것
+//ex>>
+//template <typename T>
+//T Add(T a, T b)
+// {
+// return a + b;
+// }
+//template <>
+//char* Add(char* a, char* b)
+// {
+// return strcat(a, b);
+// }
+
+// 템플릿 특수화에서 주의사항
+// 부분 특수화
+// 함수는 부분 특수화가 불가능하다.
+
+
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class A {
 public:
-    virtual void print() = 0;
+    A(T t) : m_t(t) {}
+    void print() {
+		cout << "A::print()" << endl;
+	}
+
+    template <typename TT>      // 멤버 함수 템플릿
+    void doSomething() {
+        		cout << "A::doSomething()" << endl;
+    };
+    template <>      // 멤버 함수 템플릿
+    void doSomething<float>() {
+				cout << "A::doSomething<float>()" << endl;
+	};
 };
 
-class AcountExeption : public MyExeption
-{
-private:
-    char* acc;
-	int n;
-public:
-    AcountExeption(char* _acc,int _n) {
-        acc = _acc;
-		n = _n;
-    }
-	void print()
-	{
-		std::cout << "계좌번호 또는 비밀번호가 틀렸습니다." << endl;
-        std::cout <<"입력 : 계좌 : " << acc <<"암호" << n << endl;
-	}
-};
-
-class BalanceExeprion : public MyExeption
-{
-    int balance;
-public:
-    BalanceExeprion(int bal) {
-		balance = bal;
-	}
-	void print()
-	{
-        std::cout << "잔액이 부족합니다." << endl;
-        std::cout << "잔액 : " << balance << endl;
-	}
-};
-
-int main()
-{
-    char acc[10];
-    int id;
-    int money;
-
-    try {
-        std::cout << "계좌번호 입력: "; cin >> acc;
-        std::cout << "비밀번호 4자리 입력: "; cin >> id;
-        if (strcmp(acount,acc)||sid!=id)
-        {
-            throw AcountExeption(acc,id);
-        }
 
 
-        std::cout << "출금액 입력 : "; cin >> money;
-        if (balance < money)
-        {
-            throw BalanceExeprion(balance);
-        }
-        balance -= money;
-        std::cout << "잔액 : " << balance << endl;
-    }
-    catch (AcountExeption ex)
-	{
-		ex.print();
-	}
-    catch (BalanceExeprion ex) {
-        ex.print();
+
+
+    int main()
+    {
+        A<int> a_int(123);
+        a_int.print();
+        a_int.doSomething<float>();
     }
 
-    
-
-
-    return 0;
-}
 
 
 

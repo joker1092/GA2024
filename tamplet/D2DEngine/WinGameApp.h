@@ -4,8 +4,8 @@
 // Windows 헤더 파일
 #include <windows.h>
 #include "Resource.h"
+#include "D2DRenderer.h"
 #include "InputManager.h"
-#include "TimeSystem.h"
 
 class WinGameApp
 {
@@ -22,15 +22,12 @@ public:
 
 	const int GetWidth() const { return width; }
 	const int GetHeight() const { return height; }
-	
+
 private:
 	HINSTANCE m_hInstance = { 0 };  // HINSTANCE is a handle to an instance of a module.
 	HWND m_hWnd = { 0 };			// HWND is a handle to a window.
-
-	D2DRenderer* pRender = nullptr;
-	InputManager* pInput = nullptr;
-	TimeSystem* pTime = nullptr;
-
+	D2DRenderer* pRender;
+	InputManager* pInput;
 	int width;
 	int height;
 };

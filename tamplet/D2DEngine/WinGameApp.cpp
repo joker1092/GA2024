@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include "WinGameApp.h"
+﻿#include "WinGameApp.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -8,9 +7,9 @@ void WinGameApp::Initialize(HINSTANCE hInstance, LPCTSTR appName)
 {
 	m_hInstance = hInstance;
 	//const TCHAR* appName = TEXT("Test Game Framework");
-	pRender = D2DRenderer::GetInstance();
+	pRender = new D2DRenderer();
 	pInput = new InputManager();
-	pTime = new TimeSystem();
+
 	//Step 1: Registering the Window Class
 
 	//ChangeResolution(1280, 720, 32, 60);
@@ -37,19 +36,17 @@ void WinGameApp::Initialize(HINSTANCE hInstance, LPCTSTR appName)
 
 	// Step 2: Creating the Window
 
-	/*SIZE clientSize = { 1280, 960 };
-	RECT clientRect = { 0, 0, clientSize.cx, clientSize.cy };*/
-	/*width = GetSystemMetrics(SM_CXSCREEN);
-	height = GetSystemMetrics(SM_CXSCREEN);*/
+	SIZE clientSize = { 1280, 720 };
+	RECT clientRect = { 0, 0, clientSize.cx, clientSize.cy };
+	width = GetSystemMetrics(SM_CXSCREEN);
+	height = GetSystemMetrics(SM_CXSCREEN);
 	//RECT clientRect = { 0, 0, width, height };
 
-	//AdjustWindowRect(&clientRect, WS_OVERLAPPEDWINDOW, FALSE);
+	AdjustWindowRect(&clientRect, WS_OVERLAPPEDWINDOW, FALSE);
 
 
-	/*m_hWnd = CreateWindowW(appName, appName, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);*/
-		m_hWnd = CreateWindowW(appName, appName, WS_OVERLAPPEDWINDOW,
-			0, 0, 1280, 960, nullptr, nullptr, hInstance, nullptr);
+	m_hWnd = CreateWindowW(appName, appName, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
 
 	if (!m_hWnd)
@@ -76,7 +73,7 @@ void WinGameApp::Initialize(HINSTANCE hInstance, LPCTSTR appName)
 	// Step 3: Game Initialize Here
 	//Game::GameManager::GetInstance()->Initialize();
 	pInput->InitInput(m_hWnd,width,height);
-	pTime->InitTime();
+
 }
 
 void WinGameApp::Run()
@@ -93,7 +90,7 @@ void WinGameApp::Run()
 				break;
 			else if (msg.message == WM_KEYDOWN)
 			{
-				pInput->KeyDown(msg.wParam);
+				pInput->IsKeyDown(msg.wParam);
 				//Input::KeyDown(msg.wParam);
 			}
 			else if (msg.message == WM_KEYUP)
@@ -105,7 +102,7 @@ void WinGameApp::Run()
 			// 마우스 좌클릭 메시지
 			if (msg.message == WM_LBUTTONDOWN)
 			{	
-				pInput->KeyDown(msg.wParam);
+				pInput->IsKeyDown(msg.wParam);
 			}
 			else if (msg.message == WM_LBUTTONUP) {
 				pInput->KeyUp(msg.wParam);
@@ -115,7 +112,7 @@ void WinGameApp::Run()
 			// 마우스 좌클릭 메시지
 			if (msg.message == WM_RBUTTONDOWN)
 			{
-				pInput->KeyDown(msg.wParam);
+				pInput->IsKeyDown(msg.wParam);
 				//Input::KeyDown(msg.wParam);
 			}
 			else if (msg.message == WM_RBUTTONUP) {
@@ -129,18 +126,10 @@ void WinGameApp::Run()
 		}
 		else
 		{
-			pTime->UpdateTime();
-
 			Update(pInput);
-
-			pInput->ResetInput();
-
 			pRender->BeginDraw();
-
-			pRender->Clear(D2D1::ColorF(D2D1::ColorF::Black));
-
+			pRender->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
 			Render(pRender);
-
 			pRender->EndDraw();
 		}
 	}
@@ -188,7 +177,7 @@ void ExitFullscreen(HWND hWnd)
 	SetWindowLong(hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
 
 	// Restore the window position and size
-	SetWindowPos(hWnd, HWND_TOP, 0, 0, 1280, 960, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
+	SetWindowPos(hWnd, HWND_TOP, 0, 0, 800, 600, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);
 }
 
 // 정보 대화 상자의 메시지 처리기입니다.
