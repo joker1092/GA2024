@@ -10,6 +10,8 @@ AnimationAsset::AnimationAsset()
 
 AnimationAsset::~AnimationAsset()
 {
+	//애니메이션 정보 삭제
+
 }
 
 void AnimationAsset::Load(const wchar_t* _fileName)
