@@ -23,12 +23,19 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	animeSceneBG->SetAnimation(0, false);
 	player = m_pWorld->CreateGameObject<GameObject>();
 	animeScenePlayer = player->CreateComponent<AnimationScene>();
+	animePlayerbottom = player->CreateComponent<AnimationScene>();
 	player->SetRootScene(animeScenePlayer);
 	backGound->m_ZOrder = GameObject::ZOrder::PLAYER;
-	animeScenePlayer->LoadD2DBitmap(L"../Resource/run.png", pD2DRender);
-	animeScenePlayer->LoadAnimationAsset(L"Run");
-	animeScenePlayer->SetAnimation(1,false);
-	animeScenePlayer->m_RelativeLocation = { 200, 400 };
+	animeScenePlayer->LoadD2DBitmap(L"../Resource/Marco_trans0.png", pD2DRender);
+	animeScenePlayer->LoadAnimationAsset(L"marcoIdleTop");
+	animePlayerbottom->LoadD2DBitmap(L"../Resource/Marco_trans0.png", pD2DRender);
+	animePlayerbottom->LoadAnimationAsset(L"marcoIdleBottom");
+	animeScenePlayer->SetAnimation(0,false);
+	animeScenePlayer->m_RelativeLocation = { 0, 0 };
+	animePlayerbottom->SetAnimation(0, false);
+	animePlayerbottom->m_RelativeLocation = { 0, 0 };
+	pFSMPlayer = player->CreateComponent<PlayerFSM>();
+	pFSMPlayer->createState(std::string("Idle"));
 }
 
 void DemoGameApp::UnInitialize()
@@ -75,11 +82,11 @@ void DemoGameApp::Update(float deltatime)
 	}
 	if (pInput->IsKey(VK_UP))
 	{
-		m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
+		m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
 	}
 	if (pInput->IsKey(VK_DOWN))
 	{
-		m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
+		m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
 	}
 
 	

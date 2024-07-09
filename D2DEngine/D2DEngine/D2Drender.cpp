@@ -30,9 +30,9 @@ BOOL D2DRender::D2DIntialize(HWND hwnd)
 	RECT rc;
 	GetClientRect(hwnd,&rc);
 
-	D2D1_SIZE_U size = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
+	m_ClientSize = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
 
-	hr = pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(hwnd, size), &pRenderTaget);
+	hr = pFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(hwnd, m_ClientSize), &pRenderTaget);
 	
 
 	if (FAILED(hr)) {

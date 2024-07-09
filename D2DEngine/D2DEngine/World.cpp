@@ -12,7 +12,8 @@ World::World()
 	SetCullingBound(&m_CullingBoundDefault);
 	// 카메라를 생성한다.
 	m_pCamera = new Camera();
-	m_pCamera->m_RelativeLocation= { 0,0};
+	m_pCamera->m_RelativeLocation= {0,0};
+	m_pCamera->m_RelativeTransform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * m_pCamera->m_RelativeTransform;
 	SetCullingBound(&m_pCamera->m_ViewBoundBox);
 }
 
@@ -57,18 +58,10 @@ void World::Render(ID2D1RenderTarget* pRenderTarget, ID2D1SolidColorBrush* brush
 		}
 	}
 	std::sort(m_RenderQueue.begin(), m_RenderQueue.end(), RenderSortOrder);
-	// 카메라의 역행렬을 구해서
 	
-	//D2D_MATRIX_3X2_F m_ScreenTransform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * D2D1::Matrix3x2F::Translation(0.0f, 960);
-	//Transform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * m_WorldTransform * m_CameraTransform * m_ScreenTransform
-	/*D2D1_RECT_F boundRect = { m_pCullingBound->GetMinX(),m_pCullingBound->GetMinY(),m_pCullingBound->GetMaxX(),m_pCullingBound->GetMaxY() };
-	pRenderTarget->DrawRectangle(boundRect, brush, 1.0f);*/
 	renderCount = m_RenderQueue.size();
 	for (auto& obj : m_RenderQueue){
-		//obj->m_pRootScene->m_WorldTransform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * obj->m_pRootScene->m_WorldTransform * m_ScreenTransform;
 		obj->Render(pRenderTarget);
-		//D2D1_RECT_F rc = { obj->m_BoundBox.GetMinX(),obj->m_BoundBox.GetMinY(),obj->m_BoundBox.GetMaxX(),obj->m_BoundBox.GetMaxY() };
-		//pRenderTarget->DrawRectangle(rc, brush, 1.0f);
 	}
 	m_RenderQueue.clear();
 }

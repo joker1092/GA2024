@@ -4,6 +4,8 @@
 #include "../D2DEngine/BitmapScene.h"
 #include "../D2DEngine/AnimationScene.h"
 #include "../D2DEngine/Camera.h"
+#include "../D2DEngine/FSM.h"
+#include "PlayerFSM.h"
 
 #include <random>
 class DemoGameApp :public WinGameApp
@@ -12,7 +14,8 @@ class DemoGameApp :public WinGameApp
     GameObject* player;
     AnimationScene* animeSceneBG;
     AnimationScene* animeScenePlayer;
-    
+    AnimationScene* animePlayerbottom;
+    PlayerFSM* playerFSM;
     std::vector<GameObject*> vObjList;
 
 public:

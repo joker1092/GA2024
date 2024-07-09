@@ -19,9 +19,11 @@ protected:
 	void setNextState(std::string nextStateName); //다음 상태로 전환
 	
 	//State를 생성하고 맵에 저장하는 함수
-	template<typename T>//T는 FSMState를 상속받은 클래스
+	//T는 FSMState를 상속받은 클래스
+	//template 함수로 구현되어 있어서 FSMState를 상속받은 클래스만 State를 생성할 수 있다.
+	template<typename T, typename = std::enable_if_t<std::is_base_of_v<FSMState, T>>>
 	void createState(std::string SteatName) {
-		T* pState = new T(this, SteatName);
+		FSMState* pState = new T(this, SteatName);
 		m_vStates.insert(std::make_pair(pState->GetName(), pState));
 	}
 };

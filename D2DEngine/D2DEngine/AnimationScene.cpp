@@ -1,5 +1,7 @@
 #include "AnimationScene.h"
+#include "D2DRender.h"
 
+class D2DRender;
 class GameObject;
 AnimationScene::AnimationScene()
 {
@@ -85,9 +87,12 @@ void AnimationScene::Render(ID2D1RenderTarget* pRenderTarget)
 		return;
 	width = m_DstRect.right- m_DstRect.left;
 	height= m_DstRect.bottom- m_DstRect.top;
-	D2D1_MATRIX_3X2_F Transform = m_ImageTransform * m_WorldTransform * pD2DRender->m_CameraTransform;
+
+	D2D1_MATRIX_3X2_F m_ScreenTransform =D2D1::Matrix3x2F::Scale(1.0f, -1.0f)* D2D1::Matrix3x2F::Translation(0.0f, D2DRender::Instance->GetClientSize().height);
+	D2D1_MATRIX_3X2_F Transform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * m_ImageTransform * m_WorldTransform * pD2DRender->m_CameraTransform * m_ScreenTransform;
 	pRenderTarget->SetTransform(Transform);
 	pRenderTarget->DrawBitmap(pBitmap, m_DstRect, 1.0f, D2D1_BITMAP_INTERPOLATION_MODE_LINEAR, m_SrcRect);
+	pRenderTarget->DrawRectangle(m_DstRect, D2DRender::Instance->getBrush());
 }
 
 void AnimationScene::SetAnimation(int index, bool mirror)
