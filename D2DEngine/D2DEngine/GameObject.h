@@ -46,5 +46,20 @@ public:
 		AddComponent(pComponent);
 		return pComponent;
 	}
+
+	// 컴포넌트를 찾아서 반환합니다.
+	template<typename T>
+	T* GetComponent()
+	{
+		for (auto pComponent : m_OwnedComponents)
+		{
+			T* pT = dynamic_cast<T*>(pComponent);
+			if (pT != nullptr)
+			{
+				return pT;
+			}
+		}
+		return nullptr;
+	}
 };
 

@@ -130,12 +130,16 @@
     <ClInclude Include="DemoGame.h" />
     <ClInclude Include="DemoGameApp.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="PlayerFSM.h" />
+    <ClInclude Include="PlayerState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoGame.cpp" />
     <ClCompile Include="DemoGameApp.cpp" />
+    <ClCompile Include="PlayerFSM.cpp" />
+    <ClCompile Include="PlayerState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DemoGame.rc" />

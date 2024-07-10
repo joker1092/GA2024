@@ -13,3 +13,13 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <iostream>
+#include <string>
+#include <map>
+
+#include <d2d1.h>
+#include <comdef.h>
+#include <wincodec.h>
+#include <dwrite.h>
+#include <d2d1_1helper.h>
+#include <dxgi1_4.h>

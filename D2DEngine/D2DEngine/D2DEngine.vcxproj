@@ -31,6 +31,8 @@
     <ClCompile Include="FSMState.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="InputSystem.cpp" />
+    <ClCompile Include="MathHelper.cpp" />
+    <ClCompile Include="Movement.cpp" />
     <ClCompile Include="ReferenceCounter.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -51,6 +53,8 @@
     <ClInclude Include="FSMState.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="InputSystem.h" />
+    <ClInclude Include="MathHelper.h" />
+    <ClInclude Include="Movement.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ReferenceCounter.h" />
     <ClInclude Include="ResourceManager.h" />

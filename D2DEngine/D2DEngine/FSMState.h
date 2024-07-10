@@ -12,10 +12,11 @@ public:
 	FSM* m_pOwnerFSM; //이 상태를 소유하고 있는 FSM
 	std::string m_Name; //상태의 이름
 
-
+	//상태의 진입, 업데이트, 전환, 종료 함수
 	virtual void Enter() = 0;
 	virtual void Update(float daltatime) = 0;
 	virtual void CheckTransition() = 0;
 	virtual void Exit() = 0;
+	virtual std::string GetName() = 0;
 };
 

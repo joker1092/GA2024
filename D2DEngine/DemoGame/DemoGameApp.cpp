@@ -5,6 +5,7 @@ std::mt19937 gen(rd());
 std::uniform_int_distribution<long> uniform_dist(0, 1200); // 0부터 99까지 균등 분포
 std::uniform_int_distribution<int> miror(0, 1); // 0부터 99까지 균등 분포
 
+class FSMState;
 void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 {
 	WinGameApp::Initialize(hInstance, szTitle);
@@ -25,17 +26,34 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	animeScenePlayer = player->CreateComponent<AnimationScene>();
 	animePlayerbottom = player->CreateComponent<AnimationScene>();
 	player->SetRootScene(animeScenePlayer);
+	animePlayerbottom->SetParentScene(animeScenePlayer);
 	backGound->m_ZOrder = GameObject::ZOrder::PLAYER;
 	animeScenePlayer->LoadD2DBitmap(L"../Resource/Marco_trans0.png", pD2DRender);
-	animeScenePlayer->LoadAnimationAsset(L"marcoIdleTop");
+	animeScenePlayer->pAnimationAsset->LoadAnimationFromFile(0, L"marcoIdleTop");
+	animeScenePlayer->pAnimationAsset->LoadAnimationFromFile(1, L"Marco_MoveT");
+	animeScenePlayer->pAnimationAsset->LoadAnimationFromFile(2, L"Marco_JumpT");
+	//animeScenePlayer->LoadAnimationAsset(L"marcoIdleTop");
+	//animeScenePlayer->LoadAnimationAsset(L"Marco_MoveT");
+	//animeScenePlayer->LoadAnimationAsset(L"Marco_JumpT");
+	animePlayerbottom->pAnimationAsset->LoadAnimationFromFile(0, L"marcoIdleBottom");
+	animeScenePlayer->pAnimationAsset->LoadAnimationFromFile(1, L"Marco_MoveB");
+	animeScenePlayer->pAnimationAsset->LoadAnimationFromFile(2, L"Marco_JumpB");
 	animePlayerbottom->LoadD2DBitmap(L"../Resource/Marco_trans0.png", pD2DRender);
-	animePlayerbottom->LoadAnimationAsset(L"marcoIdleBottom");
-	animeScenePlayer->SetAnimation(0,false);
-	animeScenePlayer->m_RelativeLocation = { 0, 0 };
 	animePlayerbottom->SetAnimation(0, false);
 	animePlayerbottom->m_RelativeLocation = { 0, 0 };
+	animeScenePlayer->SetAnimation(0, false);
+	animeScenePlayer->m_RelativeLocation = { 0, 0 };
+	//animePlayerbottom->LoadAnimationAsset(L"marcoIdleBottom");
+	//animePlayerbottom->LoadAnimationAsset(L"Marco_MoveB");
+	//animePlayerbottom->LoadAnimationAsset(L"Marco_JumpB");
+	pPlayerMovement = player->CreateComponent<Movement>();
+	pPlayerMovement->SetScene(animeScenePlayer);
+	pPlayerMovement->SetSpeed(100);
+	/*pFSMPlayer = player->CreateComponent<FSM>();
+	std::string idle= "Idle";
+	pFSMPlayer->createState<FSMState>(idle);*/
 	pFSMPlayer = player->CreateComponent<PlayerFSM>();
-	pFSMPlayer->createState(std::string("Idle"));
+	pFSMPlayer->Initialize();
 }
 
 void DemoGameApp::UnInitialize()
@@ -74,19 +92,23 @@ void DemoGameApp::Update(float deltatime)
 	//방향에 따른 카메라 이동
 	if (pInput->IsKey(VK_LEFT))
 	{
-		m_pWorld->GetCamera()->m_RelativeLocation.x -= 1;
+		pPlayerMovement->SetDirection({ -1,0 });
+		//m_pWorld->GetCamera()->m_RelativeLocation.x -= 1;
 	}
 	if (pInput->IsKey(VK_RIGHT))
 	{
-		m_pWorld->GetCamera()->m_RelativeLocation.x += 1;
+		pPlayerMovement->SetDirection({ 1,0 });
+		//m_pWorld->GetCamera()->m_RelativeLocation.x += 1;
 	}
 	if (pInput->IsKey(VK_UP))
 	{
-		m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
+		pPlayerMovement->SetDirection({ 0,1 });
+		//m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
 	}
 	if (pInput->IsKey(VK_DOWN))
 	{
-		m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
+		pPlayerMovement->SetDirection({ 0,-1 });
+		//m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
 	}
 
 	
