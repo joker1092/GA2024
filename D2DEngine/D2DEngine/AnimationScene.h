@@ -33,6 +33,9 @@ public:
     //virtual void Render(ID2D1HwndRenderTarget* pRenderTarget);
     virtual void Render(ID2D1RenderTarget* pRenderTarget);
     void SetAnimation(int index, bool mirror);
+    void SetAnimationIndex(int index);
+    void SetMirror(bool mirror) { m_bMirror = mirror; }
+    bool GetCurrMirror(){ return m_bMirror;}
     
 };
 

@@ -51,6 +51,20 @@ public:
 		return iter;
 	}
 
+	template<typename T>
+	T* FindPointGameObject()
+	{
+		for (auto pObject : m_GameObjects)
+		{
+			T* pT = dynamic_cast<T*>(pObject);
+			if (pT != nullptr)
+			{
+				return pT;
+			}
+		}
+		return nullptr;
+	}
+
 
 	bool DeleteGameObject(GameObject* pGameObject) {
 		std::list<GameObject*>::iterator iter;

@@ -16,7 +16,7 @@ public:
 	ID2D1Bitmap* pBitmap = nullptr;
 	ResourceManager* pRM;
 
-	bool LoadD2DBitmap(const std::wstring strFilePath, D2DRender* _pRender);
+	bool LoadD2DBitmap(const std::wstring strFilePath);
 	virtual void Update(float deltaTime);
 	virtual void Render(ID2D1RenderTarget* pRenderTarget);
 	virtual D2D1_VECTOR_2F GetExtent() { return D2D1::Vector2F((pBitmap->GetSize().width)/2, (pBitmap->GetSize().height)/2); }

@@ -9,13 +9,15 @@ class FSM : public Component
 public:
 	FSM() = default;
 	virtual ~FSM();
+	virtual void Update(float deltaTime);
+	void setNextState(std::string nextStateName); //다음 상태로 전환
+
 protected:
 	std::map<std::string, FSMState*> m_vStates; //상태들을 저장할 맵
 	FSMState* m_pCurrentState = nullptr; //현재 상태
 	FSMState* m_pNextState =nullptr; //다음 상태
 
-	virtual void Update(float deltaTime);
-	void setNextState(std::string nextStateName); //다음 상태로 전환
+	
 	
 	//State를 생성하고 맵에 저장하는 함수
 	//T는 FSMState를 상속받은 클래스

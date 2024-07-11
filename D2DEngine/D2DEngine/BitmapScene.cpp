@@ -15,7 +15,7 @@ BitmapScene::~BitmapScene()
 	pRM->ReleaseD2DBitmap(wsBitmapFilePath);
 }
 
-bool BitmapScene::LoadD2DBitmap(const std::wstring strFilePath,D2DRender* pRender)
+bool BitmapScene::LoadD2DBitmap(const std::wstring strFilePath)
 {
 
 	if (!pRM->CreateD2DBitmapFrmaFile(strFilePath, &pBitmap))

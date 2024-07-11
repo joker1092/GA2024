@@ -7,7 +7,7 @@ void PlayerFSM::Initialize()
 	createState<PlayerIdle>(std::string("Idle"));
 	createState<PlayerMove>(std::string("Move"));
 	//createState<FSMState>(std::string("Move"));
-	//createState<FSMState>(std::string("Atk"));
+	//createState<FSMState>(std::string("Attack"));
 
 	setNextState("Idle");
 }

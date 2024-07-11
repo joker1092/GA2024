@@ -8,17 +8,17 @@
 #include "../D2DEngine/FSMState.h"
 #include "../D2DEngine/Movement.h"
 #include "PlayerFSM.h"
+#include "Player.h"
+#include "EnemyRifle.h"
 
 #include <random>
 class DemoGameApp :public WinGameApp
 {
     GameObject* backGound;
-    GameObject* player;
+    Player* player;
     AnimationScene* animeSceneBG;
-    AnimationScene* animeScenePlayer;
-    AnimationScene* animePlayerbottom;
-    PlayerFSM* pFSMPlayer;
-    Movement* pPlayerMovement;
+    EnemyRifle* enemyRifle;
+    
     std::vector<GameObject*> vObjList;
 
 public:

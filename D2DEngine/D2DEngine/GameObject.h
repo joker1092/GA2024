@@ -25,7 +25,7 @@ public:
 	World* m_pOwner = nullptr;					// 이 게임 오브젝트가 속한 월드
 	AABB m_BoundBox;								// 바운딩 박스
 	ZOrder m_ZOrder = ZOrder::DISABELED;			// ZOrder
-	void Update(float deltaTime);
+	virtual void Update(float deltaTime);
 	void Render(ID2D1RenderTarget* pRenderTarget);
 	void SetRootScene(Scene* pRootComponent) { m_pRootScene = pRootComponent; }
 	const AABB& GetBoundBox() const { return m_BoundBox; }

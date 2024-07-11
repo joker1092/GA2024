@@ -111,3 +111,19 @@ void AnimationScene::SetAnimation(int index, bool mirror)
 	m_FrameIndexPrev = 0;
 	m_FrameTime = 0.0f;
 }
+
+void AnimationScene::SetAnimationIndex(int index)
+{
+	//assert(m_pAnimationAsset != nullptr);
+	if (pAnimationAsset == nullptr)
+		return;
+
+	MOTION* pFound = pAnimationAsset->GetMotionInfo(index);
+	if (pFound == nullptr)
+		return;
+
+	m_pAnimationInfo = pFound;
+	m_FrameIndexCurr = 0;
+	m_FrameIndexPrev = 0;
+	m_FrameTime = 0.0f;
+}
