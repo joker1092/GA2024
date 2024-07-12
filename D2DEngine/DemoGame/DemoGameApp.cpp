@@ -15,16 +15,19 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	RECT rc;
 	GetClientRect(m_hWnd, &rc);
 	//bg.SetDstRect(D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom));
-	backGound = m_pWorld->CreateGameObject<GameObject>();
-	animeSceneBG = backGound->CreateComponent<AnimationScene>();
+	backGound = m_pWorld->CreateGameObject<BackGround>();
+	m_pCamera = m_pWorld->GetCamera();
+	mapBackGound = m_pWorld->CreateGameObject<MapBackgound>();
+	/*animeSceneBG = backGound->CreateComponent<AnimationScene>();
 	backGound->SetRootScene(animeSceneBG);
-	backGound->m_ZOrder = GameObject::ZOrder::BACKGROUND;
-	animeSceneBG->LoadD2DBitmap(L"../Resource/midnight.png");
+	backGound->m_ZOrder = GameObject::ZOrder::BACKGROUND;*/
+	/*animeSceneBG->LoadD2DBitmap(L"../Resource/midnight.png");
 	animeSceneBG->LoadAnimationAsset(L"Background");
-	animeSceneBG->SetAnimation(0, false);
+	animeSceneBG->SetAnimation(0, false);*/
 	player = m_pWorld->CreateGameObject<Player>();	
 	player->PlayerInit(pInput);
 	enemyRifle = m_pWorld->CreateGameObject<EnemyRifle>();
+	m_pCamera->SetTargetScene(player->m_pRootScene);
 }
 
 void DemoGameApp::UnInitialize()
@@ -35,7 +38,8 @@ void DemoGameApp::UnInitialize()
 	Earth.~BitmapScene();
 	Moon.~BitmapScene();*/
 	
-	backGound->~GameObject();
+	backGound->~BackGround();
+	mapBackGound->~MapBackgound();
 	player->~Player();
 	enemyRifle->~EnemyRifle();
 	//player.~AnimationScene();
@@ -49,7 +53,7 @@ void DemoGameApp::UnInitialize()
 
 void DemoGameApp::Update(float deltatime)
 {
-	std::cout <<"delta : " << deltatime << ""<< std::endl;
+	//std::cout <<"delta : " << deltatime << ""<< std::endl;
 	//std::cout << player.curFrameIndex << std::endl;
 	//std::cout <<"elepse :"<< elepsedTime << std::endl;*/
 	//todo
@@ -92,6 +96,7 @@ void DemoGameApp::Update(float deltatime)
 	if (pInput->IsKey('A'))
 	{
 		GameObject* cObjPlayer = m_pWorld->CreateGameObject<GameObject>();
+		cObjPlayer->m_ZOrder = GameObject::ZOrder::ENEMY;
 		AnimationScene* cPlayer = cObjPlayer->CreateComponent<AnimationScene>();
 		cObjPlayer->SetRootScene(cPlayer);
 		cPlayer->LoadD2DBitmap(L"../Resource/run.png");

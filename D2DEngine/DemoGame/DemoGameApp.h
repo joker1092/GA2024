@@ -7,6 +7,8 @@
 #include "../D2DEngine/FSM.h"
 #include "../D2DEngine/FSMState.h"
 #include "../D2DEngine/Movement.h"
+#include "BackGround.h"
+#include "MapBackgound.h"
 #include "PlayerFSM.h"
 #include "Player.h"
 #include "EnemyRifle.h"
@@ -14,7 +16,8 @@
 #include <random>
 class DemoGameApp :public WinGameApp
 {
-    GameObject* backGound;
+    BackGround* backGound;
+    MapBackgound* mapBackGound;
     Player* player;
     AnimationScene* animeSceneBG;
     EnemyRifle* enemyRifle;

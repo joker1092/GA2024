@@ -15,7 +15,7 @@
 
 void EnemyRifleIdle::Enter()
 {
-	std::cout << "EnemyRifleIdle Enter" << std::endl;
+	//std::cout << "EnemyRifleIdle Enter" << std::endl;
 	m_pEnemyRifle = m_pOwnerFSM->GetOwner();
 	m_pWorld = m_pEnemyRifle->m_pOwner;
 	m_pPlayer =m_pWorld->FindPointGameObject<Player>();
@@ -40,12 +40,12 @@ void EnemyRifleIdle::Enter()
 
 void EnemyRifleIdle::Update(float daltatime)
 {
-	std::cout << "EnemyRifleIdle Update" << std::endl;
+	//std::cout << "EnemyRifleIdle Update" << std::endl;
 }
 
 void EnemyRifleIdle::CheckTransition()
 {
-	std::cout << "EnemyRifleIdle CheckTransition" << std::endl;
+	//std::cout << "EnemyRifleIdle CheckTransition" << std::endl;
 	MathHelper::Vector2F m_pPlayerLocation = m_pPlayer->GetWorldLocation();
 	MathHelper::Vector2F m_pEnemyRifleLocation = m_pEnemyRifle->GetWorldLocation();
 	float distance = (m_pPlayerLocation- m_pEnemyRifleLocation).Length();
@@ -55,7 +55,7 @@ void EnemyRifleIdle::CheckTransition()
 
 void EnemyRifleIdle::Exit()
 {
-		std::cout << "EnemyRifleIdle Exit" << std::endl;
+		//std::cout << "EnemyRifleIdle Exit" << std::endl;
 }
 
 std::string EnemyRifleIdle::GetName()
@@ -115,7 +115,7 @@ void EnemyRifleMove::CheckTransition()
 
 void EnemyRifleMove::Exit()
 {
-	std::cout << "EnemyRifleMove Exit" << std::endl;
+	//std::cout << "EnemyRifleMove Exit" << std::endl;
 	movement->SetSpeed(0);
 }
 
@@ -179,7 +179,7 @@ void EnemyRifleAttack::CheckTransition()
 
 void EnemyRifleAttack::Exit()
 {
-	std::cout << "EnemyRifleAttack Exit" << std::endl;
+	//std::cout << "EnemyRifleAttack Exit" << std::endl;
 }
 
 std::string EnemyRifleAttack::GetName()

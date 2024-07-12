@@ -14,6 +14,8 @@ public:
 	AABB m_ViewBoundBox;
 	
 	virtual void Update(float deltaTime);
-	
+	//camera tracking
+	Scene* pTargetScene = nullptr;
+	void SetTargetScene(Scene* _pTargetScene) { pTargetScene=_pTargetScene; }
 };
 

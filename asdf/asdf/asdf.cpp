@@ -1,46 +1,44 @@
 ﻿#include <iostream>
-#include <vector>
-#include <queue>
+#include <array>
 
-using namespace std;
 
-void BFS(int start, const std::vector<std::vector<int>>& list) {
-  
-    int v = list.size();
-    std::vector<bool> visited(v, false);
-    std::queue<int> q;
 
-    q.push(start);
-    visited[start] = true;
+template <typename T, int size>
+class MyArray {
 
-    while (!q.empty()) {
-        int node = q.front();
-        q.pop();
-        cout << node << " ";
+	using reference = T&;
 
-        //visited[node] = true;
-        for (int b : list[node]) {
-            if (!visited[b]) {
-                visited[b] = true;
-                q.push(b);
-            }
-        }
-    }
-}
+	private:
+	T data[size];
+	public:
+	MyArray() {
+		for (int i = 0; i < size; i++) {
+			data[i] = T{};
+		}
+	}
+	
+	reference operator[](int index) {
+		return data[index];
+	}
 
-int main()
-{
-    vector<vector<int>> adj_list =
-    {
-        {0, 1, 2},
-        {1, 0, 2, 3},
-        {2, 0, 1},
-        {3, 1}
-    };
+	void print() {
+		for (int i = 0; i < size; i++) {
+			std::cout << data[i] << " "; 
+		}
+		std::cout<<	std::endl;
+	}
+};
 
-    cout << "BFS: ";
-    BFS(0, adj_list);
-    cout << endl;
 
-    return 0;
+int main() {
+	
+	MyArray<int, 10> arr;
+
+	arr[0] = 1;
+	arr[1] = 2;
+	arr[2] = 3;
+
+	arr.print();
+
+	return 0;
 }

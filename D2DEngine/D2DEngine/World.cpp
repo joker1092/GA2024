@@ -36,7 +36,7 @@ void World::Update(float deltaTime)
 
 bool RenderSortOrder(GameObject* a, GameObject* b)
 {
-	return a->m_ZOrder > b->m_ZOrder;
+	return a->m_ZOrder < b->m_ZOrder;
 }
 
 
@@ -53,7 +53,7 @@ void World::Render(ID2D1RenderTarget* pRenderTarget, ID2D1SolidColorBrush* brush
 	objectCount= m_GameObjects.size();
 	for (auto& obj : m_GameObjects) {
 		
-		if (m_pCullingBound->CheckIntersect(obj->m_BoundBox)) {
+		if ((obj->m_ZOrder==GameObject::BACKGROUND|| obj->m_ZOrder == GameObject::MAP)||m_pCullingBound->CheckIntersect(obj->m_BoundBox)) {
 			m_RenderQueue.push_back(obj);
 		}
 	}

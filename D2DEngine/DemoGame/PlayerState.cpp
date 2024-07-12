@@ -10,7 +10,7 @@
 
 void PlayerIdle::Enter()
 {
-	std::cout << "PlayerIdle Update" << std::endl;
+	//std::cout << "PlayerIdle Update" << std::endl;
 	m_pPlayer= m_pOwnerFSM->GetOwner();
 	if (m_pPlayer->GetComponent<Movement>()->GetDirection().x < 0) {
 		flip = true;
@@ -33,12 +33,12 @@ void PlayerIdle::Enter()
 
 void PlayerIdle::Update(float daltatime)
 {
-	std::cout << "PlayerIdle Update" << std::endl;
+	//std::cout << "PlayerIdle Update" << std::endl;
 }
 
 void PlayerIdle::CheckTransition()
 {
-	std::cout << "PlayerIdle CheckTransition" << std::endl;
+	//std::cout << "PlayerIdle CheckTransition" << std::endl;
 
 	if (m_pPlayer->GetComponent<Movement>()->GetSpeed()!=0)
 		m_pOwnerFSM->setNextState(std::string("Move"));
@@ -46,7 +46,7 @@ void PlayerIdle::CheckTransition()
 
 void PlayerIdle::Exit()
 {
-	std::cout << "PlayerIdle Exit" << std::endl;
+	//std::cout << "PlayerIdle Exit" << std::endl;
 }
 
 std::string PlayerIdle::GetName()
@@ -94,19 +94,19 @@ void PlayerMove::Update(float daltatime)
 				
 			}
 	}
-	std::cout << "PlayerMove Update" << std::endl;
+	//std::cout << "PlayerMove Update" << std::endl;
 }
 
 void PlayerMove::CheckTransition()
 {
-	std::cout << "PlayerMove Update" << std::endl;
+	//std::cout << "PlayerMove Update" << std::endl;
 	if (m_pPlayer->GetComponent<Movement>()->GetSpeed() == 0)
 		m_pOwnerFSM->setNextState(std::string("Idle"));
 }
 
 void PlayerMove::Exit()
 {
-	std::cout << "PlayerMove Exit" << std::endl;
+	//std::cout << "PlayerMove Exit" << std::endl;
 	
 }
 

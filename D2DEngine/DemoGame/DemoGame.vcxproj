@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BackGround.h" />
     <ClInclude Include="Charector.h" />
     <ClInclude Include="DemoGame.h" />
     <ClInclude Include="DemoGameApp.h" />
@@ -134,6 +135,7 @@
     <ClInclude Include="EnemyRifleFSM.h" />
     <ClInclude Include="EnemyRifleState.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="MapBackgound.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerFSM.h" />
     <ClInclude Include="PlayerState.h" />
@@ -141,12 +143,14 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="Charector.cpp" />
     <ClCompile Include="DemoGame.cpp" />
     <ClCompile Include="DemoGameApp.cpp" />
     <ClCompile Include="EnemyRifle.cpp" />
     <ClCompile Include="EnemyRifleFSM.cpp" />
     <ClCompile Include="EnemyRifleState.cpp" />
+    <ClCompile Include="MapBackgound.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayerFSM.cpp" />
     <ClCompile Include="PlayerState.cpp" />

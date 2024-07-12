@@ -22,6 +22,7 @@ public:
 	TimeSystem* pTime = nullptr;
 	InputSystem* pInput = nullptr;
 	World* m_pWorld = nullptr;
+	Camera* m_pCamera = nullptr;
 	virtual void Initialize(HINSTANCE hInstance, LPCTSTR szTitle);
 	virtual int Run();
 	virtual void UnInitialize();

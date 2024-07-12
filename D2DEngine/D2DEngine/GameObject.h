@@ -14,6 +14,7 @@ public:
 	{
 		DISABELED,
 		BACKGROUND,
+		MAP,
 		OBJECT,
 		ENEMY,
 		PLAYER,
