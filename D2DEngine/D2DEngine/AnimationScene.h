@@ -26,6 +26,7 @@ public:
     D2D1_RECT_F m_DstRect;		// RenderTarget의 Destination 영역		
 
     bool m_bMirror;				// 좌우 반전 여부
+    bool isEndMotion = false;	// 애니메이션 종료 여부
     D2D1_MATRIX_3X2_F	m_ImageTransform;	// 반대 방향으로 뒤집기 위한 행렬 Scale.x = -1.0f 
 
     bool LoadAnimationAsset(const std::wstring strFilePath);

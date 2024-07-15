@@ -6,7 +6,7 @@
 #include "../D2DEngine/Camera.h"
 #include "../D2DEngine/FSM.h"
 #include "../D2DEngine/FSMState.h"
-#include "../D2DEngine/Movement.h"
+#include "../D2DEngine/SideMovement.h"
 #include "../D2DEngine/InputSystem.h"
 #include "Player.h"
 
@@ -34,7 +34,7 @@ Player::Player()
 	PlayerBottom->LoadD2DBitmap(L"../Resource/Marco_trans0.png");
 	
 		
-	pMovement = CreateComponent<Movement>();
+	pMovement = CreateComponent<SideMovement>();
 	pMovement->SetScene(PlayerTop);
 	
 }
@@ -68,15 +68,23 @@ void Player::Update(float deltaTime)
 	}
 	if (pInput->IsKey(VK_UP))
 	{
-		pMovement->SetDirection({ 0,1 });
-		//m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
-		pMovement->SetSpeed(100);
+		//pMovement->SetDirection({ 0,1 });
+		////m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
+		//pMovement->SetSpeed(100);
 	}
 	if (pInput->IsKey(VK_DOWN))
 	{
-		pMovement->SetDirection({ 0,-1 });
-		//m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
-		pMovement->SetSpeed(100);
+		//pMovement->SetDirection({ 0,-1 });
+		////m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
+		//pMovement->SetSpeed(100);
 	}
+
+	if (pInput->IsKey(VK_SPACE))
+	{
+		pMovement->Jump();
+	}
+	
+
+
 	Charector::Update(deltaTime);
 }

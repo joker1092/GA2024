@@ -2,6 +2,7 @@
 #include "../D2DEngine/FSM.h"
 #include "../D2DEngine/FSMState.h"
 #include "../D2DEngine/Movement.h"
+#include "../D2DEngine/SideMovement.h"
 #include "../D2DEngine/GameObject.h"
 #include "../D2DEngine/AnimationScene.h"
 #include "../D2DEngine/AnimationAsset.h"
@@ -19,7 +20,7 @@ void EnemyRifleIdle::Enter()
 	m_pEnemyRifle = m_pOwnerFSM->GetOwner();
 	m_pWorld = m_pEnemyRifle->m_pOwner;
 	m_pPlayer =m_pWorld->FindPointGameObject<Player>();
-	if (m_pEnemyRifle->GetComponent<Movement>()->GetDirection().x < 0) {
+	if (m_pEnemyRifle->GetComponent<SideMovement>()->GetDirection().x < 0) {
 		flip = true;
 	}
 	else {
@@ -70,11 +71,11 @@ void EnemyRifleMove::Enter()
 	m_pPlayer = m_pWorld->FindPointGameObject<Player>();
 	m_pPlayerLocation=m_pPlayer->GetWorldLocation();
 	m_pEnemyRifleLocation=m_pEnemyRifle->GetWorldLocation();
-	movement = m_pEnemyRifle->GetComponent<Movement>();
-	movement->SetSpeed(100);
-	movement->SetDirection(m_pPlayerLocation - m_pEnemyRifleLocation);
+	movement = m_pEnemyRifle->GetComponent<SideMovement>();
+	movement->SetSpeed(50);
+	movement->SetDirection((m_pPlayerLocation - m_pEnemyRifleLocation));
 
-	if (m_pEnemyRifle->GetComponent<Movement>()->GetDirection().x > 0) {
+	if (m_pEnemyRifle->GetComponent<SideMovement>()->GetDirection().x > 0) {
 		flip = true;
 	}
 	else {
@@ -131,10 +132,10 @@ void EnemyRifleAttack::Enter()
 	m_pPlayer = m_pWorld->FindPointGameObject<Player>();
 	m_pPlayerLocation = m_pPlayer->GetWorldLocation();
 	m_pEnemyRifleLocation = m_pEnemyRifle->GetWorldLocation();
-	movement = m_pEnemyRifle->GetComponent<Movement>();
+	movement = m_pEnemyRifle->GetComponent<SideMovement>();
 	movement->SetDirection(m_pPlayerLocation - m_pEnemyRifleLocation);
 
-	if (m_pEnemyRifle->GetComponent<Movement>()->GetDirection().x > 0) {
+	if (m_pEnemyRifle->GetComponent<SideMovement>()->GetDirection().x > 0) {
 		flip = true;
 	}
 	else {
@@ -158,7 +159,7 @@ void EnemyRifleAttack::Update(float daltatime)
 	m_pPlayerLocation = m_pPlayer->GetWorldLocation();
 	m_pEnemyRifleLocation = m_pEnemyRifle->GetWorldLocation();
 	movement->SetDirection(m_pPlayerLocation - m_pEnemyRifleLocation);
-	if (m_pEnemyRifle->GetComponent<Movement>()->GetDirection().x > 0) {
+	if (m_pEnemyRifle->GetComponent<SideMovement>()->GetDirection().x > 0) {
 		flip = true;
 	}
 	else {
@@ -169,10 +170,13 @@ void EnemyRifleAttack::Update(float daltatime)
 void EnemyRifleAttack::CheckTransition()
 {
 	float distance = (m_pPlayerLocation - m_pEnemyRifleLocation).Length();
-	if (distance > 100)
+	AnimationScene* root = dynamic_cast<AnimationScene*>(m_pEnemyRifle->m_pRootScene);
+	bool isEndMotion = root->isEndMotion;
+	std::cout << isEndMotion << std::endl;
+	if (isEndMotion&&distance > 100)
 	{
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleMove"));
-	}else if (distance > 500) {
+	}else if (isEndMotion && distance > 500) {
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleIdle"));
 	}
 }

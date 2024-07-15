@@ -4,6 +4,7 @@
 #include "../D2DEngine/AnimationScene.h"
 #include "../D2DEngine/AnimationAsset.h"
 #include "../D2DEngine/Movement.h"
+#include "../D2DEngine/SideMovement.h"
 #include "EnemyRifleFSM.h"
 #include "PlayerFSM.h"
 
@@ -12,7 +13,7 @@ class Charector :   public GameObject
 {
 	public:
 		AnimationScene* pAnimationSc;
-		Movement* pMovement;
+		SideMovement* pMovement;
 	Charector();
 	virtual ~Charector() = default;
 	virtual void Update(float deltaTime);

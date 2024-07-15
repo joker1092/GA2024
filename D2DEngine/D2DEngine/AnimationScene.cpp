@@ -34,6 +34,8 @@ void AnimationScene::Update(float deltatime)
 	if (pAnimationAsset == nullptr)
 		return;
 
+	/*std::cout << isEndMotion << std::endl;*/
+
 	const FRAME_INFO& Frame = m_pAnimationInfo->Frames[m_FrameIndexCurr];
 	size_t MaxFrameCount = m_pAnimationInfo->Frames.size();
 
@@ -49,6 +51,7 @@ void AnimationScene::Update(float deltatime)
 		m_FrameIndexCurr++;
 		if (m_pAnimationInfo->Frames.size() - 1 < m_FrameIndexCurr) {
 			m_FrameIndexCurr = 0;
+			isEndMotion = true;
 		}
 		//nFrameTime -= curFrame.Duration;
 		m_FrameTime = 0;
@@ -110,6 +113,7 @@ void AnimationScene::SetAnimation(int index, bool mirror)
 	m_FrameIndexCurr = 0;
 	m_FrameIndexPrev = 0;
 	m_FrameTime = 0.0f;
+	isEndMotion = false;
 }
 
 void AnimationScene::SetAnimationIndex(int index)
@@ -126,4 +130,5 @@ void AnimationScene::SetAnimationIndex(int index)
 	m_FrameIndexCurr = 0;
 	m_FrameIndexPrev = 0;
 	m_FrameTime = 0.0f;
+	isEndMotion = false;
 }

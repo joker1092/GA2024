@@ -36,3 +36,8 @@ void Scene::Render(ID2D1RenderTarget* pRenderTarget)
 	//pRenderTarget->DrawRectangle(D2D1::RectF(-2, -2, 2, 2), pD2DRender->pBrush);
 
 }
+
+void Scene::SetRelativeLocation(const D2D1_VECTOR_2F& Location)
+{
+	m_RelativeLocation = Location;
+}

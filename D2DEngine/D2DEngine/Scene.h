@@ -31,6 +31,8 @@ public:
 	}
 	virtual void Update(float deltaTime);
 	virtual void Render(ID2D1RenderTarget* pRenderTarget);
+	void SetRelativeLocation(const D2D1_VECTOR_2F& Location);
+	const D2D1_VECTOR_2F& GetRelativeLocation() { return m_RelativeLocation; }
 };
 
  

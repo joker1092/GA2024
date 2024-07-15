@@ -6,6 +6,7 @@ using namespace MathHelper;
 class World;
 class GameObject;
 class Movement;
+class SideMovement;
 class Player;
 class FSM;
 class EnemyRifleIdle : public FSMState
@@ -32,7 +33,7 @@ class EnemyRifleMove : public FSMState
 	World* m_pWorld = nullptr;
 	GameObject* m_pEnemyRifle = nullptr;
 	Player* m_pPlayer = nullptr;
-	Movement* movement =nullptr;
+	SideMovement* movement =nullptr;
 	MathHelper::Vector2F m_pPlayerLocation;
 	MathHelper::Vector2F m_pEnemyRifleLocation;
 	bool flip = false;
@@ -54,7 +55,7 @@ class EnemyRifleAttack : public FSMState
 	World* m_pWorld = nullptr;
 	GameObject* m_pEnemyRifle = nullptr;
 	Player* m_pPlayer = nullptr;
-	Movement* movement = nullptr;
+	SideMovement* movement = nullptr;
 	MathHelper::Vector2F m_pPlayerLocation;
 	MathHelper::Vector2F m_pEnemyRifleLocation;
 	bool flip = false;

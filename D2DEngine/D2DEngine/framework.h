@@ -14,6 +14,7 @@
 #include <queue>
 #include <algorithm>
 #include <utility>
+#include <set>
 
 #include <fstream>
 #include <sstream>
@@ -24,6 +25,8 @@
 #include <dwrite.h>
 #include <d2d1_1helper.h>
 #include <dxgi1_4.h>
+
+#include "Utill.h"
 
 #pragma comment(lib,"d2d1.lib")
 #pragma comment(lib,"dwrite.lib")

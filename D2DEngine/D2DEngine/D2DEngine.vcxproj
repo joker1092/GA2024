@@ -23,7 +23,10 @@
     <ClCompile Include="AnimationAsset.cpp" />
     <ClCompile Include="AnimationScene.cpp" />
     <ClCompile Include="BitmapScene.cpp" />
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CircleCollider.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="D2DEngine.cpp" />
     <ClCompile Include="D2DRender.cpp" />
@@ -36,7 +39,9 @@
     <ClCompile Include="ReferenceCounter.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SideMovement.cpp" />
     <ClCompile Include="TimeSystem.cpp" />
+    <ClCompile Include="Utill.cpp" />
     <ClCompile Include="WinGameApp.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
@@ -45,7 +50,10 @@
     <ClInclude Include="AnimationAsset.h" />
     <ClInclude Include="AnimationScene.h" />
     <ClInclude Include="BitmapScene.h" />
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CircleCollider.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="D2DRender.h" />
     <ClInclude Include="framework.h" />
@@ -59,7 +67,9 @@
     <ClInclude Include="ReferenceCounter.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SideMovement.h" />
     <ClInclude Include="TimeSystem.h" />
+    <ClInclude Include="Utill.h" />
     <ClInclude Include="WinGameApp.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>

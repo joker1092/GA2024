@@ -15,20 +15,23 @@ EnemyRifle::EnemyRifle()
 {
 	m_ZOrder = ZOrder::ENEMY;
 	pAnimationSc = CreateComponent<AnimationScene>();
-	pEnemyRifleFSM = CreateComponent<EnemyRifleFSM>();
-	pEnemyRifleFSM->Initialize();
 	SetRootScene(pAnimationSc);
 	pAnimationSc->LoadD2DBitmap(L"../Resource/Enemy_Rifle.png");
 	pAnimationSc->LoadAnimationAsset(L"EnemyRifleIdel");
 	pAnimationSc->pAnimationAsset->LoadAnimationFromFile(1, L"../Resource/EnemyRifleMove.csv");
 	pAnimationSc->pAnimationAsset->LoadAnimationFromFile(2, L"../Resource/EnemyRifleAteck.csv");
-	pMovement = CreateComponent<Movement>();
+	pMovement = CreateComponent<SideMovement>();
 	pMovement->SetScene(pAnimationSc);
+	pMovement->SetSpeed(50);
 	pAnimationSc->SetAnimation(0, false);
+	pEnemyRifleFSM = CreateComponent<EnemyRifleFSM>();
+	pEnemyRifleFSM->Initialize();
 	pAnimationSc->m_RelativeLocation = { 700,100 };
 }
 
 void EnemyRifle::Update(float deltaTime)
 {
+	std::cout <<"ENEMY RelativeLocation()" << pAnimationSc->GetRelativeLocation().x << pAnimationSc->GetRelativeLocation().y << std::endl;
+	std::cout << "ENEMY GetWorldLocation()" << pAnimationSc->GetWorldLocation().x << pAnimationSc->GetWorldLocation().y << std::endl;
 	Charector::Update(deltaTime);
 }
