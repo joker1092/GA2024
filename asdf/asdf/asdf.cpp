@@ -1,44 +1,77 @@
 ﻿#include <iostream>
-#include <array>
+#include <vector>
+#include <list>
+#include <algorithm>
 
+using namespace std;
 
+//template <typename T>
+//void printArr(T* begin, T* end) {
+//	T* it = begin;
+//	while (it != end)
+//	{
+//		cout << *it << " ";
+//		it++;
+//	}
+//	cout << endl;
+//}
+//=>
+template <typename T>
+void printVector(T begin, T end) {
+	T it = begin;
+	while (it != end)
+	{
+		cout << *it << " ";
+		it++;
+	}
+	cout << endl;
+}
 
-template <typename T, int size>
-class MyArray {
+template <typename T>
+void printVectorV2(vector<T> v) {
+	for (auto i : v)
+	{
+		cout << i << " ";
+	}
+	cout << endl;
+}
 
-	using reference = T&;
-
-	private:
-	T data[size];
-	public:
-	MyArray() {
-		for (int i = 0; i < size; i++) {
-			data[i] = T{};
+template <typename T , typename U>
+bool isValue(T begin, T end, U value) {
+	T it = begin;
+	while (it != end) {
+		if(*it == value) {
+			return true;
 		}
+		it++;
 	}
-	
-	reference operator[](int index) {
-		return data[index];
-	}
+	return false;
+}
 
-	void print() {
-		for (int i = 0; i < size; i++) {
-			std::cout << data[i] << " "; 
+template <typename T>
+void insertVector(vector<T>& v, T in) {
+	auto it = v.begin();
+	while (it != v.end()) {
+		if (*it > in) {
+			v.insert(it, in);
+			return;
 		}
-		std::cout<<	std::endl;
+		it++;
 	}
-};
+	v.push_back(in);
+}
 
 
 int main() {
-	
-	MyArray<int, 10> arr;
 
-	arr[0] = 1;
-	arr[1] = 2;
-	arr[2] = 3;
+	vector<int> v2;
 
-	arr.print();
+	insertVector(v2, 3);
+	insertVector(v2, 1);
+	insertVector(v2, 4);
+	insertVector(v2, 2);
+
+	printVector(v2.begin(), v2.end());
 
 	return 0;
 }

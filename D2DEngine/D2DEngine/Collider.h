@@ -46,6 +46,8 @@ public:
 
 	void ClearCollideState();
 
+	void SetNotify(IColliderNotify* pNotify) { m_pNotify = pNotify; }
+
 	bool IsEmptyCollideStateCurr() { return m_CollideStateCurr.empty(); }
 
 	void AddCollideStateCurr(Collider* pCollider){ m_CollideStateCurr.insert(pCollider); }

@@ -1,4 +1,5 @@
 #include "framework.h"
+#include "Collider.h"
 #include "World.h"
 
 
@@ -31,6 +32,30 @@ void World::Update(float deltaTime)
 	{
 		obj->Update(deltaTime);
 	}
+	
+
+	for (auto& obj1 : m_GameObjects)
+	{
+		Collider* pCollider1 = obj1->GetComponent<Collider>();
+		if (pCollider1!=nullptr)
+		{
+			pCollider1->ClearCollideState();
+			for (auto& obj2 : m_GameObjects)
+			{
+				if (obj1 == obj2) continue;
+				Collider* pCollider2 = obj2->GetComponent<Collider>();
+				if (pCollider2 != nullptr)
+				{
+					if (pCollider1->IsCollide(pCollider2)) {
+						pCollider1->AddCollideStateCurr(pCollider2);
+					}
+				}
+			}
+		}
+	}
+	// 충돌체크를 한다.
+	
+
 }
 
 

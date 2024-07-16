@@ -54,3 +54,15 @@ D2D1_VECTOR_2F GameObject::GetWorldLocation()
 
 	return temp;
 }
+
+void GameObject::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+}
+
+void GameObject::OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+}
+
+void GameObject::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+}

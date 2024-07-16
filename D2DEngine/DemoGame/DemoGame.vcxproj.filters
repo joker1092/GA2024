@@ -57,6 +57,12 @@
     <ClInclude Include="MapBackgound.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="BoxObject.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerNotify.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoGame.cpp">
@@ -90,6 +96,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="MapBackgound.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerNotify.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

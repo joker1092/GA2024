@@ -12,6 +12,7 @@
 #include "PlayerFSM.h"
 #include "Player.h"
 #include "EnemyRifle.h"
+#include "BoxObject.h"
 
 #include <random>
 class DemoGameApp :public WinGameApp
@@ -21,6 +22,7 @@ class DemoGameApp :public WinGameApp
     Player* player;
     AnimationScene* animeSceneBG;
     EnemyRifle* enemyRifle;
+    BoxObject* boxObject;
     
     std::vector<GameObject*> vObjList;
 

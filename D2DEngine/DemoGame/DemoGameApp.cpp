@@ -28,6 +28,9 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	player->PlayerInit(pInput);
 	enemyRifle = m_pWorld->CreateGameObject<EnemyRifle>();
 	m_pCamera->SetTargetScene(player->m_pRootScene);
+
+	boxObject = m_pWorld->CreateGameObject<BoxObject>();
+	boxObject->m_pRootScene->SetRelativeLocation({ 400,100 });
 }
 
 void DemoGameApp::UnInitialize()

@@ -1,4 +1,5 @@
 #pragma once
+#include "Collider.h"
 #include "AABB.h"
 
 
@@ -6,7 +7,7 @@
 class Component;
 class Scene;
 class World;
-class GameObject{
+class GameObject : public IColliderNotify {
 public:
 	GameObject();
 	virtual ~GameObject();
@@ -62,5 +63,10 @@ public:
 		}
 		return nullptr;
 	}
+
+	// IColliderNotify을(를) 통해 상속됨
+	void OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent) override;
+	void OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent) override;
+	void OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent) override;
 };
 
