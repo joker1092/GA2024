@@ -45,7 +45,7 @@ Player::Player()
 	//BoxCollider
 	PlayerBox = CreateComponent<BoxCollider>();
 	PlayerBox->SetParentScene(PlayerTop);
-	PlayerBox->SetNotify(pPlayerNotify);
+	PlayerBox->SetNotify(this);
 }
 
 
@@ -98,4 +98,21 @@ void Player::Update(float deltaTime)
 
 	Charector::Update(deltaTime);
 	PlayerBox->m_collider = m_BoundBox;
+	//PlayerBox->ProcessOverlap();
+	//PlayerBox->ProcessBlock(nullptr);
+}
+
+void Player::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+	std::cout << "Player OnBlock" << std::endl;
+}
+
+void Player::OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+	std::cout << "Player OnBeginOverlap" << std::endl;
+}
+
+void Player::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+	std::cout << "Player OnEndOverlap" << std::endl;
 }

@@ -3,6 +3,7 @@
 class BoxCollider : public Collider
 {	
 public:
+	BoxCollider() { m_ColliderType = ColliderType::Box; }
 	D2D_RECT_F m_Rect;
 	AABB m_collider;
 	// Collider을(를) 통해 상속됨

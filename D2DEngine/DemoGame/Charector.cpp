@@ -19,3 +19,15 @@ void Charector::Update(float deltaTime)
 {
 	GameObject::Update(deltaTime);
 }
+
+void Charector::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+}
+
+void Charector::OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+}
+
+void Charector::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+}

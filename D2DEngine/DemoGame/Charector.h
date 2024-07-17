@@ -17,5 +17,8 @@ class Charector :   public GameObject
 	Charector();
 	virtual ~Charector() = default;
 	virtual void Update(float deltaTime);
+	void OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent) override;
+	void OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent) override;
+	void OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent) override;
 };
 

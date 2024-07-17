@@ -30,6 +30,7 @@ void World::Update(float deltaTime)
 	m_pCamera->Update(deltaTime);
 	for (auto& obj : m_GameObjects)
 	{
+		
 		obj->Update(deltaTime);
 	}
 	
@@ -48,11 +49,15 @@ void World::Update(float deltaTime)
 				{
 					if (pCollider1->IsCollide(pCollider2)) {
 						pCollider1->AddCollideStateCurr(pCollider2);
+						pCollider1->ProcessBlock(pCollider2);
 					}
 				}
 			}
+			pCollider1->ProcessOverlap();
 		}
 	}
+
+
 	// 충돌체크를 한다.
 	
 

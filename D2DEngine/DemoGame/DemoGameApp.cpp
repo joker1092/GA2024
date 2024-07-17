@@ -30,7 +30,7 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	m_pCamera->SetTargetScene(player->m_pRootScene);
 
 	boxObject = m_pWorld->CreateGameObject<BoxObject>();
-	boxObject->m_pRootScene->SetRelativeLocation({ 400,100 });
+	boxObject->m_pRootScene->SetRelativeLocation({ 400,0 });
 }
 
 void DemoGameApp::UnInitialize()

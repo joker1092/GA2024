@@ -1,77 +1,69 @@
 ﻿#include <iostream>
 #include <vector>
 #include <list>
+#include <array>
+#include <string>
 #include <algorithm>
 
 using namespace std;
 
-//template <typename T>
-//void printArr(T* begin, T* end) {
-//	T* it = begin;
-//	while (it != end)
-//	{
-//		cout << *it << " ";
-//		it++;
-//	}
-//	cout << endl;
-//}
-//=>
-template <typename T>
-void printVector(T begin, T end) {
-	T it = begin;
-	while (it != end)
-	{
-		cout << *it << " ";
-		it++;
+class Item {
+private:
+	string name;
+	int level;
+public:
+	Item(string _name, int _level) :name(_name), level(_level) {}
+	~Item() {  }
+	void print() { cout << name << " " << level << endl; }
+	bool operator<(const Item& item) const {
+		return level < item.level;
 	}
-	cout << endl;
+	bool operator>(const Item& item) const {
+		return level > item.level;
+	}
+	bool operator==(const Item& item) const {
+		return level == item.level;
+	}
+	
+	friend struct nameDecrease;
+	friend struct nameIncrease;
+};
+
+struct nameDecrease {
+	bool operator()(const Item& item1, const Item& item2) {
+		return item1.name > item2.name;
+	}
+};
+
+struct nameIncrease {
+	bool operator()(const Item& item1, const Item& item2) {
+		return item1.name < item2.name;
+	}
+};
+
+
+bool ItemIncrease(const Item& item1, const Item& item2) {
+	return item1 < item2;
 }
 
-template <typename T>
-void printVectorV2(vector<T> v) {
-	for (auto i : v)
-	{
-		cout << i << " ";
-	}
-	cout << endl;
+bool ItemDecrease(const Item& item1, const Item& item2) {
+	return item1 > item2;
 }
-
-template <typename T , typename U>
-bool isValue(T begin, T end, U value) {
-	T it = begin;
-	while (it != end) {
-		if(*it == value) {
-			return true;
-		}
-		it++;
-	}
-	return false;
-}
-
-template <typename T>
-void insertVector(vector<T>& v, T in) {
-	auto it = v.begin();
-	while (it != v.end()) {
-		if (*it > in) {
-			v.insert(it, in);
-			return;
-		}
-		it++;
-	}
-	v.push_back(in);
-}
-
 
 int main() {
+	vector<Item> vec;
+	
+	vec.emplace_back("단검", 1);
+	vec.emplace_back("장검", 2);
+	vec.emplace_back("갑옷", 5);
+	vec.emplace_back("반지", 3);
 
-	vector<int> v2;
+	sort(vec.begin(), vec.end(), nameDecrease());
+	//sort(vec.begin(), vec.end(), greater<Item>());
 
-	insertVector(v2, 3);
-	insertVector(v2, 1);
-	insertVector(v2, 4);
-	insertVector(v2, 2);
-
-	printVector(v2.begin(), v2.end());
-
+	for (auto& item : vec) {
+		item.print();
+	}
+	
 	return 0;
 }
