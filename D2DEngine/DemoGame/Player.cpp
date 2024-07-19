@@ -104,6 +104,7 @@ void Player::Update(float deltaTime)
 
 void Player::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
+	pMovement->EndJump();
 	std::cout << "Player OnBlock" << std::endl;
 }
 
