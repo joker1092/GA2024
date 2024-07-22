@@ -1,4 +1,5 @@
 #include "framework.h"
+#include "../D2DEngine/D2DRender.h"
 #include "AABB.h"
 #include "BoxCollider.h"
 #include "CircleCollider.h"
@@ -26,4 +27,13 @@ bool BoxCollider::IsCollide(Collider* pOtherComponent)
 		}
 	}
     return false;
+}
+
+void BoxCollider::Render(ID2D1RenderTarget* pRenderTarget)
+{
+	m_Rect = D2D1::RectF(m_collider.m_Center.x - m_collider.m_Extent.x, m_collider.m_Center.y - m_collider.m_Extent.y, m_collider.m_Center.x + m_collider.m_Extent.x, m_collider.m_Center.y + m_collider.m_Extent.y);
+	D2D1_MATRIX_3X2_F m_ScreenTransform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * D2D1::Matrix3x2F::Translation(0.0f, D2DRender::Instance->GetClientSize().height);
+	D2D1_MATRIX_3X2_F Transform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * m_WorldTransform * pD2DRender->m_CameraTransform * m_ScreenTransform;
+	pRenderTarget->SetTransform(Transform);
+	pRenderTarget->DrawRectangle(m_Rect, D2DRender::Instance->RedBrush());
 }

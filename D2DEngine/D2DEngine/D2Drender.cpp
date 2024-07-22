@@ -62,6 +62,12 @@ BOOL D2DRender::D2DIntialize(HWND hwnd)
 		hr = pRenderTaget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::GreenYellow), &pBrush);
 	}
 
+	if (SUCCEEDED(hr))
+	{
+		hr = pRenderTaget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Red), &pRedBrush);
+	}
+
+
 	hr = CoCreateInstance(CLSID_WICImagingFactory,NULL,CLSCTX_INPROC_SERVER,IID_PPV_ARGS(&pWICFactorry));
 	
 	if (FAILED(hr)) {

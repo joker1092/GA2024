@@ -27,6 +27,7 @@ public:
 
     bool m_bMirror;				// 좌우 반전 여부
     bool isEndMotion = false;	// 애니메이션 종료 여부
+    bool isVisable = true;		// 애니메이션 출력 여부
     D2D1_MATRIX_3X2_F	m_ImageTransform;	// 반대 방향으로 뒤집기 위한 행렬 Scale.x = -1.0f 
 
     bool LoadAnimationAsset(const std::wstring strFilePath);
@@ -37,6 +38,8 @@ public:
     void SetAnimationIndex(int index);
     void SetMirror(bool mirror) { m_bMirror = mirror; }
     bool GetCurrMirror(){ return m_bMirror;}
+    void SetVisable(bool visable) { isVisable = visable; }
+    bool GetVisable() { return isVisable; }
     
 };
 

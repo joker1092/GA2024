@@ -8,5 +8,6 @@ public:
 
 	// Collider을(를) 통해 상속됨
 	bool IsCollide(Collider* pOtherComponent) override;
+	virtual void Render(ID2D1RenderTarget* pRenderTarget);
 };
 

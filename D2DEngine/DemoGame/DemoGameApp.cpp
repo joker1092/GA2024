@@ -30,7 +30,11 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	m_pCamera->SetTargetScene(player->m_pRootScene);
 
 	boxObject = m_pWorld->CreateGameObject<BoxObject>();
-	boxObject->m_pRootScene->SetRelativeLocation({ 400,0 });
+	boxObject->m_pRootScene->SetRelativeLocation({ 400,50 });
+	
+	//todo : 
+	//Box 를 통한 충돌체크 처리확인
+	//Box or Circle Collider Object로 Platform 구현
 }
 
 void DemoGameApp::UnInitialize()

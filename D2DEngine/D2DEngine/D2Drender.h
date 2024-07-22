@@ -38,11 +38,13 @@ public:
 	size_t GetUsedVRAM();
 	ID2D1HwndRenderTarget* GetRenderTarget() { return pRenderTaget; }
 	ID2D1SolidColorBrush* getBrush() { return pBrush; }
+	ID2D1SolidColorBrush* RedBrush() { return pRedBrush; }
 	HRESULT D2DBitmapFromFile(const WCHAR* path, ID2D1Bitmap** ppID2DBitmap);
 	D2D_SIZE_U GetClientSize() { return m_ClientSize; }
 
 	static D2D1_MATRIX_3X2_F m_CameraTransform;		// 카메라의 좌표계로 변환하는 카메라 월드의 역행렬
 	static D2DRender* Instance;					// 싱글톤 인스턴스
 	ID2D1SolidColorBrush* pBrush; // 브러시 개체 인터페이스 포인터 변수
+	ID2D1SolidColorBrush* pRedBrush;
 };
 

@@ -172,7 +172,7 @@ void EnemyRifleAttack::CheckTransition()
 	float distance = (m_pPlayerLocation - m_pEnemyRifleLocation).Length();
 	AnimationScene* root = dynamic_cast<AnimationScene*>(m_pEnemyRifle->m_pRootScene);
 	bool isEndMotion = root->isEndMotion;
-	std::cout << isEndMotion << std::endl;
+	//std::cout << isEndMotion << std::endl;
 	if (isEndMotion&&distance > 100)
 	{
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleMove"));

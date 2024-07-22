@@ -88,6 +88,10 @@ void AnimationScene::Render(ID2D1RenderTarget* pRenderTarget)
 {
 	if (m_pAnimationInfo == nullptr)
 		return;
+	
+	if (!isVisable)
+		return;
+
 	width = m_DstRect.right- m_DstRect.left;
 	height= m_DstRect.bottom- m_DstRect.top;
 

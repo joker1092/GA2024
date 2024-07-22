@@ -11,23 +11,30 @@
 #include "../D2DEngine/InputSystem.h"
 #include "../D2DEngine/Collider.h"
 #include "../D2DEngine/BoxCollider.h"
-#include "PlayerNotify.h"
+#include "PlayerBodyFSM.h"
+#include "PlayerWorkFSM.h"
+#include "PlayerBodyScene.h"
+#include "PlayerWorkScene.h"
 #include "Player.h"
 
 Player::Player()
 {
 	m_ZOrder =ZOrder::PLAYER;
 	//Scene
-	PlayerTop = CreateComponent<AnimationScene>();
-	PlayerBottom =CreateComponent<AnimationScene>();
+	m_pRootScene = CreateComponent<Scene>(); // 루트 씬 생성
+	PlayerTop = CreateComponent<PlayerBodyScene>(); // 상체 애니메이션 씬 생성
+	PlayerBottom = CreateComponent<PlayerWorkScene>(); // 하체 애니메이션 씬 생성
 
-	SetRootScene(PlayerTop); // 상체 애니메이션을 루트로 설정
-	PlayerBottom->SetParentScene(PlayerTop); // 하체 애니메이션을 상체 애니메이션의 자식으로 설정
+	SetRootScene(m_pRootScene); // 상체 애니메이션을 루트로 설정
+	PlayerTop->SetParentScene(m_pRootScene); // 상체 애니메이션을 루트의 자식으로 설정
+	PlayerBottom->SetParentScene(m_pRootScene); // 하체 애니메이션을 상체 애니메이션의 자식으로 설정
 
+	PlayerTop->LoadD2DBitmap(L"../Resource/Marco_trans_death.png");
 	PlayerTop->LoadD2DBitmap(L"../Resource/Marco_trans0.png");
 	PlayerTop->LoadAnimationAsset(L"marcoIdleTop");
 	PlayerTop->pAnimationAsset->LoadAnimationFromFile(1, L"../Resource/Marco_MoveT.csv");
 	PlayerTop->pAnimationAsset->LoadAnimationFromFile(2, L"../Resource/Marco_JumpT.csv");
+	PlayerTop->pAnimationAsset->LoadAnimationFromFile(3, L"../Resource/Marco_death_defuat.csv");
 
 	PlayerBottom->LoadD2DBitmap(L"../Resource/Marco_trans0.png");
 	PlayerBottom->LoadAnimationAsset(L"marcoIdleBottom");
@@ -35,17 +42,31 @@ Player::Player()
 	PlayerBottom->pAnimationAsset->LoadAnimationFromFile(2, L"../Resource/Marco_JumpB.csv");
 	
 	//FSM
-	pPlayerFSM = CreateComponent<PlayerFSM>();
-	pPlayerFSM->Initialize();
+	//todo:
+	//상체와 하체의 상태를 분리하여 관리
+	//상체의 FSM과 하체의 FSM을 따로 생성
+	//공통으로 가져야 하는 상태  => Idle, Move, Jump, Dead
+	//상체만 가져야 하는 상태 => Attack, Boom, UP, Down
+	//하체만 가져야 하는 상태 => MoveJump
+	pPlayerBodyFSM = CreateComponent<PlayerBodyFSM>();
+	pPlayerWorkFSM = CreateComponent<PlayerWorkFSM>();
+	pPlayerBodyFSM->Initialize();
+	pPlayerWorkFSM->Initialize();
+	
+
 
 	//Movement
 	pMovement = CreateComponent<SideMovement>();
-	pMovement->SetScene(PlayerTop);
+	pMovement->SetScene(m_pRootScene);
 	
 	//BoxCollider
 	PlayerBox = CreateComponent<BoxCollider>();
-	PlayerBox->SetParentScene(PlayerTop);
+	PlayerBox->SetParentScene(m_pRootScene);
 	PlayerBox->SetNotify(this);
+
+	//todo:
+	//RootScene에 자체적인 Collider의 크기를 가질것
+	//DebugDraw를 통해 확인할 수 있게 할것 
 }
 
 
@@ -55,8 +76,10 @@ void Player::PlayerInit(InputSystem* in)
 	PlayerBottom->SetAnimation(0, false);
 	PlayerBottom->m_RelativeLocation = { 0, 0 };
 	PlayerTop->SetAnimation(0, false);
-	PlayerTop->m_RelativeLocation = { 100, 100};
+	PlayerTop->m_RelativeLocation = { 0, 0 };
+	m_pRootScene->m_RelativeLocation = { 100, 100 };
 	pMovement->SetSpeed(100);
+	m_BoundBox.SetExtent(18, 22);
 	PlayerBox->m_collider = m_BoundBox;
 }
 
@@ -94,10 +117,17 @@ void Player::Update(float deltaTime)
 		pMovement->Jump();
 	}
 	
+	if (pInput->IsKey('0'))
+	{
+		isDead = true; //죽음 상태로 변경
+		//todo : 차후 collision을 통해 죽음 상태로 변경
+	}
 
 
+	PlayerBox->m_collider.SetCenter(m_pRootScene->GetWorldLocation().x, m_pRootScene->GetWorldLocation().y);
 	Charector::Update(deltaTime);
-	PlayerBox->m_collider = m_BoundBox;
+
+	//PlayerBox->m_collider = m_BoundBox;
 	//PlayerBox->ProcessOverlap();
 	//PlayerBox->ProcessBlock(nullptr);
 }

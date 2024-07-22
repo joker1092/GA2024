@@ -38,3 +38,8 @@ void Collider::ProcessBlock(Collider* pOtherComponent)
 		}
 	}
 }
+
+void Collider::Render(ID2D1RenderTarget* pRenderTarget)
+{
+	
+}

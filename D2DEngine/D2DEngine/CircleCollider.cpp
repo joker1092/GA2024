@@ -1,4 +1,5 @@
 #include "framework.h"
+#include "../D2DEngine/D2DRender.h"
 #include "AABB.h"
 #include "BoxCollider.h"
 #include "CircleCollider.h"
@@ -23,4 +24,9 @@ bool CircleCollider::IsCollide(Collider* pOtherComponent)
 		float distance = Utill::Distance(m_Center, { closestX, closestY });
 	}
     return false;
+}
+
+void CircleCollider::Render(ID2D1RenderTarget* pRenderTarget)
+{
+	pRenderTarget->DrawEllipse(D2D1::Ellipse(m_Center, m_Radius, m_Radius), D2DRender::Instance->RedBrush());
 }

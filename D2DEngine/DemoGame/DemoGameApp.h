@@ -9,7 +9,6 @@
 #include "../D2DEngine/Movement.h"
 #include "BackGround.h"
 #include "MapBackgound.h"
-#include "PlayerFSM.h"
 #include "Player.h"
 #include "EnemyRifle.h"
 #include "BoxObject.h"

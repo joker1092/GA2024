@@ -138,9 +138,12 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="MapBackgound.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerNotify.h" />
-    <ClInclude Include="PlayerFSM.h" />
-    <ClInclude Include="PlayerState.h" />
+    <ClInclude Include="PlayerBodyFSM.h" />
+    <ClInclude Include="PlayerBodyScene.h" />
+    <ClInclude Include="PlayerBodyState.h" />
+    <ClInclude Include="PlayerWorkFSM.h" />
+    <ClInclude Include="PlayerWorkScene.h" />
+    <ClInclude Include="PlayerWorkState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -155,9 +158,12 @@
     <ClCompile Include="EnemyRifleState.cpp" />
     <ClCompile Include="MapBackgound.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerNotify.cpp" />
-    <ClCompile Include="PlayerFSM.cpp" />
-    <ClCompile Include="PlayerState.cpp" />
+    <ClCompile Include="PlayerBodyFSM.cpp" />
+    <ClCompile Include="PlayerBodyScene.cpp" />
+    <ClCompile Include="PlayerBodyState.cpp" />
+    <ClCompile Include="PlayerWorkFSM.cpp" />
+    <ClCompile Include="PlayerWorkScene.cpp" />
+    <ClCompile Include="PlayerWorkState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DemoGame.rc" />

@@ -6,7 +6,7 @@
 #include "../D2DEngine/Movement.h"
 #include "../D2DEngine/SideMovement.h"
 #include "EnemyRifleFSM.h"
-#include "PlayerFSM.h"
+
 
 //GameObject를 상속 받은 케릭터 클레스
 class Charector :   public GameObject

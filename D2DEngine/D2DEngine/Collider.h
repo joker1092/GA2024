@@ -55,5 +55,6 @@ public:
 	void ProcessBlock(Collider* pOtherComponent);
 
 	virtual bool IsCollide(Collider* pOtherComponent) = 0;
+	virtual void Render(ID2D1RenderTarget* pRenderTarget);
 };
 

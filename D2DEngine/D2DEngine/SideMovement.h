@@ -18,6 +18,7 @@ public:
 	void SetGravityScale(float scale) { m_GravityScale = scale; }
 	void ResetGravity() { m_GravityScaled = m_Gravity * m_GravityScale; }
 	void Jump();
+	bool isJumping() { return m_IsJumping; }
 	void EndJump();
 };
 
