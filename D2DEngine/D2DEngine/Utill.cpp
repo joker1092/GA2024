@@ -8,7 +8,7 @@ namespace Utill {
 		if (value > max) return max;
 		float dist = abs(value - max);
 		float closest = min;
-		for (float i = min; i < max; i += 0.1)
+		for (int i = min; i < max; i++)
 		{
 			if (abs(value - i) < dist)
 			{

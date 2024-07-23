@@ -12,8 +12,9 @@ public:
 	virtual ~World();
 	int objectCount = 0;
 	int renderCount = 0;
-	std::list<GameObject*> m_GameObjects;
-	std::vector< GameObject*> m_RenderQueue;
+	std::list<GameObject*> m_GameObjects; // 게임 오브젝트들을 담는 리스트
+	std::list<GameObject*> m_DeleteObjects; //삭제할 오브젝트를 담는 리스트
+	std::vector< GameObject*> m_RenderQueue; // 렌더링 순서를 정하기 위한 큐
 	AABB* m_pCullingBound = nullptr;
 	AABB m_CullingBoundDefault;
 	
@@ -63,6 +64,12 @@ public:
 			}
 		}
 		return nullptr;
+	}
+
+	// 각 오브젝트 상황에서 삭제할 오브젝트를 배열에 넣어놓고 한번에 삭제한다.
+	// 이유는 Update에서 삭제하면 다음 오브젝트가 삭제된 오브젝트를 참조할 수 있기 때문이다.
+	void DeleteObject(GameObject* pGameObject) {
+		m_DeleteObjects.push_back(pGameObject);
 	}
 
 

@@ -140,13 +140,10 @@ void WinGameApp::RectPoint() {
 }
 
 void WinGameApp::DrawInfoRect() {
-    std::wstring FrameRate = std::to_wstring(pTime->GetFrameRate());
-    std::wstring vrem = std::to_wstring(pD2DRender->GetUsedVRAM());
-    std::wstring comment = L"추가 : A , 삭제 : D";
-    std::wstring objcount = L"Object Count : " + std::to_wstring(m_pWorld->objectCount);
-    std::wstring rendercount = L"render Count : " + std::to_wstring(m_pWorld->renderCount);
-    FrameRate = FrameRate + L" \n GetUsedVRAM : " + vrem + L"\n" + comment + L"\n" + objcount + L"\n" + rendercount;
-    const wchar_t* myFrameRate = FrameRate.c_str();
+    
+    std::wstring comment = L"이동 방향키, space:점프, z : 공격";
+    
+    const wchar_t* myFrameRate = comment.c_str();
     pD2DRender->GetRenderTarget()->SetTransform(D2D1::Matrix3x2F::Identity());
     pD2DRender->DrawTextRect(myFrameRate, D2D1::RectF(400, 200, 800, 400));
 }

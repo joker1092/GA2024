@@ -6,6 +6,10 @@ std::uniform_int_distribution<long> uniform_dist(0, 1200); // 0부터 99까지 균등 
 std::uniform_int_distribution<int> miror(0, 1); // 0부터 99까지 균등 분포
 
 class FSMState;
+class GameObject;
+class Bullet;
+class FireScene;
+
 void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 {
 	WinGameApp::Initialize(hInstance, szTitle);
@@ -97,7 +101,23 @@ void DemoGameApp::Update(float deltatime)
 	//	//m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
 	//}
 
-	
+	if (pInput->IsKey('Z') || pInput->IsKey('z'))
+	{
+		player->fireDelay += deltatime;
+		if (player->fireDelay > player->delay)
+		{
+			Bullet* bullet = m_pWorld->CreateGameObject<Bullet>();
+			bullet->m_ZOrder = GameObject::ZOrder::EFFECT;
+			bullet->m_pRootScene->SetRelativeLocation(player->pFireScene->GetWorldLocation());
+			player->fireDelay-= player->delay;
+		}
+		//bullet->m_pRootScene->SetParentScene(player->m_pRootScene);
+		//==>  플레이어의 하위 자식이 아닌 상태로 플레이어 위치에 총알 생성
+		// 
+		// 
+		//player->Fire();
+		//todo : 총알 생성
+	}
 
 
 	if (pInput->IsKey('A'))

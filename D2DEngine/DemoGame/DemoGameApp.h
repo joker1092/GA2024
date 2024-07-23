@@ -12,6 +12,8 @@
 #include "Player.h"
 #include "EnemyRifle.h"
 #include "BoxObject.h"
+#include "Bullet.h"
+#include "FireScene.h"
 
 #include <random>
 class DemoGameApp :public WinGameApp

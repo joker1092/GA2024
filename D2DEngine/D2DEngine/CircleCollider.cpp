@@ -22,8 +22,11 @@ bool CircleCollider::IsCollide(Collider* pOtherComponent)
 		float closestY = Utill::Clamp(m_Center.y, BoxAABB.m_Center.y - BoxAABB.m_Extent.y, BoxAABB.m_Center.y + BoxAABB.m_Extent.y);
 		// 원의 중심과 가장 가까운 점 사이의 거리 계산
 		float distance = Utill::Distance(m_Center, { closestX, closestY });
+		if (distance < m_Radius) {
+			return true;
+		}
+		return false;
 	}
-    return false;
 }
 
 void CircleCollider::Render(ID2D1RenderTarget* pRenderTarget)

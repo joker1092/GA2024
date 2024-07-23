@@ -27,7 +27,7 @@ class EnemyRifleIdle : public FSMState
 		std::string GetName() override;
 };
 
-class FSM;
+
 class EnemyRifleMove : public FSMState
 {
 	World* m_pWorld = nullptr;
@@ -49,7 +49,7 @@ public:
 	std::string GetName() override;
 };
 
-class FSM;
+
 class EnemyRifleAttack : public FSMState
 {
 	World* m_pWorld = nullptr;
@@ -71,3 +71,23 @@ public:
 	std::string GetName() override;
 };
 
+class EnemyRifleDead : public FSMState {
+	World* m_pWorld = nullptr;
+	GameObject* m_pEnemyRifle = nullptr;
+	Player* m_pPlayer = nullptr;
+	SideMovement* movement = nullptr;
+	MathHelper::Vector2F m_pPlayerLocation;
+	MathHelper::Vector2F m_pEnemyRifleLocation;
+	float deleteDelay = 0;
+	bool flip = false;
+public:
+	EnemyRifleDead(FSM* pOwner, std::string name) :FSMState(pOwner, name) {}
+
+	void Enter() override;
+	void Update(float daltatime) override;
+	void CheckTransition() override;
+	void Exit() override;
+
+	// FSMState을(를) 통해 상속됨
+	std::string GetName(){ return m_Name; }
+};

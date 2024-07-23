@@ -59,6 +59,5 @@ void SideMovement::EndJump()
 {
 	m_IsJumping = false;
 	m_SpeedY = 0;
-	m_GravityScaled = 0;
-
+	//m_GravityScaled = 0;
 }

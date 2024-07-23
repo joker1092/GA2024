@@ -115,7 +115,7 @@ void BodyJump::Exit()
 {
 }
 
-void BodyAtteck::Enter()
+void BodyAttack::Enter()
 {
 	m_pPlayer = m_pOwnerFSM->GetOwner();
 	Player* player = dynamic_cast<Player*>(m_pPlayer);
@@ -127,21 +127,25 @@ void BodyAtteck::Enter()
 	//3 인덱스 moveJump 배정 4 인덱스로 할당
 }
 
-void BodyAtteck::Update(float daltatime)
+void BodyAttack::Update(float daltatime)
 {
 	//jump에서는 flip이 되어있는 상태로 수정 하지 않는다.
 }
 
-void BodyAtteck::CheckTransition()
+void BodyAttack::CheckTransition()
 {
-	//jump에서 <==> moveJump으로 전환 불가
-	/*if (m_pPlayer->GetComponent<Movement>()->GetSpeed() == 0)
-		m_pOwnerFSM->setNextState(std::string("Jump"));*/
-	if (!(m_pPlayer->GetComponent<SideMovement>()->isJumping()))
-		m_pOwnerFSM->setNextState(std::string("Move"));
+
+	Player* player = dynamic_cast<Player*>(m_pPlayer);
+	PlayerBodyScene* body = dynamic_cast<PlayerBodyScene*>(m_pPlayer->GetComponent<PlayerBodyScene>());
+	bool isEndMotion = body->isEndMotion;
+	if (isEndMotion)
+	{
+		//todo : 공격 에니메이션 이후 Idle로 전환
+		m_pOwnerFSM->setNextState(std::string("Idle"));
+	}
 }
 
-void BodyAtteck::Exit()
+void BodyAttack::Exit()
 {
 	
 }

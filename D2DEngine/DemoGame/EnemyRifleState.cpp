@@ -190,3 +190,38 @@ std::string EnemyRifleAttack::GetName()
 {
 	return m_Name;
 }
+
+void EnemyRifleDead::Enter()
+{
+	m_pEnemyRifle = m_pOwnerFSM->GetOwner();
+	m_pWorld = m_pEnemyRifle->m_pOwner;
+	EnemyRifle* enemyRifle = dynamic_cast<EnemyRifle*>(m_pEnemyRifle);
+
+	AnimationScene* root = dynamic_cast<AnimationScene*>(m_pEnemyRifle->m_pRootScene);
+	root->LoadD2DBitmap(L"../Resource/Rebel_Soldier_Default.png");
+	root->SetAnimationIndex(3);
+}
+
+void EnemyRifleDead::Update(float daltatime)
+{
+	deleteDelay+= daltatime;
+	AnimationScene* root = dynamic_cast<AnimationScene*>(m_pEnemyRifle->m_pRootScene);
+	bool isEndMotion = root->isEndMotion;
+	if (isEndMotion)
+	{
+		int last = root->pAnimationAsset->GetMotionInfo(3)->Frames.size() - 1;
+		root->m_FrameIndexCurr = last;
+	}
+}
+
+void EnemyRifleDead::CheckTransition()
+{
+	if (deleteDelay > 3)
+	{
+		m_pWorld->DeleteObject(m_pEnemyRifle);
+	}
+}
+
+void EnemyRifleDead::Exit()
+{
+}

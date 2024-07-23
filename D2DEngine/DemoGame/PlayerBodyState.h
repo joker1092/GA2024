@@ -52,12 +52,12 @@ class BodyJump : public FSMState
 		std::string GetName() { return m_Name; }
 };
 
-class BodyAtteck : public FSMState
+class BodyAttack : public FSMState
 {
 	GameObject* m_pPlayer;
 	bool flip = false;
 	public:
-		BodyAtteck(FSM* pOwner, std::string name) :FSMState(pOwner, name) {}
+		BodyAttack(FSM* pOwner, std::string name) :FSMState(pOwner, name) {}
 		// FSMState을(를) 통해 상속됨
 		void Enter() override;
 		void Update(float daltatime) override;

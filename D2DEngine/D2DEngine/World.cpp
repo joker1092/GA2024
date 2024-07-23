@@ -34,9 +34,9 @@ void World::Update(float deltaTime)
 		obj->Update(deltaTime);
 	}
 	
-
+	// 충돌체크를 한다.
 	for (auto& obj1 : m_GameObjects)
-	{
+	{ 
 		Collider* pCollider1 = obj1->GetComponent<Collider>();
 		if (pCollider1!=nullptr)
 		{
@@ -57,10 +57,12 @@ void World::Update(float deltaTime)
 		}
 	}
 
-
-	// 충돌체크를 한다.
-	
-
+	// 삭제할 오브젝트를 삭제한다.
+	for (auto& obj : m_DeleteObjects)
+	{
+		DeleteGameObject(obj);
+	}
+	m_DeleteObjects.clear();
 }
 
 

@@ -3,6 +3,7 @@
 class CircleCollider : public Collider
 {
 public:
+	CircleCollider() { m_ColliderType = ColliderType::Circle; }
 	D2D_POINT_2F m_Center;
 	float m_Radius;
 

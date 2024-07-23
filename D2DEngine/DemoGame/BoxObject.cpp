@@ -12,15 +12,16 @@ BoxObject::BoxObject()
 	m_pBitmapScene->LoadD2DBitmap(L"../Resource/Object/Crate.png");
 	SetRootScene(m_pBitmapScene);
 	m_pBoxCollider->SetParentScene(m_pBitmapScene);
-	m_BoundBox.SetExtent(30, 30);
-	m_pBoxCollider->m_collider = m_BoundBox;
+	m_BoundBox.m_Extent = { 30, 30 };
+	m_pBoxCollider->m_collider = m_BoundBox;	
 
 }
 
 void BoxObject::Update(float deltaTime)
 {
-	
-	m_pBoxCollider->m_collider.SetCenter(m_pRootScene->GetWorldLocation().x, m_pRootScene->GetWorldLocation().y);
+	float x = m_pBoxCollider->m_collider.m_Extent.x;
+	float y = m_pBoxCollider->m_collider.m_Extent.y;
+	m_pBoxCollider->m_collider.SetCenter(m_pRootScene->GetWorldLocation().x+x, m_pRootScene->GetWorldLocation().y-y);
 	GameObject::Update(deltaTime);
 	//m_pBoxCollider->m_collider = m_BoundBox;
 }

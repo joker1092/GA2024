@@ -8,20 +8,23 @@ class PlayerWorkScene;
 class BoxCollider;
 class PlayerBodyFSM;
 class PlayerWorkFSM;
+class FireScene;
 class Player :   public Charector
 {
 	PlayerBodyScene* PlayerTop; //플레이어 상체 애니메이션
 	PlayerWorkScene* PlayerBottom; //플레이어 하체 애니메이션
 	BoxCollider* PlayerBox; //플레이어 박스 콜라이더
 	//PlayerNotify* pPlayerNotify;
-
+	
 	//PlayerFSM* pPlayerFSM;
 	PlayerBodyFSM* pPlayerBodyFSM;
 	PlayerWorkFSM* pPlayerWorkFSM;
 
 	bool isDead = false; //죽었는지 확인
-
 public:
+	FireScene* pFireScene; //플레이어 총 발사 씬
+	float fireDelay = 0.0f; //총 발사 딜레이
+	float delay = 0.0f; //총 발사 딜레이
 	InputSystem* pInput;
 	bool flip = false;
 	Player(); 
@@ -33,5 +36,6 @@ public:
 	void OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent) override;
 	void SetIsDead(bool dead) { isDead = dead; }
 	bool GetIsDead() { return isDead; }
+	void setDelay(float d) { delay = d; }
 };
 

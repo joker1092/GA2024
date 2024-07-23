@@ -9,7 +9,7 @@ void PlayerBodyFSM::Initialize()
 	createState<BodyIdle>(std::string("Idle"));
 	createState<BodyMove>(std::string("Move"));
 	createState<BodyJump>(std::string("Jump"));
-	//createState<BodyAttack>(std::string("Attack"));
+	createState<BodyAttack>(std::string("Attack"));
 	createState<BodyDead>(std::string("Dead"));
 	setNextState("Idle");
 }
