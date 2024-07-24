@@ -35,7 +35,7 @@ void World::Update(float deltaTime)
 	}
 	
 	// 충돌체크를 한다.
-	for (auto& obj1 : m_GameObjects)
+	/*for (auto& obj1 : m_GameObjects)
 	{ 
 		Collider* pCollider1 = obj1->GetComponent<Collider>();
 		if (pCollider1!=nullptr)
@@ -55,7 +55,35 @@ void World::Update(float deltaTime)
 			}
 			pCollider1->ProcessOverlap();
 		}
+	}*/
+
+	for (auto& obj1 : m_GameObjects) {
+		for (auto& comp : obj1->m_OwnedComponents)
+		{
+			Collider* pCollider1 = dynamic_cast<Collider*>(comp);
+			if (pCollider1 != nullptr)
+			{
+				pCollider1->ClearCollideState();
+				for (auto& obj2 : m_GameObjects)
+				{
+					if (obj1 == obj2) continue;
+					for (auto& comp2 : obj2->m_OwnedComponents)
+					{
+						Collider* pCollider2 = dynamic_cast<Collider*>(comp2);
+						if (pCollider2 != nullptr)
+						{
+							if (pCollider1->IsCollide(pCollider2)) {
+								pCollider1->AddCollideStateCurr(pCollider2);
+								pCollider1->ProcessBlock(pCollider2);
+							}
+						}
+					}
+				}
+				pCollider1->ProcessOverlap();
+			}
+		}
 	}
+
 
 	// 삭제할 오브젝트를 삭제한다.
 	for (auto& obj : m_DeleteObjects)

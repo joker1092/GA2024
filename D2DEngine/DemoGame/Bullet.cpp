@@ -15,7 +15,7 @@ Bullet::Bullet()
 	SetRootScene(pBitmapSc);
 	pMovement->SetScene(pBitmapSc);
 	pMovement->SetSpeed(200.0f);
-	pMovement->SetDirection({ 1.0f, 0 });
+	
 
 	//pCircleCollider->SetParentScene(pBitmapSc);
 	pCircleCollider->SetNotify(this);

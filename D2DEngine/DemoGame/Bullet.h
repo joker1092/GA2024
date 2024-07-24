@@ -17,6 +17,7 @@ public:
 	void Initialize();
 	void Update(float deltaTime);
 	
+	void SetDirection(MathHelper::Vector2F dir) { pMovement->SetDirection(dir); }
 
 	void OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent) override;
 	void OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent) override;

@@ -5,18 +5,44 @@
 using namespace std;
 
 
-bool foo1(int a) { return true; }
-void foo2(int a, int b) {}
-string foo3(float m, double b) { return ""; }
-void foo4(){}
-
 int main() {
 
-	function<bool(int)> f1 = foo1;	f1(1);
-	function<void(int,int)> f2 = foo2; f2(1,2);
-	function<string(float, double)> f3 = foo3; f3(1.0f, 2.5);
-	function<void()> f4 = foo4;  f4();
-	
+	int level;
 
+	level = 20;
+	[](int level) {
+		if (level > 10)
+		{
+			cout << "ok" << endl;
+		}
+		else {
+			cout << "fail" << endl;
+		}
+	}(level);
+
+	int number;
+	cin >> number;
+	[number](){
+		if(number>10)
+		cout<<number<<endl;
+		}();
+
+	function<int(int)> func = [](int a) -> int {return a + 1; };
+	cout << func(1) << endl; //2;
+
+	vector<int> v = { 0,1,2,3,4,5,6,7,8 };
+	for_each(v.begin(), v.end(), [](int a) {if (a % 3 == 0)cout << a << endl; });
+
+	vector<int> vec1 = { 5,3,1,12,4,24,8 };
+	vector<int> vec2(7);
+	transform(vec1.begin(), vec1.end(), vec2.begin(), [](int a) {return a * 2; });
+
+	vector<int> vec{ 5,3,1,2,3,4 };
+	int count = 0;
+			
+	vec.erase(remove_if(vec.begin(), vec.end(), [&count](int a) {if (a % 2 != 0) { count++; return true; } else return false; }));
+	cout<< count << endl;
+		
+	
 	return 0;
 }

@@ -21,7 +21,7 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	//bg.SetDstRect(D2D1::RectF(rc.left, rc.top, rc.right, rc.bottom));
 	backGound = m_pWorld->CreateGameObject<BackGround>();
 	m_pCamera = m_pWorld->GetCamera();
-	mapBackGound = m_pWorld->CreateGameObject<MapBackgound>();
+	//mapBackGound = m_pWorld->CreateGameObject<MapBackgound>();
 	/*animeSceneBG = backGound->CreateComponent<AnimationScene>();
 	backGound->SetRootScene(animeSceneBG);
 	backGound->m_ZOrder = GameObject::ZOrder::BACKGROUND;*/
@@ -30,11 +30,44 @@ void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
 	animeSceneBG->SetAnimation(0, false);*/
 	player = m_pWorld->CreateGameObject<Player>();	
 	player->PlayerInit(pInput);
-	enemyRifle = m_pWorld->CreateGameObject<EnemyRifle>();
+
 	m_pCamera->SetTargetScene(player->m_pRootScene);
 
-	boxObject = m_pWorld->CreateGameObject<BoxObject>();
-	boxObject->m_pRootScene->SetRelativeLocation({ 400,50 });
+	for (size_t i = 0; i < 5; i++)
+	{
+		enemyRifle = m_pWorld->CreateGameObject<EnemyRifle>();
+		float x = 700 + (100 * i);
+		enemyRifle->m_pRootScene->SetRelativeLocation({x,100 });
+	}
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		enemyRifle = m_pWorld->CreateGameObject<EnemyRifle>();
+		float x = 700 + (100 * i);
+		enemyRifle->m_pRootScene->SetRelativeLocation({ x,500 });
+	}
+	
+	
+	for (size_t i = 0; i < 30; i++)
+	{
+		boxObject = m_pWorld->CreateGameObject<BoxObject>();
+		float x = (80 * i);
+		boxObject->m_pRootScene->SetRelativeLocation({ x,50});
+	}
+	
+	for (size_t i = 0; i < 10; i++)
+	{
+		boxObject = m_pWorld->CreateGameObject<BoxObject>();
+		float x = 200+(80 * i);
+		boxObject->m_pRootScene->SetRelativeLocation({ x,250 });
+	}
+
+	for (size_t i = 0; i < 10; i++)
+	{
+		boxObject = m_pWorld->CreateGameObject<BoxObject>();
+		float x = 800 + (80 * i);
+		boxObject->m_pRootScene->SetRelativeLocation({ x,450 });
+	}
 	
 	//todo : 
 	//Box 를 통한 충돌체크 처리확인
@@ -104,19 +137,25 @@ void DemoGameApp::Update(float deltatime)
 	if (pInput->IsKey('Z') || pInput->IsKey('z'))
 	{
 		player->fireDelay += deltatime;
-		if (player->fireDelay > player->delay)
+		if (player->isFire)
 		{
+			player->isFire = false;
 			Bullet* bullet = m_pWorld->CreateGameObject<Bullet>();
 			bullet->m_ZOrder = GameObject::ZOrder::EFFECT;
+			MathHelper::Vector2F dir = { 0,0 };
+			if(player->flip)
+				dir = { -1,0 };
+			else
+				dir = { 1,0 };
+			bullet->SetDirection(dir);
 			bullet->m_pRootScene->SetRelativeLocation(player->pFireScene->GetWorldLocation());
 			player->fireDelay-= player->delay;
+			player->fireDelay = 0;
 		}
-		//bullet->m_pRootScene->SetParentScene(player->m_pRootScene);
-		//==>  플레이어의 하위 자식이 아닌 상태로 플레이어 위치에 총알 생성
-		// 
-		// 
-		//player->Fire();
-		//todo : 총알 생성
+		if (player->fireDelay > player->delay)
+		{
+			player->isFire = true;
+		}
 	}
 
 

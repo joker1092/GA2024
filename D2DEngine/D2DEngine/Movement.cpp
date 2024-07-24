@@ -9,6 +9,11 @@ void Movement::Update(float deltaTime)
 	MathHelper::Vector2F pos = m_pScene->m_RelativeLocation;
 	m_vVelocity = m_vDirection * m_fSpeed;
 
+	if (m_bIsMoving)
+	{
+		m_vVelocity.x=-m_vVelocity.x;
+	}
+
 	pos += m_vVelocity * deltaTime;
 
 	m_pScene->m_RelativeLocation = pos;

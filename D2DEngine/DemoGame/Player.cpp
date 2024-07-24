@@ -69,6 +69,9 @@ Player::Player()
 	PlayerBox->SetParentScene(m_pRootScene);
 	PlayerBox->SetNotify(this);
 
+	PlayerPlate = CreateComponent<BoxCollider>();
+	PlayerPlate->SetParentScene(m_pRootScene);
+	PlayerPlate->SetNotify(this);
 	//todo:
 	//RootScene에 자체적인 Collider의 크기를 가질것
 	//DebugDraw를 통해 확인할 수 있게 할것 
@@ -92,9 +95,13 @@ void Player::PlayerInit(InputSystem* in)
 	PlayerTop->m_RelativeLocation = { 0, 0 };
 	m_pRootScene->m_RelativeLocation = { 100, 100 };
 	pMovement->SetSpeed(100);
-	m_BoundBox.SetExtent(18, 22);
-	PlayerBox->m_collider = m_BoundBox;
-	//PlayerBox->SetParentScene(m_pRootScene);
+	//m_BoundBox.SetExtent(18, 18);
+	//PlayerBox->m_collider = m_BoundBox;
+	PlayerBox->m_RelativeLocation = { 9,20 };
+	PlayerBox->m_collider.SetExtent(18, 18);
+	PlayerPlate->m_RelativeLocation = { 9, -15 };
+	PlayerPlate->m_collider.SetExtent(6, 5);
+	
 }
 
 void Player::Update(float deltaTime)
@@ -102,9 +109,11 @@ void Player::Update(float deltaTime)
 	//pMovement->SetDirection({ 0,0 });
 	pMovement->SetSpeed(0);
 	
+	
+
 	if (!isDead) {
 
-		if (pInput->IsKey(VK_LEFT))
+		if (pInput->IsKey(VK_LEFT)) 
 		{
 			pMovement->SetDirection({ -1,0 });
 			//m_pWorld->GetCamera()->m_RelativeLocation.x -= 1;
@@ -148,35 +157,76 @@ void Player::Update(float deltaTime)
 	}
 	
 
-
-	PlayerBox->m_collider.SetCenter(m_pRootScene->GetWorldLocation().x, m_pRootScene->GetWorldLocation().y);
+	PlayerPlate->m_collider.SetCenter(PlayerPlate->GetWorldLocation().x, PlayerPlate->GetWorldLocation().y);
+	//PlayerPlate->m_collider.SetCenter(m_pRootScene->GetWorldLocation().x, m_pRootScene->GetWorldLocation().y+40);
+	//PlayerBox->m_collider.SetCenter(m_pRootScene->GetWorldLocation().x, m_pRootScene->GetWorldLocation().y);
+	PlayerBox->m_collider.SetCenter(PlayerBox->GetWorldLocation().x, PlayerBox->GetWorldLocation().y);
+	if (blockCount > 0) {
+		pMovement->SetGravityScale(0);
+		pMovement->ResetGravity();
+	}
+	else {
+		pMovement->SetGravityScale(50);
+		pMovement->ResetGravity();
+	}
+	//pMovement->ResetGravity();
+	
 	Charector::Update(deltaTime);
 
 	//PlayerBox->m_collider = m_BoundBox;
 	//PlayerBox->ProcessOverlap();
 	//PlayerBox->ProcessBlock(nullptr);
+	
+	//블록카운트 초기화
+	blockCount = 0;
 }
 
 void Player::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
-	GameObject* pOtherOwner = pOtherComponent->GetOwner();
-	if (pOtherOwner->m_ZOrder == ZOrder::OBJECT)
-	{
-		pMovement->EndJump();
+	//std::cout << "Player OnBlock" << std::endl;
+	if (pOwnedComponent == PlayerBox) {
+		//std::cout << "Player PlayerBox OnBlock" << std::endl;
 	}
-	
+
+	if (pOwnedComponent == PlayerPlate) {
+		GameObject* pOtherOwner = pOtherComponent->GetOwner();
+		if (pOtherOwner->m_ZOrder == ZOrder::OBJECT)
+		{
+			std::cout << "Player PlayerPlate OnBlock" << std::endl;
+			pMovement->EndJump();
+			blockCount++;
+		}
+	}
 }
 
 void Player::OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
-	std::cout << "Player OnBeginOverlap" << std::endl;
-	pMovement->SetGravityScale(0);
-	pMovement->ResetGravity();
+	GameObject* pOtherOwner = pOtherComponent->GetOwner();
+	if (pOwnedComponent == PlayerBox) {
+		if (pOtherOwner->m_ZOrder == ZOrder::OBJECT) {
+			pMovement->EndJump();
+			pMovement->SetIsMoving(true);
+			std::cout << "Player PlayerBox OnBeginOverlap" << std::endl;
+			
+		}
+	}
+	//std::cout << "Player OnBeginOverlap" << std::endl;
+
 }
 
 void Player::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
-	std::cout << "Player OnEndOverlap" << std::endl;
-	pMovement->SetGravityScale(100);
-	pMovement->ResetGravity();
+	GameObject* pOtherOwner = pOtherComponent->GetOwner();
+	if (pOwnedComponent == PlayerBox) {
+		std::cout << "Player PlayerBox OnEndOverlap" << std::endl;
+		if (pOtherOwner->m_ZOrder == ZOrder::OBJECT) {
+			pMovement->SetIsMoving(false);
+			std::cout << "Player PlayerBox OnBeginOverlap" << std::endl;
+
+		}
+		
+	}
+	//std::cout << "Player OnEndOverlap" << std::endl;
+	/*pMovement->SetGravityScale(100);
+	pMovement->ResetGravity();*/
 }

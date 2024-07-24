@@ -13,7 +13,7 @@ MapBackgound::MapBackgound()
 	/*pAnimationScene->LoadAnimationAsset(L"Background");
 	pAnimationScene->SetAnimation(0, false);*/
 	pBitmapScene->m_RelativeScale = {4.5, 4.5 };
-	pBitmapScene->m_RelativeLocation = {-400 ,400 };
+	pBitmapScene->m_RelativeLocation = {-600 ,700 };
 	
 }
 

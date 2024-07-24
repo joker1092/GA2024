@@ -11,7 +11,7 @@ BackGround::BackGround()
 	/*pAnimationScene->LoadAnimationAsset(L"Background");
 	pAnimationScene->SetAnimation(0, false);*/
 	pBitmapScene->m_RelativeScale = { 3.8, 4.8 };
-	pBitmapScene->m_RelativeLocation = { 0, 0 };
+	pBitmapScene->m_RelativeLocation = { 0, 1000 };
 }
 
 void BackGround::Update(float deltaTime)

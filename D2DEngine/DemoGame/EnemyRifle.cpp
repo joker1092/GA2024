@@ -30,7 +30,7 @@ EnemyRifle::EnemyRifle()
 	pAnimationSc->SetAnimation(0, false);
 	pEnemyRifleFSM = CreateComponent<EnemyRifleFSM>();
 	pEnemyRifleFSM->Initialize();
-	pAnimationSc->m_RelativeLocation = { 700,100 };
+	//pAnimationSc->m_RelativeLocation = { 700,100 };
 	pBoxCollider = CreateComponent<BoxCollider>();
 	//pBoxCollider->SetParentScene(m_pRootScene);
 	pBoxCollider->SetNotify(this);
@@ -44,11 +44,29 @@ void EnemyRifle::Update(float deltaTime)
 	pBoxCollider->m_collider.SetCenter(m_pRootScene->GetWorldLocation().x, m_pRootScene->GetWorldLocation().y);
 	/*std::cout <<"ENEMY RelativeLocation()" << pAnimationSc->GetRelativeLocation().x << pAnimationSc->GetRelativeLocation().y << std::endl;
 	std::cout << "ENEMY GetWorldLocation()" << pAnimationSc->GetWorldLocation().x << pAnimationSc->GetWorldLocation().y << std::endl;*/
+
+	if (blockCount > 0) {
+		pMovement->SetGravityScale(0);
+		pMovement->ResetGravity();
+	}
+	else {
+		pMovement->SetGravityScale(50);
+		pMovement->ResetGravity();
+	}
+
 	Charector::Update(deltaTime);
+
+	blockCount = 0; 
 }
 
 void EnemyRifle::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
+	GameObject* pOtherOwner = pOtherComponent->GetOwner();
+	if (pOtherOwner->m_ZOrder == ZOrder::OBJECT)
+	{
+		pMovement->EndJump();
+		blockCount++;
+	}
 	Bullet* bullet = dynamic_cast<Bullet*>(pOtherComponent->GetOwner());
 	if (bullet == nullptr) return;
 

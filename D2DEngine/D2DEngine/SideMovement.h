@@ -5,7 +5,7 @@ class SideMovement : public Movement
 	static float m_Gravity;
 protected:
 	bool m_IsJumping = false;  //점프 상태
-	float m_GravityScale = 100.0f; //중력 가속도 스케일
+	float m_GravityScale = 50.0f; //중력 가속도 스케일
 	float m_JumpSpeed = 500.0f;  //점프속도
 	float m_GravityScaled = 0.0f; //스케일 적용된 중력값
 	float m_SpeedY = 0.0f;    //Y축 속도
@@ -20,6 +20,7 @@ public:
 	void Jump();
 	bool isJumping() { return m_IsJumping; }
 	void EndJump();
+
 };
 
 
