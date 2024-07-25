@@ -15,6 +15,7 @@ public:
 	std::wstring wsBitmapFilePath;
 	ID2D1Bitmap* pBitmap = nullptr;
 	ResourceManager* pRM;
+	bool isVisable = true;
 
 	bool LoadD2DBitmap(const std::wstring strFilePath);
 	virtual void Update(float deltaTime);

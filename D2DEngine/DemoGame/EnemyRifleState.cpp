@@ -50,7 +50,7 @@ void EnemyRifleIdle::CheckTransition()
 	MathHelper::Vector2F m_pPlayerLocation = m_pPlayer->GetWorldLocation();
 	MathHelper::Vector2F m_pEnemyRifleLocation = m_pEnemyRifle->GetWorldLocation();
 	float distance = (m_pPlayerLocation- m_pEnemyRifleLocation).Length();
-	if (distance <= 500)
+	if (distance <= 800)
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleMove"));
 }
 
@@ -105,11 +105,11 @@ void EnemyRifleMove::Update(float daltatime)
 void EnemyRifleMove::CheckTransition()
 {
 	float distance = (m_pPlayerLocation - m_pEnemyRifleLocation).Length();
-	if (distance > 500)
+	if (distance > 800)
 	{
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleIdle"));
 	}
-	else if (distance <= 100){
+	else if (distance <= 500){
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleAttack"));
 	}
 }
@@ -159,6 +159,28 @@ void EnemyRifleAttack::Update(float daltatime)
 	m_pPlayerLocation = m_pPlayer->GetWorldLocation();
 	m_pEnemyRifleLocation = m_pEnemyRifle->GetWorldLocation();
 	movement->SetDirection(m_pPlayerLocation - m_pEnemyRifleLocation);
+
+	EnemyRifle* enemyRifle = dynamic_cast<EnemyRifle*>(m_pEnemyRifle);
+	
+	enemyRifle->fireTime+=daltatime;
+
+	MathHelper::Vector2F dir = m_pPlayerLocation - m_pEnemyRifleLocation;
+
+	if (enemyRifle->fireTime > enemyRifle->firePostDelay)
+	{
+		if (enemyRifle->isFire) {
+			enemyRifle->EnemyFire(dir);
+			enemyRifle->isFire = false;
+		}
+	}
+
+	if (enemyRifle->fireTime > (enemyRifle->firePostDelay +enemyRifle->fireDelay))
+	{
+		enemyRifle->fireTime = 0;
+		enemyRifle->isFire = true;
+	}
+
+
 	if (m_pEnemyRifle->GetComponent<SideMovement>()->GetDirection().x > 0) {
 		flip = true;
 	}
@@ -173,10 +195,10 @@ void EnemyRifleAttack::CheckTransition()
 	AnimationScene* root = dynamic_cast<AnimationScene*>(m_pEnemyRifle->m_pRootScene);
 	bool isEndMotion = root->isEndMotion;
 	//std::cout << isEndMotion << std::endl;
-	if (isEndMotion&&distance > 100)
+	if (isEndMotion&&distance > 500)
 	{
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleMove"));
-	}else if (isEndMotion && distance > 500) {
+	}else if (isEndMotion && distance > 800) {
 		m_pOwnerFSM->setNextState(std::string("EnemyRifleIdle"));
 	}
 }
@@ -211,6 +233,8 @@ void EnemyRifleDead::Update(float daltatime)
 	{
 		int last = root->pAnimationAsset->GetMotionInfo(3)->Frames.size() - 1;
 		root->m_FrameIndexCurr = last;
+
+		m_pEnemyRifle->GetComponent<Collider>()->SetCollisionType(CollisionType::NoCollision);
 	}
 }
 

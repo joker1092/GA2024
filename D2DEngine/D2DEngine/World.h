@@ -17,6 +17,9 @@ public:
 	std::vector< GameObject*> m_RenderQueue; // 렌더링 순서를 정하기 위한 큐
 	AABB* m_pCullingBound = nullptr;
 	AABB m_CullingBoundDefault;
+
+	float m_fWorldMaxX = 5000.0f; // 월드의 최대 x좌표 0~5000
+	float m_fWorldMaxY = 5000.0f; // 월드의 최대 y좌표 0~5000
 	
 public:
 	void Update(float deltaTime);
@@ -76,7 +79,7 @@ public:
 	bool DeleteGameObject(GameObject* pGameObject) {
 		std::list<GameObject*>::iterator iter;
 		iter = findGameobject(pGameObject);
-		if (*iter==nullptr)
+		if (iter == m_GameObjects.end())
 		{
 			return false;
 		}

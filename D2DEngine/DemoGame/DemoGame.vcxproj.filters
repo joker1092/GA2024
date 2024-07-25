@@ -78,6 +78,12 @@
     <ClInclude Include="FireScene.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="EnemyBulletScene.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemybullet.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DemoGame.cpp">
@@ -132,6 +138,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="FireScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyBulletScene.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemybullet.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

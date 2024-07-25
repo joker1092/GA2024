@@ -9,6 +9,7 @@ class Movement;
 class SideMovement;
 class Player;
 class FSM;
+class AnimationScene;
 class EnemyRifleIdle : public FSMState
 {
 	World* m_pWorld =nullptr;

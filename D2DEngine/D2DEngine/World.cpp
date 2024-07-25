@@ -13,9 +13,23 @@ World::World()
 	SetCullingBound(&m_CullingBoundDefault);
 	// 카메라를 생성한다.
 	m_pCamera = new Camera();
+	m_pCamera->SetWorld(this);
 	m_pCamera->m_RelativeLocation= {0,0};
 	m_pCamera->m_RelativeTransform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * m_pCamera->m_RelativeTransform;
 	SetCullingBound(&m_pCamera->m_ViewBoundBox);
+
+	//todo:
+	//월드의 최대 크기를 설정한다.
+	//카메라가 월드의 끝에 도달하면 월드의 끝에서 더이상 이동하지 못하게 한다.
+	//오브젝가 월드의 끝에 도달하면 월드의 끝에서 더이상 이동하지 못하게 한다.
+
+
+	//월드의 최대 크기를 설정한다.
+	//변수 m_fWorldMaxX, m_fWorldMaxY에 월드의 최대 크기를 설정한다.
+
+	
+
+
 }
 
 World::~World()

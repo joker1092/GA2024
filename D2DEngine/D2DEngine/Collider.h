@@ -43,6 +43,7 @@ public:
 	CollisionType GetCollisionType() { return m_CollisionType; }
 	void SetCollisionType(CollisionType type) { m_CollisionType = type; }
 	ColliderType GetColliderType() { return m_ColliderType; }
+	
 
 	void ClearCollideState();
 

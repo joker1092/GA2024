@@ -7,6 +7,10 @@
 
 bool CircleCollider::IsCollide(Collider* pOtherComponent)
 {
+	if (pOtherComponent->GetCollisionType() == CollisionType::NoCollision) {
+		return false;
+	}
+
 	if (pOtherComponent->GetColliderType() == ColliderType::Circle) {
 		CircleCollider* pCircleCollider = dynamic_cast<CircleCollider*>(pOtherComponent);
 		float distance = Utill::Distance(m_Center,pCircleCollider->m_Center);

@@ -37,6 +37,8 @@ void BitmapScene::Update(float deltaTime)
 void BitmapScene::Render(ID2D1RenderTarget* pRenderTarget)
 {
 	if (pBitmap == nullptr)return;
+	if (!isVisable)
+		return;
 	width = pBitmap->GetSize().width;
 	height = pBitmap->GetSize().height;
 	D2D1_MATRIX_3X2_F m_ScreenTransform = D2D1::Matrix3x2F::Scale(1.0f, -1.0f) * D2D1::Matrix3x2F::Translation(0.0f, D2DRender::Instance->GetClientSize().height);

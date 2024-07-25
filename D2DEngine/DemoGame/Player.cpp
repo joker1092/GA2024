@@ -16,6 +16,7 @@
 #include "PlayerBodyScene.h"
 #include "PlayerWorkScene.h"
 #include "FireScene.h"
+#include "Enemybullet.h"
 #include "Player.h"
 
 Player::Player()
@@ -47,12 +48,6 @@ Player::Player()
 	pFireScene->SetParentScene(PlayerTop);
 	pFireScene->SetRelativeLocation({ 30, 20 });
 	//FSM
-	//todo:
-	//상체와 하체의 상태를 분리하여 관리
-	//상체의 FSM과 하체의 FSM을 따로 생성
-	//공통으로 가져야 하는 상태  => Idle, Move, Jump, Dead
-	//상체만 가져야 하는 상태 => Attack, Boom, UP, Down
-	//하체만 가져야 하는 상태 => MoveJump
 	pPlayerBodyFSM = CreateComponent<PlayerBodyFSM>();
 	pPlayerWorkFSM = CreateComponent<PlayerWorkFSM>();
 	pPlayerBodyFSM->Initialize();
@@ -68,18 +63,14 @@ Player::Player()
 	PlayerBox = CreateComponent<BoxCollider>();
 	PlayerBox->SetParentScene(m_pRootScene);
 	PlayerBox->SetNotify(this);
+	PlayerBox->SetCollisionType(CollisionType::Blockm);
 
 	PlayerPlate = CreateComponent<BoxCollider>();
 	PlayerPlate->SetParentScene(m_pRootScene);
 	PlayerPlate->SetNotify(this);
+	PlayerPlate->SetCollisionType(CollisionType::Blockm);
 	//todo:
-	//RootScene에 자체적인 Collider의 크기를 가질것
-	//DebugDraw를 통해 확인할 수 있게 할것 
-
-	//player는 총을 가지고 총을 쏘는 액션을 취하고 싶다
-	//이 구조 에서 총알을 생성해서 총알을 발사하는 방법을 구현하고 싶다
-	//총알은 총을 쏘는 액션을 취하면 생성되어 총을 쏘는 방향으로 발사되어야 한다
-	//총알은 총을 쏘는 액션이 끝나면 사라져야 한다
+	
 	
 	setDelay(0.5f);
 	
@@ -98,9 +89,9 @@ void Player::PlayerInit(InputSystem* in)
 	//m_BoundBox.SetExtent(18, 18);
 	//PlayerBox->m_collider = m_BoundBox;
 	PlayerBox->m_RelativeLocation = { 9,20 };
-	PlayerBox->m_collider.SetExtent(18, 18);
+	PlayerBox->m_collider.SetExtent(16, 18);
 	PlayerPlate->m_RelativeLocation = { 9, -15 };
-	PlayerPlate->m_collider.SetExtent(6, 5);
+	PlayerPlate->m_collider.SetExtent(10, 5);
 	
 }
 
@@ -117,30 +108,37 @@ void Player::Update(float deltaTime)
 		{
 			pMovement->SetDirection({ -1,0 });
 			//m_pWorld->GetCamera()->m_RelativeLocation.x -= 1;
-			pMovement->SetSpeed(100);
+			pMovement->SetSpeed(400);
 		}
 		if (pInput->IsKey(VK_RIGHT))
 		{
 			pMovement->SetDirection({ 1,0 });
 			//m_pWorld->GetCamera()->m_RelativeLocation.x += 1;
-			pMovement->SetSpeed(100);
+			pMovement->SetSpeed(400);
 		}
-		if (pInput->IsKey(VK_UP))
-		{
-			//pMovement->SetDirection({ 0,1 });
-			////m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
-			//pMovement->SetSpeed(100);
-		}
-		if (pInput->IsKey(VK_DOWN))
-		{
-			//pMovement->SetDirection({ 0,-1 });
-			////m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
-			//pMovement->SetSpeed(100);
-		}
+		//if (pInput->IsKey(VK_UP))
+		//{
+		//	//pMovement->SetDirection({ 0,1 });
+		//	////m_pWorld->GetCamera()->m_RelativeLocation.y += 1;
+		//	//pMovement->SetSpeed(100);
+		//}
+		//if (pInput->IsKey(VK_DOWN))
+		//{
+		//	//pMovement->SetDirection({ 0,-1 });
+		//	////m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
+		//	//pMovement->SetSpeed(100);
+		//}
 
 		if (pInput->IsKey(VK_SPACE))
 		{
-			pMovement->Jump();
+			//pMovement->Jump();
+			if (pInput->IsKey(VK_DOWN))
+			{
+				pMovement->DownJump();
+			}
+			else {
+				pMovement->Jump();
+			}
 		}
 
 		if (pInput->IsKey('Z')|| pInput->IsKey('z'))
@@ -183,13 +181,17 @@ void Player::Update(float deltaTime)
 
 void Player::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
+	GameObject* pOtherOwner = pOtherComponent->GetOwner();
 	//std::cout << "Player OnBlock" << std::endl;
 	if (pOwnedComponent == PlayerBox) {
+		//적 총알과 충돌시 죽음
+		Enemybullet* bullet = dynamic_cast<Enemybullet*>(pOtherComponent->GetOwner());
+
+		
 		//std::cout << "Player PlayerBox OnBlock" << std::endl;
 	}
 
 	if (pOwnedComponent == PlayerPlate) {
-		GameObject* pOtherOwner = pOtherComponent->GetOwner();
 		if (pOtherOwner->m_ZOrder == ZOrder::OBJECT)
 		{
 			std::cout << "Player PlayerPlate OnBlock" << std::endl;
@@ -202,21 +204,28 @@ void Player::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
 void Player::OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
 	GameObject* pOtherOwner = pOtherComponent->GetOwner();
+	//PlayerBox RayCast 를 통한 선 충돌 확인을 하고 싶다
+	//RayCast를 통해 충돌한 오브젝트의 위치를 받아오고 싶다
+	//
 	if (pOwnedComponent == PlayerBox) {
 		if (pOtherOwner->m_ZOrder == ZOrder::OBJECT) {
 			pMovement->EndJump();
 			pMovement->SetIsMoving(true);
-			std::cout << "Player PlayerBox OnBeginOverlap" << std::endl;
-			
+			std::cout << "Player PlayerBox OnBeginOverlap" << std::endl;	
 		}
 	}
 	//std::cout << "Player OnBeginOverlap" << std::endl;
-
 }
 
 void Player::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
-	GameObject* pOtherOwner = pOtherComponent->GetOwner();
+
+	GameObject* pOtherOwner = pOtherComponent ? pOtherComponent->GetOwner() : nullptr;
+	if (pOtherOwner == nullptr || IsBadReadPtr(pOtherOwner, sizeof(GameObject))) {
+		// 오류 처리 또는 조기 반환
+		return;
+	}
+
 	if (pOwnedComponent == PlayerBox) {
 		std::cout << "Player PlayerBox OnEndOverlap" << std::endl;
 		if (pOtherOwner->m_ZOrder == ZOrder::OBJECT) {
@@ -224,7 +233,6 @@ void Player::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
 			std::cout << "Player PlayerBox OnBeginOverlap" << std::endl;
 
 		}
-		
 	}
 	//std::cout << "Player OnEndOverlap" << std::endl;
 	/*pMovement->SetGravityScale(100);

@@ -133,6 +133,8 @@
     <ClInclude Include="Charector.h" />
     <ClInclude Include="DemoGame.h" />
     <ClInclude Include="DemoGameApp.h" />
+    <ClInclude Include="Enemybullet.h" />
+    <ClInclude Include="EnemyBulletScene.h" />
     <ClInclude Include="EnemyRifle.h" />
     <ClInclude Include="EnemyRifleFSM.h" />
     <ClInclude Include="EnemyRifleState.h" />
@@ -156,6 +158,8 @@
     <ClCompile Include="Charector.cpp" />
     <ClCompile Include="DemoGame.cpp" />
     <ClCompile Include="DemoGameApp.cpp" />
+    <ClCompile Include="Enemybullet.cpp" />
+    <ClCompile Include="EnemyBulletScene.cpp" />
     <ClCompile Include="EnemyRifle.cpp" />
     <ClCompile Include="EnemyRifleFSM.cpp" />
     <ClCompile Include="EnemyRifleState.cpp" />

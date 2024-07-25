@@ -8,6 +8,7 @@ std::uniform_int_distribution<int> miror(0, 1); // 0부터 99까지 균등 분포
 class FSMState;
 class GameObject;
 class Bullet;
+class EnemyBullet;
 class FireScene;
 
 void DemoGameApp::Initialize(HINSTANCE hInstance, LPCTSTR szTitle)
@@ -83,7 +84,7 @@ void DemoGameApp::UnInitialize()
 	Moon.~BitmapScene();*/
 	
 	backGound->~BackGround();
-	mapBackGound->~MapBackgound();
+	//mapBackGound->~MapBackgound();
 	player->~Player();
 	enemyRifle->~EnemyRifle();
 	//player.~AnimationScene();
@@ -134,27 +135,32 @@ void DemoGameApp::Update(float deltatime)
 	//	//m_pWorld->GetCamera()->m_RelativeLocation.y -= 1;
 	//}
 
+	if (player->fireDelay > player->delay)
+	{
+		player->isFire = true;
+	}
+
 	if (pInput->IsKey('Z') || pInput->IsKey('z'))
 	{
-		player->fireDelay += deltatime;
-		if (player->isFire)
-		{
-			player->isFire = false;
-			Bullet* bullet = m_pWorld->CreateGameObject<Bullet>();
-			bullet->m_ZOrder = GameObject::ZOrder::EFFECT;
-			MathHelper::Vector2F dir = { 0,0 };
-			if(player->flip)
-				dir = { -1,0 };
-			else
-				dir = { 1,0 };
-			bullet->SetDirection(dir);
-			bullet->m_pRootScene->SetRelativeLocation(player->pFireScene->GetWorldLocation());
-			player->fireDelay-= player->delay;
-			player->fireDelay = 0;
-		}
-		if (player->fireDelay > player->delay)
-		{
-			player->isFire = true;
+		if (!player->GetIsDead()) {
+			player->fireDelay += deltatime;
+			if (player->isFire)
+			{
+				player->isFire = false;
+				//Bullet* bullet = m_pWorld->CreateGameObject<Bullet>();
+				Bullet* bullet = m_pWorld->CreateGameObject<Bullet>();
+				bullet->m_ZOrder = GameObject::ZOrder::EFFECT;
+				MathHelper::Vector2F dir = { 0,0 };
+				if (player->flip)
+					dir = { -1,0 };
+				else
+					dir = { 1,0 };
+				bullet->SetDirection(dir);
+				bullet->m_pRootScene->SetRelativeLocation(player->pFireScene->GetWorldLocation());
+				player->fireDelay -= player->delay;
+				player->fireDelay = 0;
+			}
+			
 		}
 	}
 

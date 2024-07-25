@@ -14,7 +14,7 @@ BoxObject::BoxObject()
 	m_pBoxCollider->SetParentScene(m_pBitmapScene);
 	m_BoundBox.m_Extent = { 30, 30 };
 	m_pBoxCollider->m_collider = m_BoundBox;	
-
+	m_pBoxCollider->SetCollisionType(CollisionType::Blockm);
 }
 
 void BoxObject::Update(float deltaTime)

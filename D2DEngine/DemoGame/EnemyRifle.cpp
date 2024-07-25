@@ -11,6 +11,7 @@
 #include "../D2DEngine/BoxCollider.h"
 #include "Bullet.h"
 #include "Player.h"
+#include "EnemyBulletScene.h"
 #include "EnemyRifle.h"
 
 EnemyRifle::EnemyRifle()
@@ -36,6 +37,9 @@ EnemyRifle::EnemyRifle()
 	pBoxCollider->SetNotify(this);
 	m_BoundBox.SetExtent(18, 22);
 	pBoxCollider->m_collider = m_BoundBox;
+	pBoxCollider->SetCollisionType(CollisionType::Blockm);
+	pEnemyBulletScene = CreateComponent<EnemyBulletScene>();
+	pEnemyBulletScene->SetParentScene(pAnimationSc);
 }
 
 void EnemyRifle::Update(float deltaTime)
@@ -57,6 +61,16 @@ void EnemyRifle::Update(float deltaTime)
 	Charector::Update(deltaTime);
 
 	blockCount = 0; 
+}
+
+void EnemyRifle::EnemyFire(MathHelper::Vector2F dir)
+{
+	if (!isDead) {
+		if (isFire)
+		{
+			pEnemyBulletScene ->CreateBullet(dir);
+		}
+	}
 }
 
 void EnemyRifle::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)

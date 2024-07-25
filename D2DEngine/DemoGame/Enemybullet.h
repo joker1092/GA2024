@@ -1,11 +1,13 @@
 #pragma once
-#include "../D2DEngine/GameObject.h"
 
+//적이 발사하는 총알
+
+#include "../D2DEngine/GameObject.h"
 class BitmapScene;
 class Movement;
 class CircleCollider;
-class Bullet : public GameObject
-{
+
+class Enemybullet : public GameObject{
 	BitmapScene* pBitmapSc;
 	Movement* pMovement;
 	CircleCollider* pCircleCollider;
@@ -15,12 +17,12 @@ class Bullet : public GameObject
 	bool block = false;
 
 public:
-	Bullet();
-	~Bullet();
+	Enemybullet();
+	~Enemybullet();
 	void Initialize();
 	void Update(float deltaTime);
-	
-	void SetDirection(MathHelper::Vector2F dir);
+
+	void SetDirection(MathHelper::Vector2F dir) { pMovement->SetDirection(dir); }
 
 	void OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent) override;
 	void OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent) override;

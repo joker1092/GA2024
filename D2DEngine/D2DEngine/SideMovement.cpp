@@ -22,15 +22,18 @@ void SideMovement::Update(float deltaTime)
 	MathHelper::Vector2F Location = m_pScene->GetRelativeLocation();
 
 	m_vVelocity.x = (MathHelper::Vector2F(m_vDirection) * m_fSpeed).x;
-
+	if (m_bIsMoving)
+	{
+		m_vVelocity.x = -m_vVelocity.x;
+	}
 	m_SpeedY += m_GravityScaled * deltaTime;    //중력가속도 적용
 	m_SpeedY = min(m_MaxSpeedY, m_SpeedY);	//중력가속도 적용시 종단속도 제한
 	m_vVelocity.y = (MathHelper::Vector2F(0.0f, -1.0f) * m_SpeedY).y;
 
 	Location = Location + m_vVelocity * deltaTime; 
-	Location.y = max(0.0f, Location.y);      //todo :: 지면에 닿았는지 체크 현제는 location.y가 0이면 지면에 닿은것으로 판단
+	Location.y = max(10.0f, Location.y);      //todo :: 지면에 닿았는지 체크 현제는 location.y가 0이면 지면에 닿은것으로 판단
 	
-	if (Location.y <= 0.0f) {
+	if (Location.y <= 10.0f) {
 		EndJump();
 	}
 
@@ -60,4 +63,13 @@ void SideMovement::EndJump()
 	m_IsJumping = false;
 	m_SpeedY = 0;
 	//m_GravityScaled = 0;
+}
+
+void SideMovement::DownJump()
+{
+	if (m_IsJumping)
+		return;
+	m_GravityScaled = m_Gravity * m_GravityScale;
+	m_IsJumping = true;
+	m_SpeedY = m_JumpSpeed * 1;
 }

@@ -6,8 +6,12 @@
 
 bool BoxCollider::IsCollide(Collider* pOtherComponent)
 {
+	if (pOtherComponent->GetCollisionType() == CollisionType::NoCollision){
+		return false;
+	}
+
 	if (pOtherComponent->GetColliderType() == ColliderType::Box) {
-		BoxCollider* pBoxCollider = dynamic_cast<BoxCollider*>(pOtherComponent);
+		BoxCollider* pBoxCollider = dynamic_cast<BoxCollider*>(pOtherComponent);	
 		if (!m_collider.CheckIntersect(pBoxCollider->m_collider)) {
 			return false;
 		}

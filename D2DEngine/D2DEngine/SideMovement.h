@@ -20,7 +20,7 @@ public:
 	void Jump();
 	bool isJumping() { return m_IsJumping; }
 	void EndJump();
-
+	void DownJump();
 };
 
 

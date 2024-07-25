@@ -3,19 +3,21 @@
 #include "../D2DEngine/Movement.h"
 #include "../D2DEngine/CircleCollider.h"
 #include "../D2DEngine/World.h"
-#include "Bullet.h"
+#include "Enemybullet.h"
 
-Bullet::Bullet()
+Enemybullet::Enemybullet()
 {
 	pBitmapSc = CreateComponent<BitmapScene>();
 	pMovement = CreateComponent<Movement>();
 	pCircleCollider = CreateComponent<CircleCollider>();
-	pBitmapSc->LoadD2DBitmap(L"../Resource/player_default_bullet_trance.png");
+	pBitmapSc->LoadD2DBitmap(L"../Resource/Enemy_bullet.png");
+	//pBitmapSc->m_RelativeScale = { 3.0f, 3.0f };
+	
 
 	SetRootScene(pBitmapSc);
 	pMovement->SetScene(pBitmapSc);
 	pMovement->SetSpeed(200.0f);
-	
+
 
 	//pCircleCollider->SetParentScene(pBitmapSc);
 	pCircleCollider->SetNotify(this);
@@ -24,16 +26,15 @@ Bullet::Bullet()
 	pCircleCollider->SetCollisionType(CollisionType::Blockm);
 }
 
-Bullet::~Bullet()
+Enemybullet::~Enemybullet()
 {
 }
 
-void Bullet::Initialize()
+void Enemybullet::Initialize()
 {
-
 }
 
-void Bullet::Update(float deltaTime)
+void Enemybullet::Update(float deltaTime)
 {
 	pCircleCollider->m_Center = { GetWorldLocation().x, GetWorldLocation().y };
 	m_fLifeTime += deltaTime;
@@ -46,32 +47,20 @@ void Bullet::Update(float deltaTime)
 	{
 		//
 		pBitmapSc->isVisable = false;
-		pCircleCollider->SetCollisionType(CollisionType::NoCollision);  
+		pCircleCollider->SetCollisionType(CollisionType::NoCollision);
 	}
-
 
 	GameObject::Update(deltaTime);
 }
 
-void Bullet::SetDirection(MathHelper::Vector2F dir)
-{
-		pMovement->SetDirection(dir);
-}
-
-void Bullet::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
-{
-	GameObject* pOtherOwner = pOtherComponent->GetOwner();
-	if (pOtherOwner->m_ZOrder == ZOrder::ENEMY)
-	{
-		//m_pOwner->DeleteObject(this);
-		block = true;
-	}
-}
-
-void Bullet::OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+void Enemybullet::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
 }
 
-void Bullet::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+void Enemybullet::OnBeginOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
+{
+}
+
+void Enemybullet::OnEndOverlap(Collider* pOwnedComponent, Collider* pOtherComponent)
 {
 }

@@ -13,6 +13,7 @@
 #include "EnemyRifle.h"
 #include "BoxObject.h"
 #include "Bullet.h"
+#include "Enemybullet.h"
 #include "FireScene.h"
 
 #include <random>
