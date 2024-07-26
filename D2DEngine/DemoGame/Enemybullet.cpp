@@ -11,7 +11,7 @@ Enemybullet::Enemybullet()
 	pMovement = CreateComponent<Movement>();
 	pCircleCollider = CreateComponent<CircleCollider>();
 	pBitmapSc->LoadD2DBitmap(L"../Resource/Enemy_bullet.png");
-	//pBitmapSc->m_RelativeScale = { 3.0f, 3.0f };
+	pBitmapSc->m_RelativeScale = { 1.5f, 1.5f };
 	
 
 	SetRootScene(pBitmapSc);

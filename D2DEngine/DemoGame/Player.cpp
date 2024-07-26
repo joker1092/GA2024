@@ -187,7 +187,9 @@ void Player::OnBlock(Collider* pOwnedComponent, Collider* pOtherComponent)
 		//Àû ÃÑ¾Ë°ú Ãæµ¹½Ã Á×À½
 		Enemybullet* bullet = dynamic_cast<Enemybullet*>(pOtherComponent->GetOwner());
 
-		
+		if (bullet != nullptr) {
+			isDead = true;
+		}
 		//std::cout << "Player PlayerBox OnBlock" << std::endl;
 	}
 
