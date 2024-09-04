@@ -112,7 +112,12 @@ int WinGameApp::Run()
             
             Update(pTime->GetDeltaTime());
             
+            pD2DRender->GetRenderTarget()->BeginDraw();
+            pD2DRender->GetRenderTarget()->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
             Render(pD2DRender->GetRenderTarget());
+
+            //DrawInfoRect();
+            pD2DRender->GetRenderTarget()->EndDraw();
             pInput->ResetInput();
         }
        
@@ -150,13 +155,9 @@ void WinGameApp::DrawInfoRect() {
 
 void WinGameApp::Render(ID2D1RenderTarget* pRenderTarget)
 {
-    pRenderTarget->BeginDraw();
-    pRenderTarget->Clear(D2D1::ColorF(D2D1::ColorF::CadetBlue));
    
     m_pWorld->Render(pRenderTarget, pD2DRender->getBrush());
-    
-    DrawInfoRect();
-    pRenderTarget->EndDraw();
+   
 }
 
 

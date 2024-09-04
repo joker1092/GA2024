@@ -10,8 +10,9 @@ BackGround::BackGround()
 	pBitmapScene->LoadD2DBitmap(L"../Resource/camerabackgound.png");
 	/*pAnimationScene->LoadAnimationAsset(L"Background");
 	pAnimationScene->SetAnimation(0, false);*/
-	pBitmapScene->m_RelativeScale = { 3.8, 4.8 };
-	pBitmapScene->m_RelativeLocation = { 0, 1000 };
+	pBitmapScene->m_RelativeScale = { 5.0, 5.0 };
+	pBitmapScene->m_RelativeLocation = { 0, 1300 };
+
 }
 
 void BackGround::Update(float deltaTime)

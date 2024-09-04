@@ -1,6 +1,7 @@
 #include "World.h"
 #include "Scene.h"
 #include "Camera.h"
+#include "MathHelper.h"
 
 //todo:
 //카메라가 월드의 끝에 도달하면 월드의 끝에서 더이상 이동하지 못하게 한다.
@@ -62,6 +63,11 @@ void Camera::Update(float deltaTime)
 	m_RelativeLocation.x = CameraX;
 	m_RelativeLocation.y = CameraY;
 	
+	//고정 카메라가 설정되어 있다면 고정 카메라로 설정
+	if (isFixed)
+	{
+		m_RelativeLocation = m_FixedLocation;
+	}
 
 		
 	Scene::UpdateTrasnform();
@@ -71,5 +77,43 @@ void Camera::Update(float deltaTime)
 	float x= m_WorldTransform._31+width/2;
 	float y= m_WorldTransform._32+height/2;
 	m_ViewBoundBox.m_Center = {x,y};
+}
+
+void Camera::ObjectClampToCamera(Scene* pScene)
+{
+	
+	if (pScene != nullptr)
+	{
+		// 오브젝트의 위치를 가져옵니다.
+		D2D1_VECTOR_2F objectPosition = pScene->GetWorldLocation();
+
+		// 카메라 영역을 벗어나려고 하는지 확인합니다.
+		if (!ContainsVector(objectPosition))
+		{
+			// 오브젝트를 카메라 영역 내로 되돌립니다.
+			D2D1_VECTOR_2F clampedPosition = VectorClamp(objectPosition);
+			pScene->SetRelativeLocation(clampedPosition);
+		}
+	}
+}
+
+bool Camera::ContainsVector(D2D1_VECTOR_2F v)
+{
+	D2D1_RECT_F rect = { m_ViewBoundBox.GetMinX(),m_ViewBoundBox.GetMinY(),m_ViewBoundBox.GetMaxX(),m_ViewBoundBox.GetMaxY()};
+	
+	if (v.x >= rect.left && v.x <= rect.right && v.y >= rect.top && v.y <= rect.bottom)
+	{
+		return true;
+	}
+	return false;
+}
+
+D2D1_VECTOR_2F Camera::VectorClamp(D2D1_VECTOR_2F v) {
+	D2D1_VECTOR_2F clampedVector = { 0,0 };
+	clampedVector.x = min(v.x, m_ViewBoundBox.GetMaxX());
+	clampedVector.x = max(clampedVector.x, m_ViewBoundBox.GetMinX());
+	clampedVector.y = min(v.y, m_ViewBoundBox.GetMaxY());
+	clampedVector.y = max(clampedVector.y, m_ViewBoundBox.GetMinY());
+	return clampedVector;
 }
 

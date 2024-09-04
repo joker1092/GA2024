@@ -18,8 +18,8 @@ public:
 	AABB* m_pCullingBound = nullptr;
 	AABB m_CullingBoundDefault;
 
-	float m_fWorldMaxX = 5000.0f; // 월드의 최대 x좌표 0~5000
-	float m_fWorldMaxY = 5000.0f; // 월드의 최대 y좌표 0~5000
+	float m_fWorldMaxX = 1000.0f; // 월드의 최대 x좌표 0~5000
+	float m_fWorldMaxY = 2000.0f; // 월드의 최대 y좌표 0~5000
 	
 public:
 	void Update(float deltaTime);

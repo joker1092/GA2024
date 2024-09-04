@@ -72,7 +72,7 @@ Player::Player()
 	//todo:
 	
 	
-	setDelay(0.5f);
+	setDelay(0.2f);
 	
 }
 
@@ -100,7 +100,10 @@ void Player::Update(float deltaTime)
 	//pMovement->SetDirection({ 0,0 });
 	pMovement->SetSpeed(0);
 	
-	
+	if (fireDelay > delay) {
+		isFire = true;
+	}
+	fireDelay += deltaTime;
 
 	if (!isDead) {
 

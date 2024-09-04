@@ -1,6 +1,7 @@
 #pragma once
 #include "../D2DEngine/FSMState.h"
 
+class World;
 class FSM;
 class GameObject;
 class BodyIdle : public FSMState
@@ -54,6 +55,7 @@ class BodyJump : public FSMState
 
 class BodyAttack : public FSMState
 {
+	World* m_pWorld;
 	GameObject* m_pPlayer;
 	bool flip = false;
 	public:

@@ -23,10 +23,11 @@ class DemoGameApp :public WinGameApp
     MapBackgound* mapBackGound;
     Player* player;
     AnimationScene* animeSceneBG;
-    EnemyRifle* enemyRifle;
+    //EnemyRifle* enemyRifle;
     BoxObject* boxObject;
     
-    std::vector<GameObject*> vObjList;
+    std::vector<EnemyRifle*> vObjList;
+    int rifleCount = 10;
 
 public:
     D2D1_VECTOR_2F position;
