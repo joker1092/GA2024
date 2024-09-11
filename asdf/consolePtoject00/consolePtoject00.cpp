@@ -8,27 +8,7 @@
 
 int main()
 {
-    Sleep(1);
-    //blabla
-    printf_s("Hello Wolrd\n");
-
-   /* int r;
-
-    _asm {
-        xor eax, eax
-        xor ebx, ebx
-        mov eax, 1
-        mov ebx, 1
-        add eax, ebx
-        mov dword ptr[r], eax
-    }
-
-
-    Sleep(0);*/
-
-    //end
-    printf_s("Press any key to exit...");
-    _getch();
+	
 }
 
 // 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
