@@ -19,7 +19,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-
+#include <random>
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include <directxtk/simplemath.h>

@@ -1,6 +1,7 @@
 #include "framework.h"
 #include "Tutorial.h"
 #include "Vertex.h"
+#include "Sphere.h"
 
 
 //상수 버퍼
@@ -44,6 +45,18 @@ void Tutorial::Update()
 	//g_World = DirectX::XMMatrixRotationY(t);
 	t += (float)DirectX::XM_PI * 0.0125f;
 	g_World = DirectX::XMMatrixRotationY(t);
+	
+	float eyeX = 0.0f;
+	float eyeY = 0.0f;
+
+	eyeX = 5.0f * cos(t);
+	eyeY = 5.0f * sin(t);
+
+	Vector4 eye(eyeX,1.0f,-5.0f, 0.0f);
+	Vector4 at(0.0f, 0.0f, 0.0f, 0.0f);
+	Vector4 up(0.0f, 1.0f, 0.0f, 0.0f);
+	g_View = DirectX::XMMatrixLookAtLH(eye, at, up);
+	
 
 }
 
@@ -53,8 +66,6 @@ void Tutorial::Render()
 
 	Color clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, clearColor);
-
-
 	
 
 	ConstantBuffer cb;
@@ -70,7 +81,9 @@ void Tutorial::Render()
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 	m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);//픽셀 셰이더 설정
 
-	m_pDeviceContext->DrawIndexed(m_nIndices, 0, 0); //인덱스로 그리기
+	//m_pDeviceContext->DrawIndexed(m_nIndices, 0, 0); //인덱스로 그리기
+
+	m_pSphere->Draw(m_pDeviceContext);
 	
 
 	m_pSwapChain->Present(0, 0);
@@ -127,7 +140,7 @@ bool Tutorial::InitD3D()
 	g_World = DirectX::XMMatrixIdentity();
 
 	//init view matrix
-	g_View = DirectX::XMMatrixLookAtLH(Vector4(0.0f, 1.0f, -5.0f, 0.0f), Vector4(0.0f, 1.0f, 0.0f, 0.0f), Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+	g_View = DirectX::XMMatrixLookAtLH(Vector4(0.0f, 0.0f, -5.0f, 0.0f), Vector4(0.0f, 1.0f, 0.0f, 0.0f), Vector4(0.0f, 1.0f, 0.0f, 0.0f));
 
 	//init projection matrix
 	g_Projection = DirectX::XMMatrixPerspectiveFovLH(DirectX::XM_PIDIV2, m_ClientWidth / (FLOAT)m_ClientHeight, 0.01f, 100.0f);
@@ -186,6 +199,10 @@ bool Tutorial::InitScene()
 	m_VertextBufferStride = sizeof(Vertex);
 	m_VertextBufferOffset = 0;
 	
+
+	m_pSphere = new Sphere(m_pDevice, Vector3(0.0f, 0.0f, 0.0f), 1.0f);
+
+
 	ID3DBlob* pVertexShaderBlob = nullptr;
 	ID3DBlob* pPixelShaderBlob = nullptr;
 
@@ -257,10 +274,10 @@ bool Tutorial::InitScene()
 	SAFE_RELEASE(pPixelShaderBlob);
 
 
-	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  //정점 그리기 방식
-	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_VertextBufferStride, &m_VertextBufferOffset); //정점 버퍼 설정
+	//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  //정점 그리기 방식
+	//m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_VertextBufferStride, &m_VertextBufferOffset); //정점 버퍼 설정
 	m_pDeviceContext->IASetInputLayout(m_pInputLayout); //입력 레이아웃 설정
-	m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0); //인덱스 버퍼 설정
+	//m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0); //인덱스 버퍼 설정
 
 	return true;
 }

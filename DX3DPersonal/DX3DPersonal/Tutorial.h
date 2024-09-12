@@ -1,8 +1,10 @@
 #pragma once
 #include "../common/WinApp.h"
 
+class Sphere;
 class Tutorial : public WinApp
 {
+
 
 public:
 	Tutorial(HINSTANCE hInstance);
@@ -37,6 +39,7 @@ public:
 	DirectX::XMMATRIX                g_View; // 뷰 행렬
 	DirectX::XMMATRIX                g_Projection; // 프로젝션 행렬
 
+	Sphere* m_pSphere = nullptr;
 
 	bool InitScene();		// 쉐이더,버텍스,인덱스
 	void UninitScene();
