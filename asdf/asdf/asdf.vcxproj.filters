@@ -84,5 +84,8 @@
     <ClCompile Include="Functional.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="decltype.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

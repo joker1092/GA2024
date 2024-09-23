@@ -1,36 +1,50 @@
-﻿//RTTI
-#include <iostream>
+﻿#include <iostream>
 
-using namespace std;
-
-class Base
+enum Color
 {
-public:
-	virtual ~Base() {}
+	RED,
+	BLACK
 };
 
-class Derived1 : public Base
-{};
-class Derived2 : public Base
-{};
+template <typename T>
+struct Node {
+	Node* parent;
+	Node* left;
+	Node* right;
+	Color color;
+	int key;
+	T data;
+};
 
-void F(Base* pB) {
-	if (typeid(*pB) == typeid(Derived2)) {
-		cout<< typeid(*pB).name() << endl;
+template <typename T>
+struct RBTree {
+	Node<T>* root=nullptr;
+	void insert(int key, T data) {
+		Node<T>* newNode = new Node<T>;
+		newNode->key = key;
+		newNode->data = data;
+		newNode->color = RED;
+		newNode->left = nullptr;
+		newNode->right = nullptr;
+		newNode->parent = nullptr;
+		if (root == nullptr) {
+			root = newNode;
+			root->color = BLACK;
+		}
+		else {
+			Node<T>* temp = root;
+			while (temp != nullptr) {
+				if (temp->key < key) {
+
+				}
+			}
+		}
 	}
-	else {
-		cout << "Not Derived2" << endl;
-	}
-}
+	void remove(int key);
+	T find(int key);
+};
 
 int main()
 {
-	Base* pb1 = new Derived1;
-	Base* pb2 = new Derived2;
 
-	F(pb1);
-	F(pb2);
-
-	delete pb1;
-	delete pb2;
 }
