@@ -9,4 +9,13 @@
 
 // 여기에 미리 컴파일하려는 헤더 추가
 
+#ifdef _DEBUG
+    #define _CRTDBG_MAP_ALLOC
+    #include <crtdbg.h>
+    #define new new(_NORMAL_BLOCK,__FILE__,__LINE)
+#endif // DEBUG
+
+
+
+
 #endif //PCH_H

@@ -10,11 +10,17 @@
 
 int main()
 {
-    SYSTEM_INFO si;
-    GetSystemInfo(&si);
-    DWORD dwCoreCount = si.dwNumberOfProcessors;
+#ifdef _DEBUG
+    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif // DEBUG
+
+    
 
 
+#ifdef _DEBUG
+    _ASSERT(_CrtCheckMemory());
+#endif // _DEBUG
+    return 0;
 }
 
 // 프로그램 실행: <Ctrl+F5> 또는 [디버그] > [디버깅하지 않고 시작] 메뉴
