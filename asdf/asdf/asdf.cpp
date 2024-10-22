@@ -1,116 +1,58 @@
 ﻿#include <iostream>
-#include <memory>
-#include <vector>
-#include <functional>
-#include <algorithm>
+#include <list>
+#include <type_traits>
 using namespace std;
 
-class Item {
-public:
-    int id = 0;
-    string name = "";
-    int level = 0;
-    Item(int _id,string _name,int _level):id(_id),name(_name),level(_level) {}
-    virtual ~Item()
-    {
-        cout << "Item 소멸자" << endl;
-    }
-    virtual void print() {
-        cout << "id: " << id << ", name: " << name << ", level: " << level << endl;
-    }
+
+class Widget {};
+
+template <typename T>
+class MyAlloc {};
+
+template <typename T>
+struct MyAllocLIst{
+    typedef std::list<T, MyAlloc<T>> type;
 };
 
-class Weapon : public Item {
-public:
-    int damage = 0;
-    Weapon(int _id,string _name,int _level,int _damage):Item(_id,_name,_level),damage(_damage) {}
-    void print() override {
-        cout << "id: " << id << ", name: " << name << ", level: " << level << ", damage: " << damage << endl;
-    }
-    ~Weapon()
-    {
-        cout << "Weapon 소멸자" << endl;
-    }
-};
-class Armor : public Item {
-    public:
-    int defense = 0;
-    Armor(int _id,string _name,int _level,int _defense):Item(_id,_name,_level),defense(_defense) {}
-    void print() override {
-        cout << "id: " << id << ", name: " << name << ", level: " << level << ", defense: " << defense << endl;
-    }
-    ~Armor()
-    {
-        cout << "Armor 소멸자" << endl;
-    }
-};
-class Ring : public Item {
-    public:
-    int hp = 0;
-    Ring(int _id,string _name,int _level,int _hp):Item(_id,_name,_level),hp(_hp) {}
-    ~Ring()
-    {
-        cout << "Ring 소멸자" << endl;
-    }
-};
+template <typename T>
+using MyAllocLIst_t = std::list<T, MyAlloc<T>>;
 
-class ItemManager {
-    vector<unique_ptr<Item>> ItemList;
-    using itemIter = vector<unique_ptr<Item>>::iterator;
-    public:
-    ItemManager() {}
-    ~ItemManager() {
-        ItemList.clear();
-    }
-
-    void AddItem(unique_ptr<Item> item) {
-        ItemList.push_back(move(item));
-    }
-    void RemoveItem(int id) {
-        auto iter = find_if(ItemList.begin(), ItemList.end(), [id](auto& item) {return item->id == id;});
-        if (iter != ItemList.end()) {
-            ItemList.erase(iter);
-        }
-    }
-    void PrintAll() {
-        for (auto& item : ItemList) {
-            item->print();
-        }
-    }
-
-    static bool LevelSort(itemIter& a, itemIter& b) {
-        return (*a)->level < (*b)->level;
-    }
-    static bool NameSort(itemIter& a, itemIter& b) {
-        return (*a)->name < (*b)->name;
-    }
-    static bool IndexSort(itemIter& a, itemIter& b) {
-        return (*a)->id < (*b)->id;
-    }
-    void Sort(bool(*sort)(itemIter& a, itemIter& b)) {
-        std::sort(ItemList.begin(), ItemList.end(), sort);
-    }
-};;
 
 
 
 int main() {
-    ItemManager im;
 
-    im.AddItem(make_unique<Weapon>(1,"단검",1,10));
-    im.AddItem(make_unique<Weapon>(2, "단검", 5, 20));
-    im.AddItem(make_unique<Armor>(3, "갑옷", 5, 10));
-    im.AddItem(make_unique<Armor>(4, "갑옷", 3, 5));
+    
 
-    im.PrintAll();
 
-    cout << "LevelSort" << endl;
-    im.Sort(&ItemManager::LevelSort);
-    im.PrintAll();
+    MyAllocLIst<Widget>::type lw; 
 
-    cout << "RemoveItem3" << endl;
-    im.RemoveItem(3);
-    im.PrintAll();
+    MyAllocLIst_t<Widget> lw;
 
     return 0;
 }
+
+//POD >> Plain Old Data
+//메모리 상에서 연속전인 바이트 열
+//개체를 POD로 취급하여야 하는 경우가 있다
+
+//POD의 조건
+//표준 레이아웃 타입 이어야 한다
+//간단한 타입(trivial type)이어야 한다
+//--->
+//<type_traits> 헤더의 is_pod<T> 템플릿을 사용하여 확인 가능
+
+//표준 레이아웃 타입
+//C와 분명하게 호환되는 같은 레이아웃을 가진 타입
+//--->
+//가상함수나 가상 기저 클래스를 갖지 않는 클래스
+//모든 비정적 데이터 멤버를 동일한 접근 지정자로 선언
+//모든 기저 클래스가 표준 레이아웃 타입이어야 한다
+//--->
+// <type_traits> 헤더의 is_standard_layout<T> 템플릿을 사용하여 확인 가능
+
+//간단한 타입
+//간단한 기본 생성자 및 소멸자 함수를 가진 타입
+//복사 생성자, 복사 대입 연산자, 이동 생성자, 이동 대입 연산자가 모두 없거나 각각이 간단한 형태로 존재
+//--->
+// <type_traits> 헤더의 is_trivial<T> 템플릿을 사용하여 확인 가능

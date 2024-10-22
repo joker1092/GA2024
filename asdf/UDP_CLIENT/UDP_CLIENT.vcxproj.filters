@@ -15,14 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="algorithm.cpp">
+    <ClCompile Include="UDP_CLIENT.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="net_base.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="sample.txt" />
   </ItemGroup>
 </Project>
