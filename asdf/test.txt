@@ -1,0 +1,21 @@
+decltype(T x) --> T 
+
+decltype((x)) --> T& 
+
+prvalue --> T
+
+lvalue --> T&
+
+xvalue --> T&&
+
+struct S{ T x};
+const S s;
+decltype(s.x) --> T
+decltype((s.x)) --> const T&  **ÁÖÀÇ**
+
+T f();
+decltype(f) --> T(*)()
+decltype(f()) --> T
+
+std::vector<int> v;
+decltype(v[0]) --> int&

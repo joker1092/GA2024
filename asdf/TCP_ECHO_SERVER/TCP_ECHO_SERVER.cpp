@@ -54,7 +54,7 @@ class SessionManager {
     void DeleteSession(UINT SessionID) {
         auto it = SessionMap.find(SessionID);
         if (it != SessionMap.end()) {
-            shutdown(it->second->SocketInfo->Socket, SD_BOTH);
+            //shutdown(it->second->SocketInfo->Socket, SD_BOTH);
             FreeSocketInformation(it->second->SessionID);
             it = SessionMap.erase(it);
         }
@@ -111,7 +111,7 @@ class SessionManager {
                 }
                 else
                 {
-                    printf("Send Disconnet Messege currunt :  %d\n", currentTime);
+                    printf("Send Disconnet Messege currunt :  %d\n", (UINT)currentTime);
                 }
 
                 shutdown(it->second->SocketInfo->Socket, SD_BOTH);
@@ -214,15 +214,15 @@ int main(int argc, char** argv)
         
 
         if(SocketArray[Event - WSA_WAIT_EVENT_0] == nullptr) {
-            std::cout << "WSAWaitForMultipleEvents Not Event" << std::endl;
+            std::cout << "Not Accept Socket" << std::endl;
             continue;
         }
 
-        /*if (EventArray[Event - WSA_WAIT_EVENT_0] == nullptr)
+        if (EventArray[Event - WSA_WAIT_EVENT_0] == nullptr)
         {
-            std::cout << "Event exeption" << std::endl;
+            std::cout << "WSAWaitForMultipleEvents Not Event" << std::endl;
             continue;
-        }*/
+        }
 
         if (WSAEnumNetworkEvents(SocketArray[Event - WSA_WAIT_EVENT_0]->Socket,
             EventArray[Event - WSA_WAIT_EVENT_0], &NetworkEvents) == SOCKET_ERROR)
@@ -372,13 +372,14 @@ int main(int argc, char** argv)
             if (NetworkEvents.iErrorCode[FD_CLOSE_BIT] != 0)
             {
                 printf("FD_CLOSE failed with error %d\n", NetworkEvents.iErrorCode[FD_CLOSE_BIT]);
-                break;
+                //break;
             }
             else
                 printf("FD_CLOSE is OK!\n");
 
             printf("Closing socket information %d\n", (int)SocketArray[Event - WSA_WAIT_EVENT_0]->Socket);
-            FreeSocketInformation(Event - WSA_WAIT_EVENT_0);
+            sessionManager.DeleteSession(session->SessionID);
+            //FreeSocketInformation(Event - WSA_WAIT_EVENT_0);
         }
     }
 
