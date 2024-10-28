@@ -9,10 +9,16 @@
 #include "afxdialogex.h"
 #include "CChatSocket.h"
 
+#define IP_ADRESS "127.0.0.1" //로컬
+//#define IP_ADRESS "172.21.1.60" //민재
+//#define IP_ADRESS "172.21.1.32" //용우
+#define PORT 6060
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
+//#define IP_ADRESS "127.0.0.1" //로컬
 #endif
-
 
 // CMFCClientDlg 대화 상자
 
@@ -22,6 +28,15 @@ CMFCClientDlg::CMFCClientDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCCLIENT_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+}
+
+CMFCClientDlg::~CMFCClientDlg()
+{
+    if (m_bConnected)
+    {
+        m_pChatSocket->Close();
+        delete m_pChatSocket;
+    }
 }
 
 void CMFCClientDlg::DoDataExchange(CDataExchange* pDX)
@@ -53,7 +68,7 @@ BOOL CMFCClientDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 작은 아이콘을 설정합니다.
 
 	// TODO: 여기에 추가 초기화 작업을 추가합니다.
-    m_pChatSocket = new CChatSocket;
+ 
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -102,13 +117,16 @@ void CMFCClientDlg::OnBnClickedConnection()
     // TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
     if (!m_bConnected)
     {
+        m_pChatSocket = new CChatSocket;
         m_pChatSocket->Create();
         //m_pChatSocket->Connect(_T("172.21.1.35"), 6060);
-        m_pChatSocket->Connect(_T("127.0.0.1"), 6060);
+        m_pChatSocket->Connect(_T(IP_ADRESS), PORT);
     }
     else
     {
-        m_pChatSocket->Close();
+        //m_pChatSocket->Close();
+        AfxGetApp()->m_pMainWnd->PostMessage(WM_DISCONNECT, 0, 0);
+        //m_bConnected = FALSE;
     }
 }
 
@@ -116,6 +134,10 @@ void CMFCClientDlg::OnBnClickedConnection()
 void CMFCClientDlg::OnFinalRelease()
 {
     // TODO: 여기에 특수화된 코드를 추가 및/또는 기본 클래스를 호출합니다.
+    if (m_bConnected)
+    {
+        m_pChatSocket->Close();
+    }
     delete m_pChatSocket;
 
     CDialogEx::OnFinalRelease();
@@ -131,11 +153,11 @@ afx_msg LRESULT CMFCClientDlg::OnConnect(WPARAM wParam, LPARAM lParam)
     {
         CString str;
         str.Format(_T("Connection failed (%u)"), errCode);
-        m_NetMsgList.AddString(str);
+        m_NetMsgList.InsertString(-1,str);
     }
     else
     {
-        m_NetMsgList.AddString(_T("Connected"));
+        m_NetMsgList.InsertString(-1,_T("Connected"));
         m_bConnected = TRUE;
     }
 
@@ -148,14 +170,23 @@ afx_msg LRESULT CMFCClientDlg::OnDisconnect(WPARAM wParam, LPARAM lParam)
     int errCode = (int)wParam;
     if (errCode != 0)
     {
-        CString str;
-        str.Format(_T("DisConnection failed (%u)"), errCode);
-        m_NetMsgList.AddString(str);
+        if(errCode==10053) {
+            m_NetMsgList.InsertString(-1,_T("Server Disconnect"));
+            
+        }
+        else {
+            CString str;
+            str.Format(_T("DisConnection failed (%u)"), errCode);
+            m_NetMsgList.AddString(str);
+        }
     }
     else
     {
-        m_NetMsgList.AddString(_T("DisConnected"));
+        m_NetMsgList.InsertString(-1,_T("DisConnected"));
+        
     }
+    m_bConnected = FALSE;
+    m_pChatSocket->Close();
 
     return 0;
 }

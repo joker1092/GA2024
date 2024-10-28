@@ -30,6 +30,10 @@ DWORD EventTotal = 0;
 WSAEVENT EventArray[WSA_MAXIMUM_WAIT_EVENTS];
 LPSOCKET_INFORMATION SocketArray[WSA_MAXIMUM_WAIT_EVENTS];
 
+
+
+
+
 typedef struct _SESSION {
     UINT SessionID;
     LPSOCKET_INFORMATION SocketInfo;
@@ -41,6 +45,7 @@ class SessionManager {
     std::unordered_map<UINT, LPSESSION> SessionMap;
     UINT SessionID = 0;
     int SessionTimeout = 60;
+    WSABUF BroadcastBuffer;
 
     LPSESSION CreateSession(DWORD SessionID, LPSOCKET_INFORMATION SocketInfo) {
         LPSESSION session = new SESSION;
@@ -123,6 +128,28 @@ class SessionManager {
             }
         }
     }
+
+    void BroadCast(char* data,ULONG len) {
+        for (auto it = SessionMap.begin(); it != SessionMap.end(); it++) {
+            BroadcastBuffer.buf = data;
+            BroadcastBuffer.len = len;
+            DWORD SendBytes;
+            if (WSASend(it->second->SocketInfo->Socket, &BroadcastBuffer, 1, &SendBytes, 0, NULL, NULL) == SOCKET_ERROR)
+            {
+                if (WSAGetLastError() != WSAEWOULDBLOCK)
+                {
+                    printf("WSASend() failed with error %d\n", WSAGetLastError());
+                    FreeSocketInformation(it->second->SessionID);
+                    return;
+                }
+            }
+            else
+            {
+                printf("Send Disconnet Messege currunt :  %d\n", (UINT)time(NULL));
+            }
+        }
+    }
+    
 };
 
 
@@ -328,36 +355,45 @@ int main(int argc, char** argv)
                 }
             }
 
-            // Write buffer data if it is available
-            if (SocketInfo->BytesRECV > SocketInfo->BytesSEND)
+
+            // Broadcast data
+            if (SocketInfo->BytesRECV > 0)
             {
-                SocketInfo->DataBuf.buf = SocketInfo->Buffer + SocketInfo->BytesSEND;
-                SocketInfo->DataBuf.len = SocketInfo->BytesRECV - SocketInfo->BytesSEND;
-
-                if (WSASend(SocketInfo->Socket, &(SocketInfo->DataBuf), 1, &SendBytes, 0, NULL, NULL) == SOCKET_ERROR)
-                {
-                    if (WSAGetLastError() != WSAEWOULDBLOCK)
-                    {
-                        printf("WSASend() failed with error %d\n", WSAGetLastError());
-                        FreeSocketInformation(Event - WSA_WAIT_EVENT_0);
-                        return 1;
-                    }
-
-                    // A WSAEWOULDBLOCK error has occurred. An FD_WRITE event will be posted
-                    // when more buffer space becomes available
-                }
-                else
-                {
-                    SocketInfo->BytesSEND += SendBytes;
-                    printf("[%d] WSASend() is fine! Thank you...\n", SocketInfo->BytesSEND);
-
-                    if (SocketInfo->BytesSEND == SocketInfo->BytesRECV)
-                    {
-                        SocketInfo->BytesSEND = 0;
-                        SocketInfo->BytesRECV = 0;
-                    }
-                }
+                sessionManager.BroadCast(SocketInfo->Buffer, SocketInfo->BytesRECV);
+                SocketInfo->BytesRECV = 0;
             }
+
+            //Old Echo
+            //// Write buffer data if it is available
+            //if (SocketInfo->BytesRECV > SocketInfo->BytesSEND)
+            //{
+            //    SocketInfo->DataBuf.buf = SocketInfo->Buffer + SocketInfo->BytesSEND;
+            //    SocketInfo->DataBuf.len = SocketInfo->BytesRECV - SocketInfo->BytesSEND;
+
+            //    if (WSASend(SocketInfo->Socket, &(SocketInfo->DataBuf), 1, &SendBytes, 0, NULL, NULL) == SOCKET_ERROR)
+            //    {
+            //        if (WSAGetLastError() != WSAEWOULDBLOCK)
+            //        {
+            //            printf("WSASend() failed with error %d\n", WSAGetLastError());
+            //            FreeSocketInformation(Event - WSA_WAIT_EVENT_0);
+            //            return 1;
+            //        }
+
+            //        // A WSAEWOULDBLOCK error has occurred. An FD_WRITE event will be posted
+            //        // when more buffer space becomes available
+            //    }
+            //    else
+            //    {
+            //        SocketInfo->BytesSEND += SendBytes;
+            //        printf("[%d] WSASend() is fine! Thank you...\n", SocketInfo->BytesSEND);
+
+            //        if (SocketInfo->BytesSEND == SocketInfo->BytesRECV)
+            //        {
+            //            SocketInfo->BytesSEND = 0;
+            //            SocketInfo->BytesRECV = 0;
+            //        }
+            //    }
+            //}
             // Update session time
             if (session)
             {
