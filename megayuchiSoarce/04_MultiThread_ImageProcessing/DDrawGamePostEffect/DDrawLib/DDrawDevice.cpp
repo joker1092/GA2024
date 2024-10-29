@@ -14,6 +14,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
+#include <process.h>
 
 CDDrawDevice::CDDrawDevice()
 {
@@ -21,6 +22,18 @@ CDDrawDevice::CDDrawDevice()
 
 }
 
+enum THREAD_EVENT
+{
+	THREAD_EVENT_PROCESS,
+	THREAD_EVENT_DESTROY,
+	THREAD_EVENT_COUNT
+};
+
+struct THREAD_ARG {
+	IMAGE_PROCESS_DESC* pDesc;
+	HANDLE hThread;
+	HANDLE hEventList[THREAD_EVENT_COUNT];
+};
 
 
 BOOL CDDrawDevice::InitializeDDraw(HWND hWnd)
@@ -335,7 +348,44 @@ void CDDrawDevice::EndDraw()
 		//todo : multi thread ºÐ±â
 		if (m_bUseMultiThread)
 		{
+			IMAGE_PROCESS_DESC	desc[MAX_THREAD_NUM] = {};
+			HANDLE	hThread[MAX_THREAD_NUM] = {};
+			HANDLE	hEventList[MAX_THREAD_NUM] = {};
+			THREAD_ARG	arg[MAX_THREAD_NUM] = {};
 
+			DWORD	dwThreadNum = 4;
+			DWORD	dwThreadHeight = m_dwHeight / dwThreadNum;
+			DWORD	dwRemainHeight = m_dwHeight % dwThreadNum;
+			DWORD	dwStartY = 0;
+			for (DWORD i = 0; i < dwThreadNum; i++)
+			{
+				desc[i].pSrc = pBuffer;
+				desc[i].pDest = m_pWriteBuffer;
+				desc[i].FilterType = FILTER_TYPE::FILTER_TYPE_EDGE;
+				desc[i].dwThreadNum = dwThreadNum;
+				desc[i].Width = m_dwWidth;
+				desc[i].Height = m_dwHeight;
+
+				if (i == dwThreadNum - 1)
+				{
+					desc[i].Height = dwThreadHeight + dwRemainHeight;
+				}
+				else
+				{
+					desc[i].Height = dwThreadHeight;
+				}
+				desc[i].pSrc += dwStartY * dwPitch;
+				desc[i].pDest += dwStartY * m_dwWriteBufferPitch;
+				dwStartY += desc[i].Height;
+
+				hEventList[i] = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+				arg[i].pDesc = desc + i;
+				arg[i].hEventList[THREAD_EVENT_PROCESS] = hEventList[i];
+				arg[i].hEventList[THREAD_EVENT_DESTROY] = hEventList[i];
+				arg[i].hThread = (HANDLE)_beginthreadex(nullptr, 0, ImageProcessThread, desc + i, 0, nullptr);
+			}
+			WaitForMultipleObjects(dwThreadNum, hEventList, TRUE, INFINITE);
+		
 		}
 		else {
 			CPU_Edge_Filter(pBuffer, dwPitch, m_pWriteBuffer, m_dwWidth, m_dwHeight, m_dwWriteBufferPitch);

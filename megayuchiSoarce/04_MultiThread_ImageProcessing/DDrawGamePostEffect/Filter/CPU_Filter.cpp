@@ -247,6 +247,34 @@ void CPU_Edge_Filter(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwI
 		}
 	}
 }
+
+//multi-threading version
+void CPU_Edge_Filter_MT(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwImageWidth, DWORD dwImageHeight, DWORD dwSrcPitch, int x, int y) {
+
+	DWORD	dwPixel = SampleEdgePixel32_CPU(pSrc, dwImageWidth, dwImageHeight, dwSrcPitch, x, y, SAMPLE_MASK_3_3_LAPLACIAN, MASK_3_3_WIDTH, MASK_3_3_HEIGHT, MASK_3_3_CENTER_X, MASK_3_3_CENTER_Y);
+	DWORD* pDestColor = (DWORD*)(pDest + (x * 4) + (y * dwDestPitch));
+	*pDestColor = dwPixel;
+
+}
+
+UINT __stdcall ImageProcessThread(void* pArg)
+{
+	IMAGE_PROCESS_DESC* pDesc = (IMAGE_PROCESS_DESC*)pArg;
+
+	DWORD	start_y = 0;
+	DWORD	end_y = start_y + pDesc->Height;
+
+	for (DWORD y = start_y; y < end_y; y++)
+	{
+		for (DWORD x = 0; x < pDesc->Width; x++)
+		{
+			CPU_Edge_Filter_MT(pDesc->pDest, pDesc->Width * 4, pDesc->pSrc, pDesc->Width, pDesc->Height, pDesc->Width * 4, x, y);
+		}
+	}
+
+	return 0;
+}
+
 void CPU_BW_Filter(char* pDest, const char* pSrc, DWORD dwWidth, DWORD dwHeight)
 {
 	DWORD	dwPitch = dwWidth * 4;

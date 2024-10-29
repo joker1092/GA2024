@@ -12,6 +12,8 @@
 #include <ddraw.h>
 #include "../Common/typedef.h"
 
+#define MAX_THREAD_NUM 8
+
 class CImageData;
 class CDDrawDevice
 {
@@ -45,6 +47,8 @@ class CDDrawDevice
 	void	CleanupBackBuffer();
 	BOOL	GetFontSize(int* piOutWidth, int* piOutHeight, const WCHAR* wchString, DWORD dwStrLen, HDC hDC);
 	
+	//post processing에 사용할 쓰레드 풀
+	HANDLE* m_hCompletedEvent = nullptr;
 	
 	void	UpdateInfoTxt();
 public:

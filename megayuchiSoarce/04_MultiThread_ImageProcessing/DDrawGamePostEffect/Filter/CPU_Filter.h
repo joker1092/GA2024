@@ -6,7 +6,7 @@
 void CPU_BW_Filter(char* pDest, const char* pSrc, DWORD dwWidth, DWORD dwHeight);
 void CPU_Blur_Filter(char* pDest, const char* pSrc, DWORD dwWidth, DWORD dwHeight);
 void CPU_Edge_Filter(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwImageWidth, DWORD dwImageHeight, DWORD dwSrcPitch);
-
+void CPU_Edge_Filter_MT(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwImageWidth, DWORD dwImageHeight, DWORD dwSrcPitch, int x, int y);
 
 struct IMAGE_PROCESS_DESC
 {
@@ -19,3 +19,4 @@ struct IMAGE_PROCESS_DESC
 
 };
 
+UINT __stdcall ImageProcessThread(void* pParam);

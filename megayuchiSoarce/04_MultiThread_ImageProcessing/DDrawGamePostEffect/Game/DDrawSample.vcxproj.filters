@@ -90,9 +90,6 @@
     <ClInclude Include="..\DDrawUtil\TGAImage.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="CThredPool.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DDrawSample.rc">
@@ -140,9 +137,6 @@
     </ClCompile>
     <ClCompile Include="..\DDrawUtil\TGAImage.cpp">
       <Filter>Util</Filter>
-    </ClCompile>
-    <ClCompile Include="CThredPool.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

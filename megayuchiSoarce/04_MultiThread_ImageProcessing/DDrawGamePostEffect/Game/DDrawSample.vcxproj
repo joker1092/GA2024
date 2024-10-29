@@ -264,7 +264,6 @@
     <ClInclude Include="..\Filter\Filter_typedef.h" />
     <ClInclude Include="..\ImageData\ImageData.h" />
     <ClInclude Include="..\ImageData\stdafx.h" />
-    <ClInclude Include="CThredPool.h" />
     <ClInclude Include="DDrawSample.h" />
     <ClInclude Include="FlightObject.h" />
     <ClInclude Include="Game.h" />
@@ -281,7 +280,6 @@
     <ClCompile Include="..\DDrawUtil\TGAImage.cpp" />
     <ClCompile Include="..\Filter\CPU_Filter.cpp" />
     <ClCompile Include="..\ImageData\ImageData.cpp" />
-    <ClCompile Include="CThredPool.cpp" />
     <ClCompile Include="FlightObject.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameObject.cpp" />

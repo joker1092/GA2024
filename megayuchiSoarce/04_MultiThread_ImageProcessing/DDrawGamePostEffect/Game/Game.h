@@ -28,11 +28,6 @@ class CGame
 	//CImageData*	m_pCircleImgData = nullptr;
 
 
-	
-	
-
-
-
 	int	m_iCursorPosX = 0;
 	int m_iCursorPosY = 0;
 
