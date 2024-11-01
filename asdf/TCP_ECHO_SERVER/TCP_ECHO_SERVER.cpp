@@ -5,6 +5,7 @@
 #include <iostream>
 #include <time.h>
 #include <unordered_map>
+#include "PacketHeader.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -31,7 +32,7 @@ WSAEVENT EventArray[WSA_MAXIMUM_WAIT_EVENTS];
 LPSOCKET_INFORMATION SocketArray[WSA_MAXIMUM_WAIT_EVENTS];
 
 
-
+void printPacketType(PacketType type);
 
 
 typedef struct _SESSION {
@@ -129,10 +130,18 @@ class SessionManager {
         }
     }
 
-    void BroadCast(char* data,ULONG len) {
+    void BroadCast(SESSION* sender,char* data,ULONG len) {
         for (auto it = SessionMap.begin(); it != SessionMap.end(); it++) {
-            BroadcastBuffer.buf = data;
-            BroadcastBuffer.len = len;
+            PacketC2S_Chat packet = *(PacketC2S_Chat*)data;
+            
+            PacketS2C_Chat* sendPacket = new PacketS2C_Chat();
+            sendPacket->id = sender->SessionID;
+            memcpy_s(sendPacket->msg, sizeof(sendPacket->msg), packet.msg, sizeof(packet.msg));
+            sendPacket->timestamp = time(NULL);
+            
+            BroadcastBuffer.buf = (char*)sendPacket;
+            BroadcastBuffer.len = sendPacket->len;
+
             DWORD SendBytes;
             if (WSASend(it->second->SocketInfo->Socket, &BroadcastBuffer, 1, &SendBytes, 0, NULL, NULL) == SOCKET_ERROR)
             {
@@ -145,8 +154,9 @@ class SessionManager {
             }
             else
             {
-                printf("Send Disconnet Messege currunt :  %d\n", (UINT)time(NULL));
+                printf("Send BroadCast Messege currunt :  %d\n", (UINT)time(NULL));
             }
+            delete sendPacket;
         }
     }
     
@@ -359,8 +369,25 @@ int main(int argc, char** argv)
             // Broadcast data
             if (SocketInfo->BytesRECV > 0)
             {
-                sessionManager.BroadCast(SocketInfo->Buffer, SocketInfo->BytesRECV);
-                SocketInfo->BytesRECV = 0;
+                SESSION* sender = sessionManager.FindByInfo(SocketInfo);
+                PacketType packetType = ((PacketHeader*)SocketInfo->Buffer)->type;
+                printPacketType(packetType);
+                switch (packetType)
+                {
+                case PacketType::C2S_ECHO:
+                    break;
+                case PacketType::C2S_CONNECT:
+                    break;
+                case PacketType::C2S_DISCONNECT:
+                    break;
+                case PacketType::C2S_CHAT:
+                    sessionManager.BroadCast(sender,SocketInfo->Buffer, SocketInfo->BytesRECV);
+                    SocketInfo->BytesRECV = 0;
+                    break;
+                case PacketType::HEADER_COUNT:
+                    break;
+                }
+                
             }
 
             //Old Echo
@@ -477,4 +504,40 @@ void FreeSocketInformation(DWORD Event)
     }
 
     EventTotal--;
+}
+
+
+void printPacketType(PacketType type) {
+    switch (type) {
+    case PacketType::C2S_ECHO:
+        printf("C2S_ECHO\n");
+        break;
+    case PacketType::S2C_ECHO:
+        printf("S2C_ECHO\n");
+        break;
+    case PacketType::C2S_CONNECT:
+        printf("C2S_CONNECT\n");
+        break;
+    case PacketType::S2C_CONNECT:
+        printf("S2C_CONNECT\n");
+        break;
+    case PacketType::C2S_DISCONNECT:
+        printf("C2S_DISCONNECT\n");
+        break;
+    case PacketType::S2C_DISCONNECT:
+        printf("S2C_DISCONNECT\n");
+        break;
+    case PacketType::C2S_CHAT:
+        printf("C2S_CHAT\n");
+        break;
+    case PacketType::S2C_CHAT:
+        printf("S2C_CHAT\n");
+        break;
+    case PacketType::S2C_TIME_OUT:
+        printf("S2C_TIME_OUT\n");
+        break;
+    case PacketType::HEADER_COUNT:
+        printf("HEADER_COUNT\n");
+        break;
+    }
 }

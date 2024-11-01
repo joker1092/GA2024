@@ -148,6 +148,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 	{
 		return FALSE;
 	}
+
+	if (nCmdShow)
+	{
+		AllocConsole();
+		FILE* _tempFile;
+		freopen_s(&_tempFile, "CONOUT$", "w", stdout);
+	}
+
 	g_hMainWindow = hWnd;
 	ShowWindow(hWnd, nCmdShow);
 	UpdateWindow(hWnd);

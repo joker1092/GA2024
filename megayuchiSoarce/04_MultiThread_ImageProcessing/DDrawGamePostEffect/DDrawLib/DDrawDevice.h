@@ -12,8 +12,9 @@
 #include <ddraw.h>
 #include "../Common/typedef.h"
 
-#define MAX_THREAD_NUM 8
 
+struct THREAD_ARG;
+struct IMAGE_PROCESS_DESC;
 class CImageData;
 class CDDrawDevice
 {
@@ -49,7 +50,9 @@ class CDDrawDevice
 	
 	//post processing에 사용할 쓰레드 풀
 	HANDLE* m_hCompletedEvent = nullptr;
-	
+	THREAD_ARG* arg = nullptr;
+	IMAGE_PROCESS_DESC* desc = nullptr;
+
 	void	UpdateInfoTxt();
 public:
 	BOOL	InitializeDDraw(HWND hWnd);

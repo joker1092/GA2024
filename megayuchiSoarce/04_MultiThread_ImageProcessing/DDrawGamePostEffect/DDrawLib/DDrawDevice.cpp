@@ -14,7 +14,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-#include <process.h>
+
 
 CDDrawDevice::CDDrawDevice()
 {
@@ -22,18 +22,6 @@ CDDrawDevice::CDDrawDevice()
 
 }
 
-enum THREAD_EVENT
-{
-	THREAD_EVENT_PROCESS,
-	THREAD_EVENT_DESTROY,
-	THREAD_EVENT_COUNT
-};
-
-struct THREAD_ARG {
-	IMAGE_PROCESS_DESC* pDesc;
-	HANDLE hThread;
-	HANDLE hEventList[THREAD_EVENT_COUNT];
-};
 
 
 BOOL CDDrawDevice::InitializeDDraw(HWND hWnd)
@@ -99,6 +87,33 @@ BOOL CDDrawDevice::InitializeDDraw(HWND hWnd)
 
 	DWORD dwWidth = m_rcWindow.right - m_rcWindow.left;
 	DWORD dwHeight = m_rcWindow.bottom - m_rcWindow.top;
+
+	//쓰레드 풀 초기화
+	m_hCompletedEvent = new HANDLE[MAX_THREAD_NUM];
+	arg = new THREAD_ARG[MAX_THREAD_NUM];
+	memset(arg, 0, sizeof(THREAD_ARG) * MAX_THREAD_NUM);
+
+	desc = new IMAGE_PROCESS_DESC[MAX_THREAD_NUM];
+
+	for (DWORD i = 0; i < MAX_THREAD_NUM; i++)
+	{
+
+		m_hCompletedEvent[i] = CreateEvent(nullptr, FALSE, FALSE, nullptr); //전체 종료 이벤트 초기화
+
+		for (DWORD j = 0; j < THREAD_EVENT_COUNT; j++)
+		{
+			arg[i].hEventList[j] = CreateEvent(nullptr, FALSE, FALSE, nullptr); //각 쓰레드의 실행 종료 이벤트 초기화
+		}
+
+		arg[i].dwThreadIndex = i;
+		arg[i].hCompletedEvent = m_hCompletedEvent;
+
+		arg[i].pDesc = &desc[i];
+
+		UINT uThreadID = 0;
+		arg[i].hThread = (HANDLE)_beginthreadex(nullptr, 0, ImageProcessThread, arg + i, 0, &uThreadID); //스레드 생성
+
+	}
 
 	if (!CreateBackBuffer(dwWidth, dwHeight))
 	{
@@ -347,45 +362,37 @@ void CDDrawDevice::EndDraw()
 	#endif
 		//todo : multi thread 분기
 		if (m_bUseMultiThread)
-		{
-			IMAGE_PROCESS_DESC	desc[MAX_THREAD_NUM] = {};
-			HANDLE	hThread[MAX_THREAD_NUM] = {};
-			HANDLE	hEventList[MAX_THREAD_NUM] = {};
-			THREAD_ARG	arg[MAX_THREAD_NUM] = {};
+		{			
 
-			DWORD	dwThreadNum = 4;
-			DWORD	dwThreadHeight = m_dwHeight / dwThreadNum;
-			DWORD	dwRemainHeight = m_dwHeight % dwThreadNum;
-			DWORD	dwStartY = 0;
-			for (DWORD i = 0; i < dwThreadNum; i++)
+			DWORD dwThreadHeight = m_dwHeight / MAX_THREAD_NUM;
+			DWORD dwRemainHeight = m_dwHeight % MAX_THREAD_NUM;
+
+
+			for (DWORD i = 0; i < MAX_THREAD_NUM; i++)
 			{
-				desc[i].pSrc = pBuffer;
-				desc[i].pDest = m_pWriteBuffer;
+				desc[i].pSrc = m_pWriteBuffer;
+				desc[i].pDest = pBuffer;
 				desc[i].FilterType = FILTER_TYPE::FILTER_TYPE_EDGE;
-				desc[i].dwThreadNum = dwThreadNum;
 				desc[i].Width = m_dwWidth;
 				desc[i].Height = m_dwHeight;
+				desc[i].dwSrcPitch = dwPitch;
+				desc[i].dwDestPitch = m_dwWriteBufferPitch;
+				desc[i].dwStartHeight = i * dwThreadHeight;
+				desc[i].dwProcessHeight = dwThreadHeight;
 
-				if (i == dwThreadNum - 1)
-				{
-					desc[i].Height = dwThreadHeight + dwRemainHeight;
-				}
-				else
-				{
-					desc[i].Height = dwThreadHeight;
-				}
-				desc[i].pSrc += dwStartY * dwPitch;
-				desc[i].pDest += dwStartY * m_dwWriteBufferPitch;
-				dwStartY += desc[i].Height;
-
-				hEventList[i] = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-				arg[i].pDesc = desc + i;
-				arg[i].hEventList[THREAD_EVENT_PROCESS] = hEventList[i];
-				arg[i].hEventList[THREAD_EVENT_DESTROY] = hEventList[i];
-				arg[i].hThread = (HANDLE)_beginthreadex(nullptr, 0, ImageProcessThread, desc + i, 0, nullptr);
+				//arg[i].pDesc = desc[i];
 			}
-			WaitForMultipleObjects(dwThreadNum, hEventList, TRUE, INFINITE);
-		
+			arg[MAX_THREAD_NUM - 1].pDesc->dwProcessHeight += dwRemainHeight;
+			
+
+			for (DWORD i = 0; i < MAX_THREAD_NUM; i++) {
+				SetEvent(arg[i].hEventList[THREAD_EVENT_PROCESS]);		//이벤트 실행
+			}
+
+
+			WaitForMultipleObjects(MAX_THREAD_NUM, m_hCompletedEvent, TRUE, INFINITE); //전체 스레드가 완료될때까지 대기
+
+			m_bUseMultiThread = FALSE;
 		}
 		else {
 			CPU_Edge_Filter(pBuffer, dwPitch, m_pWriteBuffer, m_dwWidth, m_dwHeight, m_dwWriteBufferPitch);
@@ -732,6 +739,36 @@ void CDDrawDevice::Cleanup()
 {
 	CleanupBackBuffer();
 
+	for (DWORD i = 0; i < MAX_THREAD_NUM; i++) {
+
+		SetEvent(arg[i].hEventList[THREAD_EVENT_DESTROY]);
+	}
+
+	if (arg)
+	{
+		// 각 스레드가 스스로 종료할때까지 대기
+		for (DWORD i = 0; i < MAX_THREAD_NUM; i++)
+		{
+			WaitForSingleObject(arg[i].hThread, INFINITE);
+			CloseHandle(arg[i].hThread);
+			for (DWORD j = 0; j < THREAD_EVENT_COUNT; j++)
+			{
+				CloseHandle(arg[i].hEventList[j]);
+				arg[i].hEventList[j] = nullptr;
+			}
+			CloseHandle(m_hCompletedEvent[i]);
+			m_hCompletedEvent[i] = nullptr;
+		}
+		delete[] arg;
+		arg = nullptr;
+	}
+	if (m_hCompletedEvent)
+	{
+		delete[] m_hCompletedEvent;
+		m_hCompletedEvent = nullptr;
+	}
+
+
 	if (m_pDDPrimary)
 	{
 		m_pDDPrimary->SetClipper(nullptr);
@@ -763,3 +800,4 @@ CDDrawDevice::~CDDrawDevice()
 {
 	Cleanup();
 }
+

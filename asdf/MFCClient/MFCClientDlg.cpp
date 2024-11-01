@@ -8,6 +8,7 @@
 #include "MFCClientDlg.h"
 #include "afxdialogex.h"
 #include "CChatSocket.h"
+#include "PacketHeader.h"
 
 #define IP_ADRESS "127.0.0.1" //로컬
 //#define IP_ADRESS "172.21.1.60" //민재
@@ -200,10 +201,20 @@ BOOL CMFCClientDlg::PreTranslateMessage(MSG* pMsg)
     {
         if (pMsg->wParam == VK_RETURN)
         {
-            CString str;
-            m_ChatInput.GetWindowText(str);
-            m_pChatSocket->Send(str, str.GetLength());
-            m_ChatInput.SetWindowText(_T(""));
+            if (m_bConnected)
+            {
+                PacketC2S_Chat* packet = new PacketC2S_Chat();
+                CString str;
+                m_ChatInput.GetWindowText(str);
+                memcpy_s(packet->msg, sizeof(packet->msg), str, sizeof(packet->msg));
+                m_pChatSocket->Send(packet, packet->len);
+                m_ChatInput.SetWindowText(_T(""));
+                delete packet;
+            }
+            else {
+                m_NetMsgList.InsertString(-1, _T("server not conneted"));
+            }
+            
         }
         return TRUE;
     }
@@ -215,13 +226,32 @@ BOOL CMFCClientDlg::PreTranslateMessage(MSG* pMsg)
 afx_msg LRESULT CMFCClientDlg::OnReceive(WPARAM wParam, LPARAM lParam)
 {
     char buffer[1024] = "";
-
+    char msg[512] = "";
     int nRecv = m_pChatSocket->Receive(buffer, 1024);
 
     if (nRecv > 0)
     {
-        buffer[nRecv] = '\0';
-        m_NetMsgList.InsertString(-1, buffer);
+        PacketType type = ((PacketHeader*)buffer)->type;
+        switch (type)
+        {
+        case PacketType::S2C_ECHO:
+            break;
+        case PacketType::S2C_CONNECT:
+            break;
+        case PacketType::S2C_DISCONNECT:
+            break;
+        case PacketType::S2C_CHAT:
+            {
+                PacketS2C_Chat* chatPacket = (PacketS2C_Chat*)buffer;
+                sprintf_s(msg, sizeof(msg), "[%d] : %s", chatPacket->id, chatPacket->msg);
+                m_NetMsgList.InsertString(-1, msg);
+            }
+            break;
+        case PacketType::S2C_TIME_OUT:
+            break;
+        case PacketType::HEADER_COUNT:
+            break;
+        }
     }
     else
     {

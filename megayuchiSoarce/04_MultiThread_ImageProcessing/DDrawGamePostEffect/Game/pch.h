@@ -36,3 +36,4 @@
 #include "../../../Util/QueryPerfCounter.h"
 #include <process.h>
 #include <XInput.h>
+#include <wrl/client.h>
