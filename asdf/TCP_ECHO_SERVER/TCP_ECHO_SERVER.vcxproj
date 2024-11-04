@@ -128,7 +128,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="PacketHeader.h" />
+    <ClCompile Include="StreamQue.cpp" />
     <ClCompile Include="TCP_ECHO_SERVER.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="StreamQue.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

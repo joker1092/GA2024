@@ -6,12 +6,14 @@
 #include <time.h>
 #include <unordered_map>
 #include "PacketHeader.h"
+#include "StreamQue.h"
 
 #pragma comment(lib, "ws2_32.lib")
 
 #define PORT 6060
 #define DATA_BUFSIZE 8192
-
+#define MAX_SESSION 64
+#define MAX_PACKET_SIZE 1024
 
 typedef struct _SOCKET_INFORMATION {
 
@@ -33,6 +35,7 @@ LPSOCKET_INFORMATION SocketArray[WSA_MAXIMUM_WAIT_EVENTS];
 
 
 void printPacketType(PacketType type);
+
 
 
 typedef struct _SESSION {
@@ -74,7 +77,7 @@ class SessionManager {
         return nullptr;
     }
 
-    LPSESSION FindByInfo(_SOCKET_INFORMATION* SocketInfo) {
+    LPSESSION FindByInfo(LPSOCKET_INFORMATION SocketInfo) {
         for (auto& it : SessionMap) {
             if (it.second->SocketInfo == SocketInfo) {
                 return it.second;
@@ -180,6 +183,8 @@ int main(int argc, char** argv)
     LPSESSION session = nullptr;
     // Session Manager
     SessionManager sessionManager;
+
+    StreamQue que(INT16_MAX);
 
     if (WSAStartup(0x0202, &wsaData) != 0)
     {
@@ -365,30 +370,81 @@ int main(int argc, char** argv)
                 }
             }
 
+            // Update session time
+            if (session)
+            {
+                sessionManager.UpdateSessionTime(session->SessionID);
+            }
 
-            // Broadcast data
+            //data to StreamQue
             if (SocketInfo->BytesRECV > 0)
             {
-                SESSION* sender = sessionManager.FindByInfo(SocketInfo);
-                PacketType packetType = ((PacketHeader*)SocketInfo->Buffer)->type;
+                
+                int ndata = que.Write(SocketInfo->Buffer, SocketInfo->BytesRECV);
+                SocketInfo->BytesRECV = 0;
+                int nsenderID = que.Write((char*)&session->SessionID, sizeof(UINT));//data add socket info
+                //std::cout << "Data Que : " << ndata << " Sender Info Que : " << nsenderinfo << SocketInfo->Socket << std::endl;
+            }
+
+            // Read data from the StreamQue and process it
+            if (!que.IsEmpty()) {
+                char headerBuffer[sizeof(PacketHeader)];
+                que.Peek(headerBuffer, sizeof(PacketHeader));
+                PacketHeader* header = (PacketHeader*)headerBuffer;
+                PacketType packetType = header->type;
+
+                
+
                 printPacketType(packetType);
+
+                
+
+
                 switch (packetType)
                 {
-                case PacketType::C2S_ECHO:
-                    break;
-                case PacketType::C2S_CONNECT:
-                    break;
-                case PacketType::C2S_DISCONNECT:
-                    break;
-                case PacketType::C2S_CHAT:
-                    sessionManager.BroadCast(sender,SocketInfo->Buffer, SocketInfo->BytesRECV);
-                    SocketInfo->BytesRECV = 0;
-                    break;
-                case PacketType::HEADER_COUNT:
-                    break;
+                    case PacketType::C2S_ECHO:
+                        break;
+                    case PacketType::C2S_CONNECT:
+                        break;
+                    case PacketType::C2S_DISCONNECT:
+                        break;
+                    case PacketType::C2S_CHAT:
+                        PacketC2S_Chat packet;
+                        UINT sessionID;
+                        int ndata  = que.Read((char*)&packet, sizeof(PacketC2S_Chat));
+                        int nsenderid = que.Read((char*)&sessionID, sizeof(UINT));
+                        LPSESSION sender = sessionManager.FindSession(sessionID);
+                        //std::cout << "Data Que : " << ndata << " Sender Info Que : " << sender->SocketInfo->Socket << std::endl;
+                        sessionManager.BroadCast(sender, (char*)&packet, sizeof(PacketC2S_Chat));
+                        break;
                 }
-                
+               
+
             }
+
+            //// Broadcast data
+            //if (SocketInfo->BytesRECV > 0)
+            //{
+            //    SESSION* sender = sessionManager.FindByInfo(SocketInfo);
+            //    PacketType packetType = ((PacketHeader*)SocketInfo->Buffer)->type;
+            //    printPacketType(packetType);
+            //    switch (packetType)
+            //    {
+            //    case PacketType::C2S_ECHO:
+            //        break;
+            //    case PacketType::C2S_CONNECT:
+            //        break;
+            //    case PacketType::C2S_DISCONNECT:
+            //        break;
+            //    case PacketType::C2S_CHAT:
+            //        sessionManager.BroadCast(sender,SocketInfo->Buffer, SocketInfo->BytesRECV);
+            //        SocketInfo->BytesRECV = 0;
+            //        break;
+            //    case PacketType::HEADER_COUNT:
+            //        break;
+            //    }
+            //    
+            //}//old broadcast
 
             //Old Echo
             //// Write buffer data if it is available
@@ -421,11 +477,7 @@ int main(int argc, char** argv)
             //        }
             //    }
             //}
-            // Update session time
-            if (session)
-            {
-                sessionManager.UpdateSessionTime(session->SessionID);
-            }
+            
         }
 
         
