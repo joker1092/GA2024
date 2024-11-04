@@ -1,0 +1,91 @@
+#include <iostream>
+#include <winsock2.h>
+#include <windows.h>
+
+#define DEFAULT_BUFLEN 512
+#define DEFAULT_PORT "27015"
+
+DWORD WINAPI ClientThread(void* data) {
+    SOCKET clientSocket = *((SOCKET*)data);
+    char buffer[DEFAULT_BUFLEN];
+    int bytesReceived = recv(clientSocket, buffer, DEFAULT_BUFLEN, 0);
+    if (bytesReceived > 0) {
+        std::cout << "Received: " << buffer << std::endl;
+    }
+    closesocket(clientSocket);
+    return 0;
+}
+
+int main() {
+    WSADATA wsaData;
+    SOCKET serverSocket, clientSocket;
+    struct sockaddr_in serverAddress, clientAddress;
+    int clientAddressLen = sizeof(clientAddress);
+    HANDLE iocpHandle;
+    DWORD dwThreadId;
+
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        std::cerr << "WSAStartup failed." << std::endl;
+        return 1;
+    }
+
+    serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (serverSocket == INVALID_SOCKET) {
+        std::cerr << "Socket creation failed." << std::endl;
+        WSACleanup();
+        return 1;
+    }
+
+    serverAddress.sin_family = AF_INET;
+    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    serverAddress.sin_port = htons(27015);
+
+    if (bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == SOCKET_ERROR) {
+        std::cerr << "Bind failed." << std::endl;
+        closesocket(serverSocket);
+        WSACleanup();
+        return 1;
+    }
+
+    if (listen(serverSocket, SOMAXCONN) == SOCKET_ERROR) {
+        std::cerr << "Listen failed." << std::endl;
+        closesocket(serverSocket);
+        WSACleanup();
+        return 1;
+    }
+
+    std::cout << "Server is listening on port 27015..." << std::endl;
+
+    iocpHandle = CreateIoCompletionPort((HANDLE)serverSocket, NULL, 0, 1);
+    if (iocpHandle == NULL) {
+        std::cerr << "CreateIoCompletionPort failed." << std::endl;
+        closesocket(serverSocket);
+        WSACleanup();
+        return 1;
+    }
+
+    while (true) {
+        clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddress, &clientAddressLen);
+        if (clientSocket == INVALID_SOCKET) {
+            std::cerr << "Accept failed." << std::endl;
+            break;
+        }
+
+        if (!CreateIoCompletionPort((HANDLE)clientSocket, iocpHandle, 0, 0)) {
+            std::cerr << "CreateIoCompletionPort failed." << std::endl;
+            closesocket(clientSocket);
+            break;
+        }
+
+        HANDLE hThread = CreateThread(NULL, 0, ClientThread, &clientSocket, 0, &dwThreadId);
+        if (hThread == NULL) {
+            std::cerr << "CreateThread failed." << std::endl;
+            closesocket(clientSocket);
+            break;
+        }
+    }
+
+    closesocket(serverSocket);
+    WSACleanup();
+    return 0;
+}
