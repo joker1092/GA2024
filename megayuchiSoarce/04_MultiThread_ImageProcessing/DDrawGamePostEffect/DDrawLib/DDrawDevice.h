@@ -26,6 +26,7 @@ class CDDrawDevice
 
 	BOOL	m_bUsePostEffect = FALSE;
 	BOOL    m_bUseMultiThread = FALSE;
+	BOOL	m_bUseSIMD = FALSE;
 
 	char*	m_pWriteBuffer = nullptr;
 	DWORD	m_dwWriteBufferPitch = 0;
@@ -49,6 +50,7 @@ class CDDrawDevice
 	BOOL	GetFontSize(int* piOutWidth, int* piOutHeight, const WCHAR* wchString, DWORD dwStrLen, HDC hDC);
 	
 	//post processing에 사용할 쓰레드 풀
+	DWORD dwWorkerThreadNum = 0;
 	HANDLE* m_hCompletedEvent = nullptr;
 	THREAD_ARG* arg = nullptr;
 	IMAGE_PROCESS_DESC* desc = nullptr;
@@ -68,7 +70,7 @@ public:
 	BOOL	DrawBitmapWithColorKey(int sx, int sy, int iBitmapWidth, int iBitmapHeight, char* pBits, DWORD dwColorKey);
 	BOOL	DrawImageData(int sx, int sy, const CImageData* pImgData);
 
-	BOOL	BeginDraw(BOOL bUsePostEffect,BOOL m_bUseMultiThread);
+	BOOL	BeginDraw(BOOL bUsePostEffect,BOOL m_bUseMultiThread,BOOL bUseSIMD);
 	void	EndDraw();
 
 	void	DrawInfo(HDC hDC);

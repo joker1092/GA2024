@@ -10,9 +10,11 @@
 #include "CChatSocket.h"
 #include "PacketHeader.h"
 
-#define IP_ADRESS "127.0.0.1" //로컬
+//#define IP_ADRESS "127.0.0.1" //로컬
 //#define IP_ADRESS "172.21.1.60" //민재
 //#define IP_ADRESS "172.21.1.32" //용우
+#define IP_ADRESS "172.21.1.35" //세민
+
 #define PORT 6060
 
 
@@ -120,7 +122,6 @@ void CMFCClientDlg::OnBnClickedConnection()
     {
         m_pChatSocket = new CChatSocket;
         m_pChatSocket->Create();
-        //m_pChatSocket->Connect(_T("172.21.1.35"), 6060);
         m_pChatSocket->Connect(_T(IP_ADRESS), PORT);
     }
     else

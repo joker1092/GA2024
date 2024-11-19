@@ -248,9 +248,8 @@ DWORD SampleEdgePixel32_CPU_SIMD(const char* pBits, int iWidth, int iHeight, int
 	int		sample_width = src_end_x - src_start_x;
 	int		sample_height = src_end_y - src_start_y;
 
-	int	color[4];
 	__m128 total_color_m128 = _mm_setzero_ps();
-	float total_color[4] = {};
+	__m128 bwPreset = _mm_set_ps(0.11f, 0.59f, 0.3f, 0.0f);
 
 	for (int y = 0; y < sample_height; y++)
 	{
@@ -261,24 +260,28 @@ DWORD SampleEdgePixel32_CPU_SIMD(const char* pBits, int iWidth, int iHeight, int
 
 			DWORD dwPixelIn = *pPixel;
 
-			__m128 b = _mm_cvtepi32_ps(_mm_set_epi32((int)(dwPixelIn & 0x000000ff), (int)((dwPixelIn & 0x0000ff00) >> 8), (int)((dwPixelIn & 0x00ff0000) >> 16), (int)((dwPixelIn & 0xff000000) >> 24)));
+			__m128 b = _mm_cvtepi32_ps(
+				_mm_set_epi32((int)(dwPixelIn & 0x000000ff),
+					(int)((dwPixelIn & 0x0000ff00) >> 8),
+					(int)((dwPixelIn & 0x00ff0000) >> 16), 
+					(int)((dwPixelIn & 0xff000000) >> 24)));
 			__m128 c = { weight, weight, weight, weight };
 			__m128 d = _mm_mul_ps(b, c);
 			total_color_m128 = _mm_add_ps(total_color_m128, d);
-
-			/*for (int k = 0; k < 4; k++)
-			{
-				total_color[k] += (color[k] * weight);
-			}*/
 		}
 	}
 
-	total_color[0] = total_color_m128.m128_f32[0];
+
+	__m128 bw_m128 = _mm_mul_ps(total_color_m128, bwPreset);
+
+	int bw = (int)(bw_m128.m128_f32[0] + bw_m128.m128_f32[1] + bw_m128.m128_f32[2]);
+
+	/*total_color[0] = total_color_m128.m128_f32[0];
 	total_color[1] = total_color_m128.m128_f32[1];
 	total_color[2] = total_color_m128.m128_f32[2];
 	total_color[3] = total_color_m128.m128_f32[3];
 
-	int	bw = (int)((total_color[2] * 0.3f) + (total_color[1] * 0.59f) + (total_color[0] * 0.11f));
+	int	bw = (int)((total_color[2] * 0.3f) + (total_color[1] * 0.59f) + (total_color[0] * 0.11f));*/
 	bw = 255 - bw;
 
 	if (bw > 255)
@@ -320,7 +323,6 @@ void CPU_Edge_Filter(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwI
 	{
 		for (DWORD x = 0; x < dwImageWidth; x++)
 		{
-
 			
 			DWORD	dwPixel = SampleEdgePixel32_CPU(pSrc, dwImageWidth, dwImageHeight, dwSrcPitch, x, y, SAMPLE_MASK_3_3_LAPLACIAN, MASK_3_3_WIDTH, MASK_3_3_HEIGHT, MASK_3_3_CENTER_X, MASK_3_3_CENTER_Y);
 			DWORD*	pDestColor = (DWORD*)(pDest + (x*4) + (y * dwDestPitch));
@@ -329,8 +331,41 @@ void CPU_Edge_Filter(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwI
 	}
 }
 
+void CPU_Edge_Filter_SIMD(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwImageWidth, DWORD dwImageHeight, DWORD dwSrcPitch)
+{
+	DWORD	start_y = 0;
+	DWORD	end_y = start_y + dwImageHeight;
+
+	for (DWORD y = start_y; y < end_y; y++)
+	{
+		for (DWORD x = 0; x < dwImageWidth; x++)
+		{
+
+			DWORD	dwPixel = SampleEdgePixel32_CPU_SIMD(pSrc, dwImageWidth, dwImageHeight, dwSrcPitch, x, y, SAMPLE_MASK_3_3_LAPLACIAN, MASK_3_3_WIDTH, MASK_3_3_HEIGHT, MASK_3_3_CENTER_X, MASK_3_3_CENTER_Y);
+			DWORD* pDestColor = (DWORD*)(pDest + (x * 4) + (y * dwDestPitch));
+			*pDestColor = dwPixel;
+		}
+	}
+}
+
 //multi-threading version
 void CPU_Edge_Filter_MT(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwImageWidth, DWORD dwImageHeight, DWORD dwSrcPitch,DWORD dwStartHeight, DWORD dwPocessHeight) {
+	DWORD	start_y = dwStartHeight;
+	DWORD	end_y = start_y + dwPocessHeight;
+
+	for (DWORD y = start_y; y < end_y; y++)
+	{
+		for (DWORD x = 0; x < dwImageWidth; x++)
+		{
+			//printf("x : %d, y : %d\n", x, y);
+			DWORD	dwPixel = SampleEdgePixel32_CPU(pSrc, dwImageWidth, dwImageHeight, dwSrcPitch, x, y, SAMPLE_MASK_3_3_LAPLACIAN, MASK_3_3_WIDTH, MASK_3_3_HEIGHT, MASK_3_3_CENTER_X, MASK_3_3_CENTER_Y);
+			DWORD* pDestColor = (DWORD*)(pDest + (x * 4) + (y * dwDestPitch));
+			*pDestColor = dwPixel;
+		}
+	}
+}
+
+void CPU_Edge_Filter_MT_SIMD(char* pDest, DWORD dwDestPitch, const char* pSrc, DWORD dwImageWidth, DWORD dwImageHeight, DWORD dwSrcPitch, DWORD dwStartHeight, DWORD dwPocessHeight) {
 	DWORD	start_y = dwStartHeight;
 	DWORD	end_y = start_y + dwPocessHeight;
 
@@ -362,10 +397,15 @@ UINT __stdcall ImageProcessThread(void* pArg)
 		{
 		case THREAD_EVENT_PROCESS: {
 			CPU_Edge_Filter_MT(pDesc->pDest, pDesc->dwDestPitch, pDesc->pSrc, pDesc->Width, pDesc->Height, pDesc->dwSrcPitch,pDesc->dwStartHeight,pDesc->dwProcessHeight);
-				SetEvent(pThreadArg->hCompletedEvent[dwThreadIndex]);
+			SetEvent(pThreadArg->hCompletedEvent[dwThreadIndex]);
 			}
-				break;
-			case THREAD_EVENT_DESTROY:
+			break;
+		case THREAD_EVENT_PROCESS_SIMD: {
+			CPU_Edge_Filter_MT_SIMD(pDesc->pDest, pDesc->dwDestPitch, pDesc->pSrc, pDesc->Width, pDesc->Height, pDesc->dwSrcPitch, pDesc->dwStartHeight, pDesc->dwProcessHeight);
+			SetEvent(pThreadArg->hCompletedEvent[dwThreadIndex]);
+		}
+			break;
+		case THREAD_EVENT_DESTROY:
 				goto lb_exit;
 		}
 
@@ -373,10 +413,6 @@ UINT __stdcall ImageProcessThread(void* pArg)
 
 lb_exit:
 	_endthreadex(0);
-	return 0;
-
-	//CPU_Edge_Filter_MT(pDesc->pDest, pDesc->dwDestPitch, pDesc->pSrc, pDesc->Width, pDesc->Height, pDesc->dwSrcPitch, pDesc->dwCurrentX, pDesc->dwCurrentY);
-
 	return 0;
 }
 

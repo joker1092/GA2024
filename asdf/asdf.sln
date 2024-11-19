@@ -36,6 +36,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MFCClient", "MFCClient\MFCC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ThreadExemple", "ThreadExemple\ThreadExemple.vcxproj", "{CE5CC57F-542C-40F2-8A46-32EE90ABF4AE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "patten", "patten\patten.vcxproj", "{B068FE34-2327-4E14-B9F5-E7E86391B2FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -156,6 +158,14 @@ Global
 		{CE5CC57F-542C-40F2-8A46-32EE90ABF4AE}.Release|x64.Build.0 = Release|x64
 		{CE5CC57F-542C-40F2-8A46-32EE90ABF4AE}.Release|x86.ActiveCfg = Release|Win32
 		{CE5CC57F-542C-40F2-8A46-32EE90ABF4AE}.Release|x86.Build.0 = Release|Win32
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Debug|x64.ActiveCfg = Debug|x64
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Debug|x64.Build.0 = Debug|x64
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Debug|x86.ActiveCfg = Debug|Win32
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Debug|x86.Build.0 = Debug|Win32
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Release|x64.ActiveCfg = Release|x64
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Release|x64.Build.0 = Release|x64
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Release|x86.ActiveCfg = Release|Win32
+		{B068FE34-2327-4E14-B9F5-E7E86391B2FE}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

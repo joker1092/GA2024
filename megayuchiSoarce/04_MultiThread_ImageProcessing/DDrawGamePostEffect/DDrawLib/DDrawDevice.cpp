@@ -89,13 +89,24 @@ BOOL CDDrawDevice::InitializeDDraw(HWND hWnd)
 	DWORD dwHeight = m_rcWindow.bottom - m_rcWindow.top;
 
 	//쓰레드 풀 초기화
-	m_hCompletedEvent = new HANDLE[MAX_THREAD_NUM];
-	arg = new THREAD_ARG[MAX_THREAD_NUM];
-	memset(arg, 0, sizeof(THREAD_ARG) * MAX_THREAD_NUM);
 
-	desc = new IMAGE_PROCESS_DESC[MAX_THREAD_NUM];
+	SYSTEM_INFO systemInfo;
 
-	for (DWORD i = 0; i < MAX_THREAD_NUM; i++)
+	GetSystemInfo(&systemInfo);
+	DWORD dwNumCPU = systemInfo.dwNumberOfProcessors;
+
+	dwWorkerThreadNum = dwNumCPU;
+	if (dwWorkerThreadNum > MAX_THREAD_NUM)
+		dwWorkerThreadNum = dwWorkerThreadNum;
+	
+
+	m_hCompletedEvent = new HANDLE[dwWorkerThreadNum];
+	arg = new THREAD_ARG[dwWorkerThreadNum];
+	memset(arg, 0, sizeof(THREAD_ARG) * dwWorkerThreadNum);
+
+	desc = new IMAGE_PROCESS_DESC[dwWorkerThreadNum];
+
+	for (DWORD i = 0; i < dwWorkerThreadNum; i++)
 	{
 
 		m_hCompletedEvent[i] = CreateEvent(nullptr, FALSE, FALSE, nullptr); //전체 종료 이벤트 초기화
@@ -259,7 +270,7 @@ void CDDrawDevice::OnUpdateWindowSize()
 
 	CreateBackBuffer(dwWidth, dwHeight);
 
-	if (BeginDraw(FALSE,FALSE))
+	if (BeginDraw(FALSE,FALSE,FALSE))
 	{
 		Clear();
 		EndDraw();
@@ -300,7 +311,7 @@ BOOL CDDrawDevice::CalcClipArea(INT_VECTOR2* pivOutSrcStart, INT_VECTOR2* pivOut
 	BOOL bResult = ::CalcClipArea(pivOutSrcStart, pivOutDestStart, pivOutDestSize, pivPos, pivImageSize, &ivBufferSize);
 	return bResult;
 }
-BOOL CDDrawDevice::BeginDraw(BOOL bUsePostEffect,BOOL bUseMultiThread)
+BOOL CDDrawDevice::BeginDraw(BOOL bUsePostEffect,BOOL bUseMultiThread,BOOL bUseSIMD)
 {
 	BOOL	bResult = FALSE;
 
@@ -335,6 +346,7 @@ BOOL CDDrawDevice::BeginDraw(BOOL bUsePostEffect,BOOL bUseMultiThread)
 	bResult = TRUE;
 	m_bUsePostEffect = bUsePostEffect;
 	m_bUseMultiThread = bUseMultiThread;
+	m_bUseSIMD = bUseSIMD;
 lb_return:
 	return bResult;
 }
@@ -364,11 +376,11 @@ void CDDrawDevice::EndDraw()
 		if (m_bUseMultiThread)
 		{			
 
-			DWORD dwThreadHeight = m_dwHeight / MAX_THREAD_NUM;
-			DWORD dwRemainHeight = m_dwHeight % MAX_THREAD_NUM;
+			DWORD dwThreadHeight = m_dwHeight / dwWorkerThreadNum;
+			DWORD dwRemainHeight = m_dwHeight % dwWorkerThreadNum;
 
 
-			for (DWORD i = 0; i < MAX_THREAD_NUM; i++)
+			for (DWORD i = 0; i < dwWorkerThreadNum; i++)
 			{
 				desc[i].pSrc = m_pWriteBuffer;
 				desc[i].pDest = pBuffer;
@@ -382,20 +394,33 @@ void CDDrawDevice::EndDraw()
 
 				//arg[i].pDesc = desc[i];
 			}
-			arg[MAX_THREAD_NUM - 1].pDesc->dwProcessHeight += dwRemainHeight;
+			arg[dwWorkerThreadNum - 1].pDesc->dwProcessHeight += dwRemainHeight;
 			
-
-			for (DWORD i = 0; i < MAX_THREAD_NUM; i++) {
-				SetEvent(arg[i].hEventList[THREAD_EVENT_PROCESS]);		//이벤트 실행
+			//release simd 분기
+			if (m_bUseSIMD)
+			{
+				for (DWORD i = 0; i < dwWorkerThreadNum; i++) {
+					SetEvent(arg[i].hEventList[THREAD_EVENT_PROCESS_SIMD]);		//이벤트 실행
+				}
+				m_bUseSIMD = FALSE;
+			}
+			else {
+				for (DWORD i = 0; i < dwWorkerThreadNum; i++) {
+					SetEvent(arg[i].hEventList[THREAD_EVENT_PROCESS]);		//이벤트 실행
+				}
 			}
 
-
-			WaitForMultipleObjects(MAX_THREAD_NUM, m_hCompletedEvent, TRUE, INFINITE); //전체 스레드가 완료될때까지 대기
+			WaitForMultipleObjects(dwWorkerThreadNum, m_hCompletedEvent, TRUE, INFINITE); //전체 스레드가 완료될때까지 대기
 
 			m_bUseMultiThread = FALSE;
 		}
 		else {
-			CPU_Edge_Filter(pBuffer, dwPitch, m_pWriteBuffer, m_dwWidth, m_dwHeight, m_dwWriteBufferPitch);
+			if (m_bUseSIMD) {
+				CPU_Edge_Filter_SIMD(pBuffer, dwPitch, m_pWriteBuffer, m_dwWidth, m_dwHeight, m_dwWriteBufferPitch);
+			}
+			else {
+				CPU_Edge_Filter(pBuffer, dwPitch, m_pWriteBuffer, m_dwWidth, m_dwHeight, m_dwWriteBufferPitch);
+			}
 		}
 		UnlockBackBuffer();
 		m_bUsePostEffect = FALSE;

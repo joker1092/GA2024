@@ -255,7 +255,7 @@ void CGame::DrawScene()
 {
 	// 메시지가 없으면 게임루프
 
-	m_pDDraw->BeginDraw(m_bUsePostEffect, m_bUseMultiThread);
+	m_pDDraw->BeginDraw(m_bUsePostEffect, m_bUseMultiThread,m_bUseSIMD);
 
 
 	if (m_pBackImage)
