@@ -105,5 +105,14 @@
     <ClCompile Include="stroke.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="stringview.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="invokeex.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="templateex.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
