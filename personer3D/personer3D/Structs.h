@@ -40,14 +40,14 @@ struct ShadingCB
 
 
 
-struct Vertex
-{
-	Vector3 position{};		// 정점 위치 정보.
-	Vector3 normal{};			// 정점 노말 정보.
-	Vector3 tangent{};		// 정점 탄젠트 정보.
-	Vector3 bitangent{};		// 정점 탄젠트 정보.
-	Vector2 texcoord{};		// 정점 텍스쳐 좌표 정보.
-};
+//struct Vertex
+//{
+//	Vector3 position{};		// 정점 위치 정보.
+//	Vector3 normal{};			// 정점 노말 정보.
+//	Vector3 tangent{};		// 정점 탄젠트 정보.
+//	Vector3 bitangent{};		// 정점 탄젠트 정보.
+//	Vector2 texcoord{};		// 정점 텍스쳐 좌표 정보.
+//};
 
 struct BoneWeightVertex
 {

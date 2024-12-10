@@ -3,6 +3,8 @@
 
 
 class Camera;
+class Mesh;
+class Model;
 class WinMainApp : public WinApp
 {
 
@@ -42,7 +44,9 @@ public:
 	ID3D11Buffer* m_pIndexBuffer = nullptr;			// 인덱스 버퍼.
 	ID3D11Buffer* pTransformBuffer = nullptr;		// 
 	ID3D11Buffer* pShadingBuffer = nullptr;			// 
-	ID3D11SamplerState* TexSamplerState = nullptr;	// 샘플러 상태.
+	ID3D11SamplerState* m_pDefaultSamplerState = nullptr;	// 샘플러 상태.
+	ID3D11SamplerState* m_pBRDFSamplerState = nullptr;	// 샘플러 상태.
+
 	int m_nIndices = 0;								// 인덱스 개수.
 		
 
@@ -80,7 +84,8 @@ public:
 	Matrix g_View;
 	Matrix g_Projection;
 	
-
+	Mesh* m_Mesh;
+	Model* m_Model;
 
 	float m_FovAngleY = DirectX::XM_PIDIV2;
 	float m_AspectRatio = m_ClientWidth / (FLOAT)m_ClientHeight; // AspectRatio

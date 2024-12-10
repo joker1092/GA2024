@@ -1,4 +1,5 @@
 #pragma once
+
 const unsigned int ImportFlags =
 aiProcess_CalcTangentSpace |
 aiProcess_Triangulate |
@@ -13,7 +14,7 @@ aiProcess_ValidateDataStructure;
 class Mesh
 {
 public:
-
+	
 	struct Vertex
 	{
 		Vector3 position;

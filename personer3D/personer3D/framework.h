@@ -37,3 +37,5 @@
 
 #include "structs.h"
 #include "../common/Helper.h"
+
+using namespace DirectX::SimpleMath;

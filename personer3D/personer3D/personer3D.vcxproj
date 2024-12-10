@@ -143,23 +143,6 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="personer3D.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="Structs.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="WinMainApp.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Mesh.cpp" />
-    <ClCompile Include="personer3D.cpp" />
-    <ClCompile Include="Structs.cpp" />
-    <ClCompile Include="WinMainApp.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="personer3D.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +178,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\PBR_Shead.fxh" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="personer3D.cpp" />
+    <ClCompile Include="Structs.cpp" />
+    <ClCompile Include="WinMainApp.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="personer3D.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="Structs.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="WinMainApp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

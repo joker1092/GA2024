@@ -1,5 +1,7 @@
 #include "framework.h"
 #include "Camera.h"
+#include "Mesh.h"
+#include "Model.h"
 #include "WinMainApp.h"
 #include "Structs.h"
 
@@ -147,6 +149,9 @@ void WinMainApp::Render()
 	//m_pModelLoader2->Draw(m_pDeviceContext);
 
 	//m_pModelLoader3->Draw(m_pDeviceContext);
+	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_Model->m_pVertexBuffer, &m_Model->stride, &m_Model->offset);
+	m_pDeviceContext->IASetIndexBuffer(m_Model->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	m_pDeviceContext->DrawIndexed(m_Model->numElements, 0, 0);
 
 	// ImGUI 렌더링
 	ImGuiIO& io = ImGui::GetIO();
@@ -412,18 +417,33 @@ bool WinMainApp::InitScene()
 	HR_T(m_pDevice->CreateBuffer(&bd, nullptr, &pShadingBuffer));
 
 
+	{
+		D3D11_SAMPLER_DESC sampDesc = {};
+		ZeroMemory(&sampDesc, sizeof(sampDesc));
+		sampDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		sampDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	D3D11_SAMPLER_DESC sampDesc;
-	ZeroMemory(&sampDesc, sizeof(sampDesc));
-	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-	sampDesc.MinLOD = 0;
-	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+		HR_T(m_pDevice->CreateSamplerState(&sampDesc, &m_pDefaultSamplerState));
+	}
 
-	HR_T(m_pDevice->CreateSamplerState(&sampDesc, &TexSamplerState));
+	{
+		D3D11_SAMPLER_DESC sampDesc = {};
+		ZeroMemory(&sampDesc, sizeof(sampDesc));
+		sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		sampDesc.MaxAnisotropy = 1;
+		sampDesc.MinLOD = 0;
+		sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+		HR_T(m_pDevice->CreateSamplerState(&sampDesc, &m_pBRDFSamplerState));
+	}
 
 	//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  //정점 그리기 방식
 	//m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_VertextBufferStride, &m_VertextBufferOffset); //정점 버퍼 설정
@@ -431,11 +451,14 @@ bool WinMainApp::InitScene()
 	//pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0); //인덱스 버퍼 설정
 
 
-	m_pDeviceContext->PSSetSamplers(0, 1, &TexSamplerState);
+	m_pDeviceContext->PSSetSamplers(0, 1, &m_pDefaultSamplerState);
 
-
-	std::string g_ModelPath = "Resources/sphere.fbx";
 	
+
+	std::string g_ModelPath = "Resources/cerberus.fbx";
+	m_Mesh = Mesh::fromFile(g_ModelPath);
+	m_Model = new Model;
+	m_Model->createMeshBuffer(m_pDevice, m_Mesh);
 
 	return true;
 }
