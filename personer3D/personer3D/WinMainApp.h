@@ -3,8 +3,10 @@
 
 
 class Camera;
+class Image;
 class Mesh;
 class Model;
+class MessageLogger;
 class WinMainApp : public WinApp
 {
 
@@ -48,10 +50,7 @@ public:
 	ID3D11SamplerState* m_pBRDFSamplerState = nullptr;	// 샘플러 상태.
 
 	int m_nIndices = 0;								// 인덱스 개수.
-		
-
-	DirectX::XMFLOAT4				m_LightColor = { 1.0f, 1.0f, 1.0f, 1.0f }; // 라이트 색상
-	DirectX::XMFLOAT4				m_LightDiretion = { 0.0f, 0.0f, 1.0f, 1.0f }; //라이트 방향
+	
 
 	//Light
 	Vector3 Light1Direction = { 0.0f, 0.0f, 1.0f}; //라이트 방향// 방향
@@ -81,6 +80,7 @@ public:
 	Vector3 m_SceanRotation;
 	bool useIBL = false;
 
+	Matrix g_world;
 	Matrix g_View;
 	Matrix g_Projection;
 	
@@ -93,13 +93,35 @@ public:
 	float m_FarZ = 1000.0f; // FarZ
 
 
+	Texture m_albedoTexture;
+	Texture m_normalTexture;
+	Texture m_metalnessTexture;
+	Texture m_roughnessTexture;
+
+	Texture m_envTexture;
+	Texture m_irmapTexture;
+	Texture m_spBRDF_LUT;
+
 	bool InitScene();		// 쉐이더,버텍스,인덱스
 	void UninitScene();
 
-
-
-
 	virtual LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) override;
 	void OnInputProcess(const Keyboard::State& KeyState, const Keyboard::KeyboardStateTracker& KeyTracker, const Mouse::State& MouseState, const Mouse::ButtonStateTracker& MouseTracker);
+
+
+	Texture createTexture(UINT width, UINT height, DXGI_FORMAT format, UINT levels = 0) const;
+	Texture createTexture(const Image* image, DXGI_FORMAT format, UINT levels = 0) const;
+	Texture createTextureCube(UINT width, UINT height, DXGI_FORMAT format, UINT levels = 0) const;
+
+	void createTextureUAV(Texture& texture, UINT mipSlice) const;
+
+	template<typename T> static constexpr T numMipmapLevels(T width, T height)
+	{
+		T levels = 1;
+		while ((width | height) >> levels) {
+			++levels;
+		}
+		return levels;
+	}
 };
 

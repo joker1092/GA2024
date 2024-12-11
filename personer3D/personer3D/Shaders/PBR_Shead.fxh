@@ -9,9 +9,12 @@ static const float3 Fdielectric = 0.04;
 
 cbuffer TransformConstants : register(b0)
 {
-    float4x4 viewProjectionMatrix;
-    float4x4 skyProjectionMatrix;
-    float4x4 sceneRotationMatrix;
+   // matrix viewProjectionMatrix;
+   // matrix skyProjectionMatrix;
+    matrix World;
+    matrix View;
+    matrix Projection;
+    matrix sceneRotationMatrix;
 };
 
 cbuffer ShadingConstants : register(b0)

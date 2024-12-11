@@ -4,6 +4,8 @@
 #include "Model.h"
 #include "WinMainApp.h"
 #include "Structs.h"
+#include "Image.h"
+#include "MessageLogger.h"
 
 
 
@@ -42,46 +44,10 @@ void WinMainApp::Update()
 
 	//프로젝션 행렬
 	g_Projection = DirectX::XMMatrixPerspectiveFovLH(m_FovAngleY, m_AspectRatio, m_NearZ, m_FarZ);
-
 }
 
 void WinMainApp::Render()
 {
-	//const glm::mat4 projectionMatrix = glm::perspectiveFov(view.fov, float(m_framebuffer.width), float(m_framebuffer.height), 1.0f, 1000.0f);
-	//const glm::mat4 viewRotationMatrix = glm::eulerAngleXY(glm::radians(view.pitch), glm::radians(view.yaw));
-	//const glm::mat4 sceneRotationMatrix = glm::eulerAngleXY(glm::radians(scene.pitch), glm::radians(scene.yaw));
-	//const glm::mat4 viewMatrix = glm::translate(glm::mat4{ 1.0f }, { 0.0f, 0.0f, -view.distance }) * viewRotationMatrix;
-	//const glm::vec3 eyePosition = glm::inverse(viewMatrix)[3];
-
-
-	//// Update transform constant buffer (for vertex shaders).
-	//{
-	//	TransformCB transformConstants;
-	//	transformConstants.viewProjectionMatrix = projectionMatrix * viewMatrix;
-	//	transformConstants.skyProjectionMatrix = projectionMatrix * viewRotationMatrix;
-	//	transformConstants.sceneRotationMatrix = sceneRotationMatrix;
-	//	m_context->UpdateSubresource(m_transformCB.Get(), 0, nullptr, &transformConstants, 0, 0);
-	//}
-
-	//// Update shading constant buffer (for pixel shader).
-	//{
-	//	ShadingCB shadingConstants;
-	//	shadingConstants.eyePosition = glm::vec4{ eyePosition, 0.0f };
-	//	shadingConstants.useIBL.r = scene.useIBL ? 1.0f : 0;
-	//	for (int i = 0; i < SceneSettings::NumLights; ++i) {
-	//		const SceneSettings::Light& light = scene.lights[i];
-	//		shadingConstants.lights[i].direction = glm::vec4{ light.direction, 0.0f };
-	//		if (light.enabled) {
-	//			shadingConstants.lights[i].radiance = glm::vec4{ light.radiance, 0.0f };
-	//		}
-	//		else {
-	//			shadingConstants.lights[i].radiance = glm::vec4{};
-	//		}
-	//	}
-	//	m_context->UpdateSubresource(m_shadingCB.Get(), 0, nullptr, &shadingConstants, 0, 0);
-	//}
-
-
 	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
 
 	//clear render target view
@@ -93,28 +59,18 @@ void WinMainApp::Render()
 	m_pDeviceContext->OMSetBlendState(m_pAlphaBlendEnable, blendFactor, 0xFFFFFFFF);
 	m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  //정점 그리기 방식
 
-
-	/*DirectX::XMMATRIX viewProjectionMatrix;
-	DirectX::XMMATRIX skyProjectionMatrix;
-	DirectX::XMMATRIX sceneRotationMatrix;*/
 	Matrix viewRotationMatrix = Matrix::CreateFromYawPitchRoll(m_pCamera->m_Rotation);
 	Matrix sceneRotationMatrix = Matrix::CreateFromYawPitchRoll(m_SceanRotation);
-	TransformCB TB; 
-	TB.viewProjectionMatrix = g_Projection * g_View;
-	TB.skyProjectionMatrix = g_Projection * viewRotationMatrix;
-	TB.sceneRotationMatrix = sceneRotationMatrix;
-	/*lb.LightDirection = m_LightDiretion;
-	lb.LightAmbient = LightAmbient;
-	lb.LightDiffuse = LightDiffuse;
-	lb.LightSpecular = LightSpecular;*/
 
-	/*struct
-	{
-		Vector3 direction;
-		Vector3 radiance;
-	} lights[3];
-	Vector3 eyePosition;
-	Vector4 useIBL;*/
+	TransformCB TB; 
+	/*TB.viewProjectionMatrix = XMMatrixTranspose(g_Projection * g_View);
+	TB.skyProjectionMatrix = XMMatrixTranspose(g_Projection * viewRotationMatrix);
+	TB.sceneRotationMatrix = XMMatrixTranspose(sceneRotationMatrix);*/
+	TB.mWorld = XMMatrixTranspose(g_world);
+	TB.mView = XMMatrixTranspose(g_View);
+	TB.mProjection = XMMatrixTranspose(g_Projection);
+	TB.sceneRotationMatrix = sceneRotationMatrix;
+
 	ShadingCB SB;
 	SB.lights[0].direction = Vector4{Light1Direction.x,Light1Direction.y,Light1Direction.z,0.0f};
 	SB.lights[0].radiance = Vector4{ Light1Radiance.x,Light1Radiance.y,Light1Radiance.z,0.0f };
@@ -129,8 +85,6 @@ void WinMainApp::Render()
 
 	SB.useIBL.x = useIBL ? 1.0f : 0;
 
-	//cab.vCameraPos = XMVECTOR{ m_pCamera->m_Position.x, m_pCamera->m_Position.y, m_pCamera->m_Position.z, 1.0f };
-
 
 	m_pDeviceContext->UpdateSubresource(pTransformBuffer, 0, nullptr, &TB, 0, 0);
 	m_pDeviceContext->UpdateSubresource(pShadingBuffer, 0, nullptr, &SB, 0, 0);
@@ -138,19 +92,24 @@ void WinMainApp::Render()
 	m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0); //정점 셰이더 설정
 	m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);//픽셀 셰이더 설정
 
-	
 	m_pDeviceContext->VSSetConstantBuffers(0, 1, &pTransformBuffer);
-	m_pDeviceContext->PSSetConstantBuffers(1, 1, &pTransformBuffer); //상수 버퍼 설정
-	m_pDeviceContext->PSSetConstantBuffers(2, 1, &pShadingBuffer); //상수 버퍼 설정
+	m_pDeviceContext->PSSetConstantBuffers(0, 1, &pTransformBuffer); //상수 버퍼 설정
+	m_pDeviceContext->PSSetConstantBuffers(1, 1, &pShadingBuffer); //상수 버퍼 설정
 
+	ID3D11ShaderResourceView* const pbrModelSRVs[] = {
+		m_albedoTexture.srv,
+		m_normalTexture.srv,
+		m_metalnessTexture.srv,
+		m_roughnessTexture.srv,
+		m_envTexture.srv,
+		m_irmapTexture.srv,
+		m_spBRDF_LUT.srv,
+	};
 
-	//m_pModelLoader->Draw(m_pDeviceContext);
-
-	//m_pModelLoader2->Draw(m_pDeviceContext);
-
-	//m_pModelLoader3->Draw(m_pDeviceContext);
+	
 	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_Model->m_pVertexBuffer, &m_Model->stride, &m_Model->offset);
 	m_pDeviceContext->IASetIndexBuffer(m_Model->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	m_pDeviceContext->PSSetShaderResources(0, 7, pbrModelSRVs);
 	m_pDeviceContext->DrawIndexed(m_Model->numElements, 0, 0);
 
 	// ImGUI 렌더링
@@ -175,10 +134,7 @@ void WinMainApp::Render()
 
 		ImGui::Text("Light");
 
-		ImGui::SliderFloat3("LightDirection", &m_LightDiretion.x, -1.0f, 1.0f);
-		/*ImGui::ColorEdit3("LightAmbient", &LightAmbient.x);
-		ImGui::ColorEdit3("LightDiffuse", &LightDiffuse.x);
-		ImGui::ColorEdit3("LightSopecular", &LightSpecular.x);*/
+		ImGui::Text("");
 
 
 		ImGui::Text("Clear Color");
@@ -351,37 +307,24 @@ bool WinMainApp::InitScene()
 	ID3DBlob* pPixelShaderBlob = nullptr;
 	ID3DBlob* pErrorBlob = nullptr;
 
-
-	//D3D_SHADER_MACRO defines[] = {
-	//	{"VERTEX_SKINNING", ""},
-	//	{nullptr,nullptr}
-	//};
-
-	//UINT flags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-
-	//hr = D3DCompileFromFile(L"Shaders/PBR_VS.hlsl", defines, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main_vs", "vs_5_0", flags, 0, &pVertexShaderBlob, &pErrorBlob);
-	//if (FAILED(hr)) {
-	//	if (pErrorBlob) {
-	//		std::string errorMsg = (char*)pErrorBlob->GetBufferPointer();
-	//		pErrorBlob->Release();
-	//	}
-	//	// 추가 오류 처리 코드
-	//	return hr;
-	//}
-
 	HR_T(CompileShaderFromFile(L"Shaders/PBR_VS.hlsl", "main_vs", "vs_5_0", &pVertexShaderBlob));
 
 	D3D11_INPUT_ELEMENT_DESC layout[] =
 	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	/*	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }*/
+		{ "POSITION",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 48, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	HR_T(m_pDevice->CreateInputLayout(layout, ARRAYSIZE(layout), pVertexShaderBlob->GetBufferPointer(), pVertexShaderBlob->GetBufferSize(), &m_pInputLayout));
 
+	HR_T(m_pDevice->CreateInputLayout(layout, ARRAYSIZE(layout), pVertexShaderBlob->GetBufferPointer(), pVertexShaderBlob->GetBufferSize(), &m_pInputLayout));
 	// 정점 셰이더 생성
 	HR_T(m_pDevice->CreateVertexShader(pVertexShaderBlob->GetBufferPointer(), pVertexShaderBlob->GetBufferSize(), NULL, &m_pVertexShader));
 	SAFE_RELEASE(pVertexShaderBlob);
@@ -445,20 +388,23 @@ bool WinMainApp::InitScene()
 		HR_T(m_pDevice->CreateSamplerState(&sampDesc, &m_pBRDFSamplerState));
 	}
 
-	//m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);  //정점 그리기 방식
-	//m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &m_VertextBufferStride, &m_VertextBufferOffset); //정점 버퍼 설정
-	m_pDeviceContext->IASetInputLayout(m_pInputLayout); //입력 레이아웃 설정
-	//pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0); //인덱스 버퍼 설정
-
-
 	m_pDeviceContext->PSSetSamplers(0, 1, &m_pDefaultSamplerState);
-
+	m_pDeviceContext->PSSetSamplers(1, 1, &m_pBRDFSamplerState);
 	
+	m_pDeviceContext->IASetInputLayout(m_pInputLayout); //입력 레이아웃 설정
+	
+	g_world = Matrix::Identity;
 
 	std::string g_ModelPath = "Resources/cerberus.fbx";
 	m_Mesh = Mesh::fromFile(g_ModelPath);
 	m_Model = new Model;
 	m_Model->createMeshBuffer(m_pDevice, m_Mesh);
+
+	m_albedoTexture = createTexture(Image::fromFile("Resources/cerberus_A.png"), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	m_normalTexture = createTexture(Image::fromFile("Resources/cerberus_N.png"), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_metalnessTexture = createTexture(Image::fromFile("Resources/cerberus_M.png", 1), DXGI_FORMAT_R8_UNORM);
+	m_roughnessTexture = createTexture(Image::fromFile("Resources/cerberus_R.png", 1), DXGI_FORMAT_R8_UNORM);
+
 
 	return true;
 }
@@ -494,4 +440,113 @@ void WinMainApp::OnInputProcess(const Keyboard::State& KeyState, const Keyboard:
 	}
 
 	m_pCamera->OnInputProcess(KeyState, KeyTracker, MouseState, MouseTracker);
+}
+
+Texture WinMainApp::createTexture(UINT width, UINT height, DXGI_FORMAT format, UINT levels) const
+{
+	Texture texture;
+	texture.width = width;
+	texture.height = height;
+	texture.levels = (levels > 0) ? levels : numMipmapLevels(width, height);
+
+	D3D11_TEXTURE2D_DESC desc = {};
+	desc.Width = width;
+	desc.Height = height;
+	desc.MipLevels = levels;
+	desc.ArraySize = 1;
+	desc.Format = format;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+	if (levels == 0) {
+		desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+		desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+	}
+
+	if (FAILED(m_pDevice->CreateTexture2D(&desc, nullptr, &texture.texture))) {
+		throw std::runtime_error("Failed to create 2D texture");
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = desc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MostDetailedMip = 0;
+	srvDesc.Texture2D.MipLevels = -1;
+	if (FAILED(m_pDevice->CreateShaderResourceView(texture.texture, &srvDesc, &texture.srv))) {
+		throw std::runtime_error("Failed to create 2D texture SRV");
+	}
+	return texture;
+}
+
+Texture WinMainApp::createTexture(const Image* image, DXGI_FORMAT format, UINT levels) const
+{
+	Texture texture = createTexture(image->width(), image->height(), format, levels);
+	m_pDeviceContext->UpdateSubresource(texture.texture, 0, nullptr, image->pixels<void>(), image->pitch(), 0);
+	if (levels == 0) {
+		m_pDeviceContext->GenerateMips(texture.srv);
+	}
+	return texture;
+}
+
+Texture WinMainApp::createTextureCube(UINT width, UINT height, DXGI_FORMAT format, UINT levels) const
+{
+	Texture texture;
+	texture.width = width;
+	texture.height = height;
+	texture.levels = (levels > 0) ? levels : numMipmapLevels(width, height);
+
+	D3D11_TEXTURE2D_DESC desc = {};
+	desc.Width = width;
+	desc.Height = height;
+	desc.MipLevels = levels;
+	desc.ArraySize = 6;
+	desc.Format = format;
+	desc.SampleDesc.Count = 1;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+	desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+	if (levels == 0) {
+		desc.BindFlags |= D3D11_BIND_RENDER_TARGET;
+		desc.MiscFlags |= D3D11_RESOURCE_MISC_GENERATE_MIPS;
+	}
+
+	if (FAILED(m_pDevice->CreateTexture2D(&desc, nullptr, &texture.texture))) {
+		throw std::runtime_error("Failed to create cubemap texture");
+	}
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = desc.Format;
+	srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+	srvDesc.TextureCube.MostDetailedMip = 0;
+	srvDesc.TextureCube.MipLevels = -1;
+	if (FAILED(m_pDevice->CreateShaderResourceView(texture.texture, &srvDesc, &texture.srv))) {
+		throw std::runtime_error("Failed to create cubemap texture SRV");
+	}
+	return texture;
+}
+
+void WinMainApp::createTextureUAV(Texture& texture, UINT mipSlice) const
+{
+
+	assert(texture.texture);
+
+	D3D11_TEXTURE2D_DESC desc;
+	texture.texture->GetDesc(&desc);
+
+	D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
+	uavDesc.Format = desc.Format;
+	if (desc.ArraySize == 1) {
+		uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
+		uavDesc.Texture2D.MipSlice = mipSlice;
+	}
+	else {
+		uavDesc.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2DARRAY;
+		uavDesc.Texture2DArray.MipSlice = mipSlice;
+		uavDesc.Texture2DArray.FirstArraySlice = 0;
+		uavDesc.Texture2DArray.ArraySize = desc.ArraySize;
+	}
+
+	if (FAILED(m_pDevice->CreateUnorderedAccessView(texture.texture, &uavDesc, &texture.uav))) {
+		throw std::runtime_error("Failed to create texture UAV");
+	}
 }

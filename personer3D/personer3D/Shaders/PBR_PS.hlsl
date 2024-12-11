@@ -101,5 +101,7 @@ float4 main_ps(PixelShaderInput pin) : SV_Target
     }
 
 //    return float4(directLighting + ambientLighting, 1.0);
-    return float4(pow(float3(directLighting + ambientLighting), 1.0 / 2.2), 1.0);
+ //   return float4(pow(float3(directLighting + ambientLighting), 1.0 / 2.2), 1.0);
+    return float4(albedo.rgb, 1.0);
+
 }

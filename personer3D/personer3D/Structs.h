@@ -22,8 +22,11 @@ using namespace DirectX::SimpleMath;
 
 struct TransformCB
 {
-	DirectX::XMMATRIX viewProjectionMatrix;
-	DirectX::XMMATRIX skyProjectionMatrix;
+	/*DirectX::XMMATRIX viewProjectionMatrix;
+	DirectX::XMMATRIX skyProjectionMatrix;*/
+	DirectX::XMMATRIX mWorld;
+	DirectX::XMMATRIX mView;
+	DirectX::XMMATRIX mProjection;
 	DirectX::XMMATRIX sceneRotationMatrix;
 };
 
@@ -74,18 +77,26 @@ struct BoneWeightVertex
 	}
 };
 
+//struct Texture
+//{
+//	ID3D11ShaderResourceView* texture;
+//	std::string type;
+//	std::string path;
+//
+//	void Release() {
+//		SAFE_RELEASE(texture);
+//	}
+//};
+
+
 struct Texture
 {
-	ID3D11ShaderResourceView* texture;
-	std::string type;
-	std::string path;
-
-	void Release() {
-		SAFE_RELEASE(texture);
-	}
+	ID3D11Texture2D* texture;
+	ID3D11ShaderResourceView* srv;
+	ID3D11UnorderedAccessView* uav;
+	UINT width, height;
+	UINT levels;
 };
-
-
 
 struct BoneInfo {
 	Matrix RelativeTransform; //부모로 부터의 상대적인 변환

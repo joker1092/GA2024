@@ -4,7 +4,7 @@
 class Camera : public InputPrecesser
 {
 private:
-	Vector3 m_InitPos = { 0,0,-100 };
+	Vector3 m_InitPos = { 0,0,-200 };
 
 	Vector3 m_InputVector;
 
