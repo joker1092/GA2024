@@ -182,7 +182,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Image.h" />
+    <ClInclude Include="MyImage.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MessageLogger.h" />
     <ClInclude Include="Model.h" />
@@ -194,7 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Image.cpp" />
+    <ClCompile Include="MyImage.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MessageLogger.cpp" />
     <ClCompile Include="Model.cpp" />

@@ -110,7 +110,7 @@ public:
 
 
 	Texture createTexture(UINT width, UINT height, DXGI_FORMAT format, UINT levels = 0) const;
-	Texture createTexture(const Image* image, DXGI_FORMAT format, UINT levels = 0) const;
+	Texture createTexture(const MyImage* image, DXGI_FORMAT format, UINT levels = 0) const;
 	Texture createTextureCube(UINT width, UINT height, DXGI_FORMAT format, UINT levels = 0) const;
 
 	void createTextureUAV(Texture& texture, UINT mipSlice) const;

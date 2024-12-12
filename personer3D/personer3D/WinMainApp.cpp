@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "WinMainApp.h"
 #include "Structs.h"
-#include "Image.h"
+#include "MyImage.h"
 #include "MessageLogger.h"
 
 
@@ -400,10 +400,10 @@ bool WinMainApp::InitScene()
 	m_Model = new Model;
 	m_Model->createMeshBuffer(m_pDevice, m_Mesh);
 
-	m_albedoTexture = createTexture(Image::fromFile("Resources/cerberus_A.png"), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
-	m_normalTexture = createTexture(Image::fromFile("Resources/cerberus_N.png"), DXGI_FORMAT_R8G8B8A8_UNORM);
-	m_metalnessTexture = createTexture(Image::fromFile("Resources/cerberus_M.png", 1), DXGI_FORMAT_R8_UNORM);
-	m_roughnessTexture = createTexture(Image::fromFile("Resources/cerberus_R.png", 1), DXGI_FORMAT_R8_UNORM);
+	m_albedoTexture = createTexture(MyImage::fromFile("Resources/cerberus_A.png"), DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
+	m_normalTexture = createTexture(MyImage::fromFile("Resources/cerberus_N.png"), DXGI_FORMAT_R8G8B8A8_UNORM);
+	m_metalnessTexture = createTexture(MyImage::fromFile("Resources/cerberus_M.png", 1), DXGI_FORMAT_R8_UNORM);
+	m_roughnessTexture = createTexture(MyImage::fromFile("Resources/cerberus_R.png", 1), DXGI_FORMAT_R8_UNORM);
 
 
 	return true;
@@ -478,7 +478,7 @@ Texture WinMainApp::createTexture(UINT width, UINT height, DXGI_FORMAT format, U
 	return texture;
 }
 
-Texture WinMainApp::createTexture(const Image* image, DXGI_FORMAT format, UINT levels) const
+Texture WinMainApp::createTexture(const MyImage* image, DXGI_FORMAT format, UINT levels) const
 {
 	Texture texture = createTexture(image->width(), image->height(), format, levels);
 	m_pDeviceContext->UpdateSubresource(texture.texture, 0, nullptr, image->pixels<void>(), image->pitch(), 0);
