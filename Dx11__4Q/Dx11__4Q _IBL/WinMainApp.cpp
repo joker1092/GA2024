@@ -46,7 +46,7 @@ void WinMainApp::Update()
 
 void WinMainApp::Render()
 {
-	Matrix viewRotationMatrix = Matrix::CreateFromYawPitchRoll(m_pCamera->m_Rotation);
+	//Matrix viewRotationMatrix = Matrix::CreateFromYawPitchRoll(m_pCamera->m_Rotation);
 	Matrix sceneRotationMatrix = Matrix::CreateFromYawPitchRoll(m_SceanRotation);
 
 	TransformCB TB;
@@ -54,6 +54,14 @@ void WinMainApp::Render()
 	TB.mView = XMMatrixTranspose(g_View);
 	TB.mProjection = XMMatrixTranspose(g_Projection);
 	TB.sceneRotationMatrix = sceneRotationMatrix;
+
+	Matrix skyworld = g_world * Matrix::CreateScale(100.0f, 100.0f, 100.0f);
+
+	TransformCB skyTB;
+	skyTB.mWorld = XMMatrixTranspose(skyworld);
+	skyTB.mView = XMMatrixTranspose(g_View);
+	skyTB.mProjection = XMMatrixTranspose(g_Projection);
+	skyTB.sceneRotationMatrix = sceneRotationMatrix;
 
 	ShadingCB SB;
 	SB.lights[0].direction = Vector4{ Light1Direction.x,Light1Direction.y,Light1Direction.z,0.0f };
@@ -74,7 +82,7 @@ void WinMainApp::Render()
 	SB.useCustomRough = m_bUseCustomRough ? 1.0f : 0;
 	SB.CustomRough = m_fCustomRough;
 
-	m_pDeviceContext->UpdateSubresource(pTransformBuffer, 0, nullptr, &TB, 0, 0);
+	m_pDeviceContext->UpdateSubresource(pTransformBuffer, 0, nullptr, &skyTB, 0, 0);
 	m_pDeviceContext->UpdateSubresource(pShadingBuffer, 0, nullptr, &SB, 0, 0);
 
 	m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
@@ -108,7 +116,12 @@ void WinMainApp::Render()
 		m_pDeviceContext->DrawIndexed(m_pModelSky->numElements, 0, 0);
 	}
 
+	m_pDeviceContext->UpdateSubresource(pTransformBuffer, 0, nullptr, &TB, 0, 0);
+	m_pDeviceContext->UpdateSubresource(pShadingBuffer, 0, nullptr, &SB, 0, 0);
 
+	m_pDeviceContext->VSSetConstantBuffers(0, 1, &pTransformBuffer);
+	m_pDeviceContext->PSSetConstantBuffers(0, 1, &pTransformBuffer); //상수 버퍼 설정a
+	m_pDeviceContext->PSSetConstantBuffers(0, 1, &pShadingBuffer); //상수 버퍼 설정
 
 	ID3D11ShaderResourceView* const pbrModelSRVs[] = {
 		m_albedoTexture.srv,
@@ -373,7 +386,7 @@ bool WinMainApp::InitScene()
 	SAFE_RELEASE(pVertexShaderBlob);
 
 	// 픽셀 셰이더 컴파일 및 생성
-	HR_T(CompileShaderFromFile(L"Shaders/PBR_PS.hlsl", "main_ps", "ps_5_0", &pPixelShaderBlob));
+	HR_T(CompileShaderFromFile(L"Shaders/skybox_ps.hlsl", "main_ps", "ps_5_0", &pPixelShaderBlob));
 	HR_T(m_pDevice->CreatePixelShader(pPixelShaderBlob->GetBufferPointer(), pPixelShaderBlob->GetBufferSize(), NULL, &m_pSkyPixelShader));
 	SAFE_RELEASE(pPixelShaderBlob);
 

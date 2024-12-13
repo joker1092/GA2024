@@ -1,0 +1,18 @@
+[
+    {
+        "detail": {
+            "description": "item1 description",
+            "price": 100,
+            "stock": 10
+        },
+        "name": "item1"
+    },
+    {
+        "detail": {
+            "description": "item2 description",
+            "price": 200,
+            "stock": 20
+        },
+        "name": "item2"
+    }
+]
