@@ -1,5 +1,5 @@
-#include <Windows.h>
-#include <tchar.h>
+#include "Windows.h"
+#include "tchar.h"
 #include "Device.h"
 #include "Render.h"
 
@@ -9,7 +9,7 @@ int height = 600;
 HWND g_hwnd = NULL;
 BOOL g_bLoop = TRUE;
 
-const TCHAR* g_ClassName = _T("ExDx12");
+TCHAR* g_ClassName = _T("ExDx12");
 extern TCHAR* g_WindowName;
 
 

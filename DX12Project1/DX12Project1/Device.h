@@ -1,7 +1,8 @@
 #pragma once
-#include <Windows.h>
-#include <tchar.h>
-#include <stdio.h>
+#pragma warning(disable:4996)
+#include "Windows.h"
+#include "tchar.h"
+#include "stdio.h"
 
 #include <memory>
 #include <chrono>
@@ -10,10 +11,11 @@ using namespace std::chrono;
 
 #define TIME_MAX 9223372056854775807 //std::chrono::millseconds::max()
 
-#include <d3d12.h>
-#pragma comment(lib,"d3d12")
+#include "D3D12.h"
+//#include "D3D12_1.h"
+#pragma comment(lib,"D3D12")
 
-#include <DirectXMath.h>
+#include "DirectXMath.h"
 using namespace DirectX;
 
 #include <dxgi1_4.h>
