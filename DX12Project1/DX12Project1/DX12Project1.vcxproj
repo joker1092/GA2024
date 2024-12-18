@@ -79,8 +79,9 @@
     <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>..\Yena\Inc;..\Yena\DXTK\Inc;..\Yena\DXTex\Inc;..\Yena\DXHelper;$(IncludePath)</IncludePath>
     <LibraryWPath>$(WindowsSDK_MetadataPath);</LibraryWPath>
+    <LibraryPath>..\Yena\Lib;..\Yena\DXTK\Lib;..\Yena\DXTex\Lib;..\Yena\DXHelper;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
@@ -95,7 +96,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader />
-      <DisableSpecificWarnings>wd28251;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>28251;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -113,7 +114,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader />
-      <DisableSpecificWarnings>wd28251;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>28251;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -131,7 +132,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader />
-      <DisableSpecificWarnings>wd28251;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>28251;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -149,7 +150,7 @@
       <ConformanceMode>false</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <PrecompiledHeader />
-      <DisableSpecificWarnings>wd28251;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>28251;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,9 +159,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ResourceCompile Include="DX12Project1.rc" />
-  </ItemGroup>
   <ItemGroup>
     <Image Include="DX12Project1.ico" />
     <Image Include="small.ico" />

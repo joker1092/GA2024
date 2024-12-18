@@ -6,7 +6,7 @@
 int width = 900;
 int height = 600;
 
-HWND g_hwnd = NULL;
+HWND g_hWnd = NULL;
 BOOL g_bLoop = TRUE;
 
 TCHAR* g_ClassName = _T("ExDx12");
@@ -27,8 +27,16 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevIstance, LPSTR lpCmdLin
 	}
 
 	//todo:dx초기화
+	if (FAILED(DXSetup(g_hWnd)))
+	{
+		return 0;
+	}
 
 	//todo:렌더데이터 로딩
+	if (!DataLoading())
+	{
+		g_bLoop = FALSE;
+	}
 
 	while (g_bLoop) {
 
@@ -37,10 +45,13 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevIstance, LPSTR lpCmdLin
 		}
 
 		//todo:장면 렌더링
+		SceneRender();
 
 	}
 
 	//종료
+	DataRelease();
+	DXRelease();
 	
 	return 0;
 }
@@ -66,7 +77,7 @@ LRESULT CALLBACK MsgProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 //윈도우 초기화
 BOOL InitWindow(int width, int height) {
-	WNDCLASSEX wc = { sizeof(WNDCLASS),CS_CLASSDC,MsgProc,0,0,GetModuleHandle(NULL),NULL,NULL ,NULL ,NULL ,g_ClassName ,NULL };
+	WNDCLASSEX wc = { sizeof(WNDCLASSEX),CS_CLASSDC,MsgProc,0,0,GetModuleHandle(NULL),NULL,NULL ,NULL ,NULL ,g_ClassName ,NULL };
 	RegisterClassEx(&wc);
 
 	HWND hWnd = CreateWindow(g_ClassName, g_WindowName, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX, 0, 0, width, height, GetDesktopWindow(), NULL, wc.hInstance, NULL);
@@ -77,10 +88,11 @@ BOOL InitWindow(int width, int height) {
 	}
 	
 	ResizeWindow(hWnd, width, height);
+	ShowWindow(hWnd, SW_SHOWDEFAULT);
 	UpdateWindow(hWnd);
 	SetCursor(LoadCursor(NULL, IDC_ARROW));
 
-	g_hwnd = hWnd;
+	g_hWnd = hWnd;
 	
 	return TRUE;
 }

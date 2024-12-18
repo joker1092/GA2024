@@ -1,5 +1,7 @@
 #pragma once
-class Render
-{
-};
+
+int DataLoading();
+void DataRelease();
+void SceneRender();
+
 
