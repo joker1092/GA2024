@@ -12,7 +12,6 @@ public:
     MessageLogger(const std::string& filename) {
         logFile.open(filename, std::ios::app);
         if (!logFile.is_open()) {
-            //std::cerr << "Failed to open log file: " << filename << std::endl;
             throw std::runtime_error("Failed to open log file: "+ filename);
         }
         worker = std::thread(&MessageLogger::workerThread, this);
@@ -22,7 +21,6 @@ public:
         // 쓰레드 종료를 위한 신호 (예: 큐에 특별한 값을 넣거나, 조건 변수를 이용)
         {
             std::lock_guard<std::mutex> lock(mtx);
-            // 종료 신호를 큐에 넣는 예시
             messageQueue.push("exit");
         }
         cv.notify_one();
@@ -53,7 +51,7 @@ private:
 
             auto now = std::chrono::system_clock::now();
             std::string timestamp = std::format("{:%Y / %m / %d  %H : %M : %S}",std::chrono::floor<std::chrono::milliseconds>(now));
-            timestamp.pop_back(); // 마지막 개행 문자 제거
+            timestamp.pop_back();
 
             logFile << timestamp << " => msg : " << message << std::endl;
         }
