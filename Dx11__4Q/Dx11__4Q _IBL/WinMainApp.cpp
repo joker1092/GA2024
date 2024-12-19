@@ -55,7 +55,8 @@ void WinMainApp::Render()
 	TB.mProjection = XMMatrixTranspose(g_Projection);
 	TB.sceneRotationMatrix = sceneRotationMatrix;
 
-	Matrix skyworld = g_world * Matrix::CreateScale(100.0f, 100.0f, 100.0f);
+	//Matrix skyworld = g_world * Matrix::CreateScale(100.0f, 100.0f, 100.0f);
+	Matrix skyworld = g_world;
 
 	TransformCB skyTB;
 	skyTB.mWorld = XMMatrixTranspose(skyworld);
@@ -133,16 +134,16 @@ void WinMainApp::Render()
 		m_spBRDF_LUT,
 	};
 
-	m_pDeviceContext->IASetInputLayout(m_pInputLayout); //ÀÔ·Â ·¹ÀÌ¾Æ¿ô ¼³Á¤
-	m_pDeviceContext->IASetVertexBuffers(0, 1, &m_Model->m_pVertexBuffer, &m_Model->stride, &m_Model->offset);
-	m_pDeviceContext->IASetIndexBuffer(m_Model->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0); //Á¤Á¡ ¼ÎÀÌ´õ ¼³Á¤
-	m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);//ÇÈ¼¿ ¼ÎÀÌ´õ ¼³Á¤
-	m_pDeviceContext->PSSetShaderResources(0, 7, pbrModelSRVs);
-	m_pDeviceContext->PSSetSamplers(0, 1, &m_pDefaultSamplerState);
-	m_pDeviceContext->PSSetSamplers(1, 1, &m_pBRDFSamplerState);
-	m_pDeviceContext->OMSetDepthStencilState(m_pDefaultDepthstencilState, 0);
-	m_pDeviceContext->DrawIndexed(m_Model->numElements, 0, 0);
+	//m_pDeviceContext->IASetInputLayout(m_pInputLayout); //ÀÔ·Â ·¹ÀÌ¾Æ¿ô ¼³Á¤
+	//m_pDeviceContext->IASetVertexBuffers(0, 1, &m_Model->m_pVertexBuffer, &m_Model->stride, &m_Model->offset);
+	//m_pDeviceContext->IASetIndexBuffer(m_Model->m_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	//m_pDeviceContext->VSSetShader(m_pVertexShader, nullptr, 0); //Á¤Á¡ ¼ÎÀÌ´õ ¼³Á¤
+	//m_pDeviceContext->PSSetShader(m_pPixelShader, nullptr, 0);//ÇÈ¼¿ ¼ÎÀÌ´õ ¼³Á¤
+	//m_pDeviceContext->PSSetShaderResources(0, 7, pbrModelSRVs);
+	//m_pDeviceContext->PSSetSamplers(0, 1, &m_pDefaultSamplerState);
+	//m_pDeviceContext->PSSetSamplers(1, 1, &m_pBRDFSamplerState);
+	//m_pDeviceContext->OMSetDepthStencilState(m_pDefaultDepthstencilState, 0);
+	//m_pDeviceContext->DrawIndexed(m_Model->numElements, 0, 0);
 
 	// ImGUI ·»´õ¸µ
 	ImGuiIO& io = ImGui::GetIO();
