@@ -2,8 +2,26 @@
 #include "tchar.h"
 #include "Device.h"
 #include "Render.h"
+#include "Shader.h"
 
 TCHAR* g_WindowName = _T("DX12Project1");
+
+//기하 데이터
+
+//정점 구조체
+struct Vertex
+{
+	float x, y, z;
+	float r, g, b, a;
+};
+
+//정점 버퍼
+ID3D12Resource* g_pVB = nullptr;
+D3D12_VERTEX_BUFFER_VIEW* g_pVBView = nullptr;
+
+//입력 레이아웃
+D3D12_INPUT_LAYOUT_DESC* g_pVBLayout = nullptr; //DX12
+
 
 //=============================================================================
 //전역 데이터들

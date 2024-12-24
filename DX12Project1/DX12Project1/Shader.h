@@ -1,0 +1,11 @@
+#pragma once
+typedef ID3DBlob* LPSHADER;
+typedef LPSHADER LPVERTEXSHADER;
+typedef LPSHADER LPPIXELSHADER;
+typedef LPSHADER LPGEOMETRYSHADER;
+typedef ID3D12Resource* LPRESOURCE;
+typedef LPRESOURCE LPCONSTBUFFER;
+
+int ShaderLoad();
+HRESULT ShaderLoad(TCHAR* filename)
+

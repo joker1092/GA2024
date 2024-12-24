@@ -1,5 +1,6 @@
 #pragma warning(disable:4996)
 #include "Device.h"
+#include "Shader.h"
 
 // DX 및 장치 관련 전역 데이터들 
 // 
@@ -25,6 +26,11 @@ ID3D12Resource* g_pRT[g_RTCnt] = { NULL, };
 ID3D12CommandQueue*         g_pCommandQueue = NULL;
 ID3D12CommandAllocator*     g_pCommandAllocator = NULL;
 ID3D12GraphicsCommandList*  g_pCommandList = NULL;
+
+//파이프라인 상태 인터페이스
+ID3D12PipelineState* g_pPipelineState = NULL;
+//ID3D12PipelineState* g_pCurrPSO = NULL;
+
 
 //렌더링 동기화 인터페이스
 ID3D12Fence* g_pFence = NULL;
@@ -78,6 +84,8 @@ int DXSetup(HWND hwnd)
 	//2단계 : 기타 렌더링 관련 추가 설정
 	g_GraphicsMemory = std::make_unique<GraphicsMemory>(g_pDevice);
 	ynFontCreate(g_pDevice);
+
+	
 
 	//3단계 : 추가 장치 설정
 	//todo:...
@@ -250,7 +258,7 @@ int CommandsCreate()
 int CommandsReset()
 {
 	g_CmdAlloc->Reset();
-	g_CmdList->Reset(g_CmdAlloc, nullptr);
+	g_CmdList->Reset(g_CmdAlloc, g_pCurrPSO);
 
 	return YN_OK;
 }
@@ -329,7 +337,7 @@ int ClearBackBuffer(COLOR col)
 	g_CmdAlloc->Reset();
 	g_CmdList->Reset(g_CmdAlloc, nullptr);
 
-    //장치 상태 재설정
+	//장치 상태 재설정 ===> 과제의 멀티 뷰포트 todo ==> 오브젝트 그릴때 뷰포트 설정
     g_CmdList->RSSetViewports(1, &g_VP);
 	g_CmdList->RSSetScissorRects(1, &rc);
 
@@ -386,6 +394,8 @@ int Flip()
 	
     //새 프레임 준비
 	g_RTIndex = g_pSwapChain->GetCurrentBackBufferIndex();
+	g_GraphicsMemory->Commit(g_CmdQueue);
+	
 
 	return YN_OK;
 }
@@ -410,10 +420,12 @@ void PutFPS(int x, int y)
 	static float fps = 0.0f;
 
 	++frmcnt;
+
 	ULONGLONG time = nowTime - oldTime;
     if (time >= 999)
     {
         oldTime = nowTime;
+
 		fps = (float)frmcnt*1000/(float)time;
 		frmcnt = 0;
     }
@@ -561,7 +573,7 @@ void SystemInfo(int x, int y, COLOR col)
 	ynTextDraw(x, y += 14, col2, _T("Build : %s"), g_Platform);
 
 	//GPU 정보 출력
-	AdapterInfo(700, y += 14, col);
+	//AdapterInfo(700, y += 14, col);
 
 	//그래픽 옵션 출력
 	{
@@ -618,6 +630,36 @@ int ynErrorW(TCHAR* file, UINT line, TCHAR* func, BOOL bMBox, HRESULT hr, TCHAR*
 	}
 
     return YN_OK;
+}
+
+//셰이더 에러 처리
+int ynErrorW(BOOL bMBox, TCHAR* msg, HRESULT hr, ID3DBlob* err, TCHAR* filename, char* entryPoint, char* shaderModel) {
+
+	TCHAR func[80] = _T("");
+	mbstowcs(func, entryPoint, strlen(entryPoint));
+	TCHAR sm[20] = _T("");
+	mbstowcs(sm, shaderModel, strlen(shaderModel));
+	TCHAR errw[1024] = _T("");
+	mbstowcs(errw, (char*)err->GetBufferPointer(), err->GetBufferSize());
+
+	TCHAR herr[1024] = _T("아래의 오류를 확인 하십시오.");
+
+	TCHAR errmsg[2048] = _T("");
+	_stprintf_s(errmsg, _T("%s \n File = %s Entry = %s Target = %s \n에러코드(0x%08X) :%s \n\n%s"), msg, filename, func, sm, hr, herr, errw);
+
+	//(디버깅 중) VS 출력창에 출력
+	OutputDebugString(_T("\n"));
+	OutputDebugString(errmsg);
+
+	//로그 파일로 출력 : todo...
+
+	//메세지 창 출력
+	if (bMBox)
+	{
+		MessageBox(NULL, errmsg, _T("Yena::Error"), MB_OK | MB_ICONERROR);
+	}
+
+	return YN_OK;
 }
 
 SpriteFont* g_pFont = nullptr;
@@ -687,4 +729,73 @@ void ynTextDraw(int x, int y, COLOR col, TCHAR* msg, ...)
 	g_pFontBatch->Begin(g_CmdList);
 	g_pFont->DrawString(g_pFontBatch, buff, Vector2((float)x,(float)y), Vector4(col));
 	g_pFontBatch->End();
+}
+
+
+
+//===============================================================
+//리소스 운용
+int CreateBuffer(LPDEVICE pDev, UINT size, out LPXBUFFER* ppBuff) {
+	HRESULT hr = S_OK;
+
+	//버퍼 크기 정렬
+	//size = aligned64(size);
+
+	//버퍼 정보
+	D3D12_HEAP_PROPERTIES hp = {};
+	hp.Type = D3D12_HEAP_TYPE_UPLOAD;
+	hp.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+	hp.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
+	hp.CreationNodeMask = 0;
+	hp.VisibleNodeMask = 0;
+	
+	//버퍼에 저장될 자원 정보
+	D3D12_RESOURCE_DESC rd = {};
+	rd.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	rd.Alignment = 0;
+	rd.Width = size;
+	rd.Height = 1;
+	rd.DepthOrArraySize = 1;
+	rd.MipLevels = 1;
+	rd.Format = DXGI_FORMAT_UNKNOWN;
+	rd.SampleDesc.Count = 1;
+	rd.SampleDesc.Quality = 0;
+	rd.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	rd.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	//버퍼 생성
+	ID3D12Resource* pBuff = nullptr;
+	hr = pDev->CreateCommittedResource(&hp, D3D12_HEAP_FLAG_NONE, &rd, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&pBuff));
+
+	if (FAILED(hr))
+	{
+		ynError(hr, _T("버퍼 생성 실패 : HEAP_TYPE_UPLOAD, size=%d"),size);
+		return hr;
+	}
+
+	//성공후 외부로 복사
+	*ppBuff = pBuff;
+
+	return hr;
+}
+
+//버퍼 갱신
+int UpdateBuffer(LPXBUFFER pBuff, LPVOID pData, UINT size) {
+	HRESULT hr = S_OK;
+	if (pData == nullptr)
+	{
+		return hr;
+	}
+
+	UINT8* buff = nullptr;
+	hr = pBuff->Map(0, nullptr, (void**)&buff);
+	if (FAILED(hr)||buff == nullptr)
+	{
+		ynError(hr, _T("버퍼 갱신 실패. \npBuff=0x%x Size=%d"),buff,size);
+		return hr;
+	}
+	memcpy(buff, pData, size);
+	pBuff->Unmap(0, nullptr);
+
+	return hr;
 }
