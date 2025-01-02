@@ -16,12 +16,17 @@ using namespace std::chrono;
 using namespace Microsoft::WRL;
 
 
-#ifndef in
-#define in
-#define out
-#define inout
-#endif // !in
+//#ifndef in
+//#define in
+//#define out
+//#define inout
+//#endif
 
+#ifndef MY_IN
+#define MY_IN
+#define MY_OUT
+#define MY_INOUT
+#endif // !MY_IN
 
 #include "D3D12.h"
 //#include "D3D12_1.h"
@@ -140,7 +145,7 @@ int ClearBackBuffer(UINT flag,COLOR col, float depth = 1.0f,UINT stencill = 0);
 int Flip();
 //int wait();
 
-float GetEngindTime();
+float GetEnginTime();
 void PutFPS(int x, int y);
 
 void GetDeviceInfo();
@@ -152,17 +157,17 @@ void GetFeatureLevel();
 //int GetFeatureAA(LPDEVICE pDev,DXGI_FORMAT fmt,DWORD dwAA);
 
 //버퍼 운용 함수
-int CreateBuffer(LPDEVICE pDev,UINT size, out LPXBUFFER* ppBuff);
+int CreateBuffer(LPDEVICE pDev,UINT size, MY_OUT LPXBUFFER* ppBuff);
 int UpdateBuffer(LPXBUFFER pBuff, LPVOID pData, UINT size);
 
-int CreateVertexBuffer(LPDEVICE pDev, LPVOID pData, UINT size, out LPVERTEXBUFFER* ppVB);
-int CreateIndexBuffer(LPDEVICE pDev, LPVOID pBuff, UINT size, out LPINDEXBUFFER* ppIB);
-int CreateConstantBuffer(LPDEVICE pDev, LPVOID pData, UINT size, out LPCONSTBUFFER* ppCB);
+int CreateVertexBuffer(LPDEVICE pDev, LPVOID pData, UINT size,UINT stride, MY_OUT LPVERTEXBUFFER* ppVB, MY_OUT LPVERTEXBUFFERVIWE* ppVBV);
+int CreateIndexBuffer(LPDEVICE pDev, LPVOID pBuff, UINT size, MY_OUT LPINDEXBUFFER* ppIB);
+int CreateConstantBuffer(LPDEVICE pDev, LPVOID pData, UINT size, MY_OUT LPCONSTBUFFER* ppCB);
 #define UpdateCB UpdateBuffer
 
 //입력 레이아웃
 int InputLayoutCreate(D3D12_INPUT_ELEMENT_DESC* ed, DWORD num, D3D12_INPUT_LAYOUT_DESC** ppLayout);
-int InputLayoutRelease(D3D12_INPUT_LAYOUT_DESC*& rpLayout);
+void InputLayoutRelease(D3D12_INPUT_LAYOUT_DESC*& rpLayout);
 #define CreateInputLayout InputLayoutCreate
 
 extern ID3D12Device* g_pDevice;
@@ -213,6 +218,12 @@ _T("x86");
 #ifndef IsKeyDown
 #define IsKeyDown(key)	 ((GetAsyncKeyState(key) & 0x8000) == 0x8000)
 #define IsKeyUp(key)	((GetAsyncKeyState(key) & 0x8001) == 0x0001)
+enum VK_CHAR
+{
+	VK_A = 0x41,
+	VK_B, VK_C, VK_D, VK_E, VK_F, VK_G, VK_H, VK_I, VK_J, VK_K, VK_L, VK_M,
+	VK_N, VK_O, VK_P, VK_Q, VK_R, VK_S, VK_T, VK_U, VK_V, VK_W, VK_X, VK_Y, VK_Z,
+};
 #endif // !IsKeyDown
 
 //메모리	해제
@@ -265,7 +276,7 @@ int ynErrorW(BOOL bMBox, TCHAR * msg, HRESULT hr, ID3DBlob * err, TCHAR * filena
 #define ynError(hr,msg,...)	\
 ynErrorW(__FILEW__,__LINE__,__FUNCTIONW__,TRUE,hr,msg,__VA_ARGS__)
 
-#define ToStromg(v) #v
+#define ToString(v) #v
 
 //=============================================================================
 //폰트 엔진 : 일반 함수 버전

@@ -7,12 +7,12 @@ typedef ID3D12Resource* LPRESOURCE;
 typedef LPRESOURCE LPCONSTBUFFER;
 
 int ShaderLoad();
-HRESULT ShaderLoad(TCHAR* filename, CHAR* entry, CHAR* sm, out LPSHADER* ppfx);
+HRESULT ShaderLoad(TCHAR* filename, CHAR* entry, CHAR* sm, MY_OUT LPSHADER* ppfx);
 //HRESULT ShaderLoad(TCHAR* filename, CHAR* entry, CHAR* sm, D3D12_SHADER_BYTECODE* pshader);
 void ShaderRelease();
-HRESULT ShaderCompile(TCHAR* filename, CHAR* entry, CHAR* sm, out ID3DBlob** ppCode);
+HRESULT ShaderCompile(WCHAR* filename, char* entry, char* sm, MY_OUT ID3DBlob** ppCode);
 void ShaderCreate();
-void ShderUpdate();
+void ShaderUpdate();
 
 //셰이더 관련 전역 변수
 //extern ID3D11VertexShader* g_pVS; //dx11

@@ -121,7 +121,8 @@ HRESULT CreateDeviceSwapChain(HWND Hwnd)
 	CreateDXGIFactory2(0, IID_PPV_ARGS(&pFactory));
 
     //DX 렌더링 장치 구성
-    hr = D3D12CreateDevice(0, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&g_pDevice));
+	hr = D3D12CreateDevice(0, g_FeatLv, IID_PPV_ARGS(&g_pDevice));
+    //hr = D3D12CreateDevice(0, D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&g_pDevice));
     //hr = D3D12CreateDevice(0, D3D_FEATURE_LEVEL_12_0, __uuidof(ID3D12Device),(void**)&g_pDevice);
 	//hr = D3D12CreateDevice(g_pAdapter, D3D_FEATURE_LEVEL_12_0, __uuidof(ID3D12Device), (void**)&g_pDevice);
     if (FAILED(hr)) 
@@ -401,7 +402,7 @@ int Flip()
 }
 
 //엔진 동기화용 경과시간 획득
-float GetEngindTime()
+float GetEnginTime()
 {
 	static ULONGLONG oldTime = GetTickCount64();
 	ULONGLONG nowTime = GetTickCount64();
@@ -410,6 +411,18 @@ float GetEngindTime()
 
 	return dTime;
 }
+
+#pragma comment(lib,"winmm.lib")
+float GetEnginTime2()
+{
+	static DWORD oldTime = timeGetTime();
+	DWORD nowTime = timeGetTime();
+	float dTime = (nowTime - oldTime) * 0.001f;
+	oldTime = nowTime;
+
+	return dTime;
+}
+
 
 //타이머의 초당 프레임률(fps)를 출력
 void PutFPS(int x, int y)
@@ -735,7 +748,7 @@ void ynTextDraw(int x, int y, COLOR col, TCHAR* msg, ...)
 
 //===============================================================
 //리소스 운용
-int CreateBuffer(LPDEVICE pDev, UINT size, out LPXBUFFER* ppBuff) {
+int CreateBuffer(LPDEVICE pDev, UINT size, MY_OUT LPXBUFFER* ppBuff) {
 	HRESULT hr = S_OK;
 
 	//버퍼 크기 정렬
@@ -798,4 +811,85 @@ int UpdateBuffer(LPXBUFFER pBuff, LPVOID pData, UINT size) {
 	pBuff->Unmap(0, nullptr);
 
 	return hr;
+}
+
+//정점버퍼 생성
+int CreateVertexBuffer(LPDEVICE pDev, LPVOID pData, UINT size, UINT stride, MY_OUT LPVERTEXBUFFER* ppVB, MY_OUT LPVERTEXBUFFERVIWE* ppVBV) {
+
+	HRESULT hr = S_OK;
+	//버퍼 생성
+	LPXBUFFER pVB = nullptr;
+	hr = CreateBuffer(pDev, size, &pVB);
+	if (FAILED(hr))
+	{
+		ynError(hr, _T("정점버퍼 생성 실패"));
+		return hr;
+	}
+
+	//버퍼 갱신
+	hr = UpdateBuffer(pVB, pData, size);
+
+	//버퍼 뷰 생성
+	D3D12_VERTEX_BUFFER_VIEW* pVBV = new D3D12_VERTEX_BUFFER_VIEW;
+	pVBV->BufferLocation = pVB->GetGPUVirtualAddress();
+	pVBV->SizeInBytes = size;
+	pVBV->StrideInBytes = stride;
+	//성공후 외부로 복사
+	*ppVB = pVB;
+	*ppVBV = pVBV;
+
+	return YN_OK;
+}
+
+int CreateIndexBuffer(LPDEVICE pDev, LPVOID pBuff, UINT size, MY_OUT LPINDEXBUFFER* ppIB) {
+	//todo:...
+	return YN_OK;
+}
+
+//상수 버퍼 생성
+int CreateConstantBuffer(LPDEVICE pDev, LPVOID pData, UINT size, MY_OUT LPCONSTBUFFER* ppCB) {
+	
+	HRESULT hr = S_OK;
+
+	//버퍼 생성
+	LPXBUFFER pCB = nullptr;
+	hr = CreateBuffer(pDev, size, &pCB);
+	if (FAILED(hr))
+	{
+		ynError(hr, _T("상수버퍼 생성 실패"));
+		return hr;
+	}
+
+	//버퍼 갱신
+	UpdateBuffer(pCB, pData, size);
+
+
+	//성공후 외부로 복사
+	*ppCB = pCB;
+	
+	return hr;
+}
+
+
+//입력 레이아웃 생성
+int InputLayoutCreate(D3D12_INPUT_ELEMENT_DESC* ed, DWORD num, D3D12_INPUT_LAYOUT_DESC** ppLayout) {
+	D3D12_INPUT_LAYOUT_DESC* pLayout = new D3D12_INPUT_LAYOUT_DESC;
+	pLayout->pInputElementDescs = new D3D12_INPUT_ELEMENT_DESC[num];
+
+	//메모리 할당 예외 처리
+	//todo:...
+
+	CopyMemory((void*)pLayout->pInputElementDescs, ed, num * sizeof(D3D12_INPUT_ELEMENT_DESC));
+	pLayout->NumElements = num;
+
+	*ppLayout = pLayout;
+
+	return YN_OK;
+}
+
+
+void InputLayoutRelease(D3D12_INPUT_LAYOUT_DESC*& rpLayout) {
+
+	SAFE_DELARRY(rpLayout->pInputElementDescs);
+	SAFE_DELETE(rpLayout);
 }

@@ -8,16 +8,16 @@ struct VSOutput
 };
 
 //셰이더 상수 구조체
-
-//1.transform
-struct Transform
+struct CONSTS
 {
     float trans;
     float scale;
     float rot;
 };
 
-ConstantBuffer<Transform> g_transform : register(b0);
+ConstantBuffer<CONSTS> g_Consts : register(b0);
+
+
 //2. color blanding
 struct COLANI
 {
@@ -30,14 +30,14 @@ struct COLANI
 ConstantBuffer<COLANI> g_ColAni : register(b1);
 
 //3.flags
-struct Flags
-{
-    bool tFlag1;
-    bool cFlag2;
-    bool bFlag3;
-};
+//struct Flags
+//{
+//    bool tFlag1;
+//    bool cFlag2;
+//    bool bFlag3;
+//};
 
-ConstantBuffer<Flags> g_Flags : register(b2);
+//ConstantBuffer<Flags> g_Flags : register(b2);
 
 //셰이더 상수
 static float4 g_RGB[] =
@@ -54,35 +54,35 @@ float4 RGBGen(float4 col, float a, uint frm);
 //정점 셰이더
 VSOutput VSMain(
     float4 pos : POSITION, 
-    float4 col : COLO0R
+    float4 col : COLOR0
 )
 {
-    if (g_Flags.tFlag1)
-    {
+    //if (g_Flags.tFlag1)
+    //{
         
-    //scale
-        pos.x *= g_transform.scale;
-        pos.y *= g_transform.scale;
+    ////scale
+    //    pos.x *= g_Consts.scale;
+    //    pos.y *= g_Consts.scale;
     
-    //rotation
-    #define r g_transform.rot
-    float4 v = pos;
-        pos.x = v.x * cos(r) - v.y * sin(r);
-        pos.y = v.x * sin(r) + v.y * cos(r);
-    //translation
-        pos.x += g_transform.trans;
-    }
+    ////rotation
+    //#define r g_Consts.rot
+    //float4 v = pos;
+    //    pos.x = v.x * cos(r) - v.y * sin(r);
+    //    pos.y = v.x * sin(r) + v.y * cos(r);
+    ////translation
+    //    pos.x += g_Consts.trans;
+    //}
     
     
-    if (g_Flags.cFlag2)
-    {
-        col = g_ColAni.color;
-    }
+    //if (g_Flags.cFlag2)
+    //{
+    //    col = g_ColAni.color;
+    //}
     
-    if (g_Flags.bFlag3)
-    {
-        col = RGBGen(col, g_ColAni.per, g_ColAni.frm);
-    }
+    //if (g_Flags.bFlag3)
+    //{
+    //    col = RGBGen(col, g_ColAni.per, g_ColAni.frm);
+    //}
     
     VSOutput output = (VSOutput) 0;
     output.pos = pos;

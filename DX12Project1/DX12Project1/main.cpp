@@ -3,8 +3,7 @@
 #include "Device.h"
 #include "Render.h"
 
-int width = 900;
-int height = 600;
+
 
 HWND g_hWnd = NULL;
 BOOL g_bLoop = TRUE;
@@ -21,7 +20,7 @@ LRESULT CALLBACK MsgProc(HWND, UINT, WPARAM, LPARAM);
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevIstance, LPSTR lpCmdLine, int nCmdShow) {
 
 	//윈도우 초기화
-	if (!InitWindow(width,height))
+	if (!InitWindow(g_Mode.Width, g_Mode.Height))
 	{
 		return 0;
 	}
