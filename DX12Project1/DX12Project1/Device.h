@@ -141,11 +141,14 @@ int GPUSync();
 
 int Clear();
 int ClearBackBuffer(COLOR col);
+int SetViewPort(int index);
 int ClearBackBuffer(UINT flag,COLOR col, float depth = 1.0f,UINT stencill = 0);
+
 int Flip();
 //int wait();
 
 float GetEnginTime();
+//float GetEnginTime2();
 void PutFPS(int x, int y);
 
 void GetDeviceInfo();
@@ -217,7 +220,7 @@ _T("x86");
 //비동기 키보드 입력 처리
 #ifndef IsKeyDown
 #define IsKeyDown(key)	 ((GetAsyncKeyState(key) & 0x8000) == 0x8000)
-#define IsKeyUp(key)	((GetAsyncKeyState(key) & 0x8001) == 0x0001)
+#define IsKeyUp(key)	((GetAsyncKeyState(key) & 0x8001) == 0x8001)
 enum VK_CHAR
 {
 	VK_A = 0x41,

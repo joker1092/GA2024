@@ -25,19 +25,18 @@ struct COLANI
     
     float per;
     uint frm;
+    float use;
 };
 
 ConstantBuffer<COLANI> g_ColAni : register(b1);
 
 //3.flags
-//struct Flags
-//{
-//    bool tFlag1;
-//    bool cFlag2;
-//    bool bFlag3;
-//};
+struct Flags
+{
+    bool blandflag;
+};
 
-//ConstantBuffer<Flags> g_Flags : register(b2);
+ConstantBuffer<Flags> g_Flags : register(b2);
 
 //¼ÎÀÌ´õ »ó¼ö
 static float4 g_RGB[] =
@@ -57,34 +56,38 @@ VSOutput VSMain(
     float4 col : COLOR0
 )
 {
-    //if (g_Flags.tFlag1)
-    //{
         
-    ////scale
-    //    pos.x *= g_Consts.scale;
-    //    pos.y *= g_Consts.scale;
+    //scale
+    pos.x *= g_Consts.scale;
+    pos.y *= g_Consts.scale;
     
-    ////rotation
-    //#define r g_Consts.rot
-    //float4 v = pos;
-    //    pos.x = v.x * cos(r) - v.y * sin(r);
-    //    pos.y = v.x * sin(r) + v.y * cos(r);
-    ////translation
-    //    pos.x += g_Consts.trans;
-    //}
+    //rotation
+    #define r g_Consts.rot
+    float4 v = pos;
+    pos.x = v.x * cos(r) - v.y * sin(r);
+    pos.y = v.x * sin(r) + v.y * cos(r);
+    //translation
+    pos.x += g_Consts.trans;
     
     
-    //if (g_Flags.cFlag2)
-    //{
-    //    col = g_ColAni.color;
-    //}
     
-    //if (g_Flags.bFlag3)
-    //{
-    //    col = RGBGen(col, g_ColAni.per, g_ColAni.frm);
-    //}
+    float4 defaultcol = col;
     
-    VSOutput output = (VSOutput) 0;
+    if (g_ColAni.use > 0)
+    {
+        
+        col = g_ColAni.color;
+    }
+    
+    if (g_Flags.blandflag)
+    {
+        col = col + defaultcol;
+        col = RGBGen(col, g_ColAni.per, g_ColAni.frm);
+    }
+        
+    
+    VSOutput
+    output = (VSOutput) 0;
     output.pos = pos;
     output.col = col;
     

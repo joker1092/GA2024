@@ -51,7 +51,11 @@ struct  COLANI
 
 	float per = 0;
 	DWORD frm = 0;
+	float use = 0;
 };
 
 
-
+struct FLAGS
+{
+	float blandFlag = 0;
+};

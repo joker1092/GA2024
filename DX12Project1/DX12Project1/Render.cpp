@@ -26,9 +26,7 @@ D3D12_INPUT_LAYOUT_DESC* g_pVBLayout = nullptr; //DX12
 int ObjLoad();
 void ObjRelease();
 void ObjUpdate(float dtime=0);
-void ObjDraw(float dtime=0);
-
-
+void ObjDraw(bool colorflag,bool blandflag,float dtime=0);
 //렌더링 상태 조절 데이터/함수
 
 //전역 데이터들
@@ -56,11 +54,19 @@ int PSOCreate();
 void PSORelease();
 
 CONSTS g_Consts;
+CONSTS g_FixedConsts;
 ID3D12Resource* g_pCB = nullptr;
+ID3D12Resource* g_pCBFix = nullptr;
 
 COLANI g_ColAni;
+COLANI g_FixedColAni;
 ID3D12Resource* g_pCB2 = nullptr;
+ID3D12Resource* g_pCB2Fix = nullptr;
 
+FLAGS g_blandFlags;
+FLAGS g_nonblandFlags;
+ID3D12Resource* g_pCB3 = nullptr;
+ID3D12Resource* g_pCB3Fix = nullptr;
 
 
 //게임 데이터 및 레더링 자원을 불러온다
@@ -156,23 +162,30 @@ void ObjUpdate(float dtime) {
 	g_ColAni.color = COLOR(sinf(r), cosf(r), 1 - (sinf(r) + cosf(r)), 1);
 	g_ColAni.per = sinf(r2);
 	g_ColAni.frm = frm;
+	g_ColAni.use = 1;
 
 	UpdateCB(g_pCB2, &g_ColAni, sizeof(COLANI));
 	//end update const2
 
+	//update flag
+	g_blandFlags.blandFlag = 1;
+	UpdateCB(g_pCB3, &g_blandFlags, sizeof(FLAGS));
 }
 
 
 //오브젝트 그리기
-void ObjDraw(float dtime) {
+void ObjDraw(bool cflag,bool bflag,float dtime) {
 
 	ID3D12GraphicsCommandList* cmdList = g_pCommandList;
 
 	//루트 시그니처 설정
 	cmdList->SetGraphicsRootSignature(g_pRootSign);
 	//루트 파라미터 설정
-	cmdList->SetGraphicsRootConstantBufferView(0, g_pCB->GetGPUVirtualAddress());
-	cmdList->SetGraphicsRootConstantBufferView(1, g_pCB2->GetGPUVirtualAddress());
+	cmdList->SetGraphicsRootConstantBufferView(0, g_pCBFix->GetGPUVirtualAddress());
+	cflag ? cmdList->SetGraphicsRootConstantBufferView(1, g_pCB2->GetGPUVirtualAddress()) : cmdList->SetGraphicsRootConstantBufferView(1, g_pCB2Fix->GetGPUVirtualAddress());
+	//cmdList->SetGraphicsRootConstantBufferView(1, g_pCB2->GetGPUVirtualAddress());
+	bflag ? cmdList->SetGraphicsRootConstantBufferView(2, g_pCB3->GetGPUVirtualAddress()) : cmdList->SetGraphicsRootConstantBufferView(2, g_pCB3Fix->GetGPUVirtualAddress());
+	//cmdList->SetGraphicsRootConstantBufferView(2, g_pCB3->GetGPUVirtualAddress());
 
 	//파이프라인 상태 설정
 	cmdList->SetPipelineState(g_pCurrPSO);
@@ -192,9 +205,17 @@ void ObjDraw(float dtime) {
 float EngineUpdate() {
 	float dTime = GetEnginTime();
 
-	if (IsKeyUp(VK_P)) g_bPause ^= TRUE;
+	if (IsKeyUp(VK_P)) {
+		g_bPause ^= TRUE;
+	}
+	if (g_bPause) {
+		dTime = 0;
+	}
 
-	if (g_bWireFrame)
+	//if (IsKeyUp(VK_SPACE))	g_bWireFrame ^= TRUE;
+
+
+	/*if (g_bWireFrame)
 	{
 		g_ClearColor = COLOR(0.2f, 0.2f, 0.2f, 1.0f);
 		g_pCurrPSO = g_pPSO[RS_WIREFRM];
@@ -202,7 +223,7 @@ float EngineUpdate() {
 	else {
 		g_ClearColor = COLOR(0.0f, 0.125f, 0.3f, 1.0f);
 		g_pCurrPSO = g_pPSO[RS_SOLID];
-	}
+	}*/
 
 	ShaderUpdate();
 
@@ -352,7 +373,7 @@ void ShowInfo(float dTime)
 	y += 14;
 	ynTextDraw(x, y += 14, col, _T("[렌더링 상태]"));
 	ynTextDraw(x, y += 14, col2, _T("일시정지: P (%s)"), g_bPause ? _T("ON") : _T("OFF"));
-	ynTextDraw(x, y += 14, col, _T("채우기: Space (%s)"), g_bWireFrame ? _T("WIRE") : _T("SOLID"));
+	//ynTextDraw(x, y += 14, col, _T("채우기: Space (%s)"), g_bWireFrame ? _T("WIRE") : _T("SOLID"));
 
 
 	{
@@ -374,7 +395,23 @@ void ShowInfo(float dTime)
 	ynTextDraw(x, y += 14, col3, _T("Frm   = %d"), g_ColAni.frm);
 	ynTextDraw(x, y += 14, col3, _T("Color = { %+.2f, %+.2f, %+.2f, %.2f }"), g_ColAni.color.x, g_ColAni.color.y, g_ColAni.color.z, g_ColAni.color.w);
 
+	{
+		int viewX = g_Mode.Width / 3;
+		COLOR col(1, 1, 1, 1);
+		int x = (g_Mode.Width / 3)- viewX/2 - 30, y = g_Mode.Height-100;
+		ynTextDraw(x, y, col, _T("기		본"));
+	
+				
+		x = (g_Mode.Width * 2 / 3) - viewX / 2 - 30;
+		ynTextDraw(x, y, col, _T("ColAni"));
+	
+			
+		x = (g_Mode.Width) - viewX / 2 - 30;
+		ynTextDraw(x, y, col, _T("Bland"));
+	}
 }
+
+
 
 //게임 장면 렌더링
 void SceneRender()
@@ -391,10 +428,18 @@ void SceneRender()
 	//장면 그리기
 	//렌더타겟 지우기
 	ClearBackBuffer(g_ClearColor);
+	//viewport 설정
+	SetViewPort(1);
+	ObjDraw(false,false);
+	
+	SetViewPort(2);
+	ObjDraw(true,false);
+	
+	SetViewPort(3);
+	ObjDraw(true,true);
+	
 
-	//장면 렌더링
-	ObjDraw();
-
+	SetViewPort(0);
 	//도움말 출력
 	ShowInfo(dTime);
 

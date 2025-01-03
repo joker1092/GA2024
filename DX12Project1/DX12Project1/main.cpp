@@ -101,9 +101,10 @@ BOOL MessagePump() {
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
-	while (true)
+	while (1)
 	{
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			
 			if (msg.message==WM_QUIT)
 			{
 				return FALSE;

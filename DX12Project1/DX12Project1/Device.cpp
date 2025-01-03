@@ -40,13 +40,13 @@ UINT64 g_FenceValue = 0;
 HANDLE g_FenceEvent = NULL;
 
 //뷰포트
-D3D12_VIEWPORT g_VP;
+D3D12_VIEWPORT g_VP[4];
 
 //그래픽 메모리 관리 자동화 헬퍼 : DXTK/폰트 운용시 내부적으로 사용됨.
 std::unique_ptr<GraphicsMemory> g_GraphicsMemory;
 
 //장치 설정 기본 정보
-DISPLAYMODE g_Mode = { 960,600,0,1,DXGI_FORMAT_R8G8B8A8_UNORM };
+DISPLAYMODE g_Mode = { 1920,600,0,1,DXGI_FORMAT_R8G8B8A8_UNORM };
 
 //AA & AF Option
 DWORD g_dwAA = 1;
@@ -220,15 +220,28 @@ HRESULT CreateRenderTarget()
 //뷰포트 설정
 void SetViewPort()
 {
-    D3D12_VIEWPORT vp;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    vp.Width = (FLOAT)g_Mode.Width;
-    vp.Height = (FLOAT)g_Mode.Height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    //g_CmdList->RSSetViewports(1, &vp);
-    g_VP = vp;
+    // 전체 화면 뷰포트 설정
+    D3D12_VIEWPORT fullScreenVP;
+    fullScreenVP.TopLeftX = 0;
+    fullScreenVP.TopLeftY = 0;
+    fullScreenVP.Width = (FLOAT)g_Mode.Width;
+    fullScreenVP.Height = (FLOAT)g_Mode.Height;
+    fullScreenVP.MinDepth = 0.0f;
+    fullScreenVP.MaxDepth = 1.0f;
+    g_VP[0] = fullScreenVP;
+
+    // 가로 크기로 3개로 나뉘어진 뷰포트 설정
+    for (int i = 1; i < 4; ++i)
+    {
+        D3D12_VIEWPORT vp;
+        vp.TopLeftX = (FLOAT)(g_Mode.Width / 3 * (i - 1));
+        vp.TopLeftY = 0;
+        vp.Width = (FLOAT)(g_Mode.Width / 3);
+        vp.Height = (FLOAT)g_Mode.Height;
+        vp.MinDepth = 0.0f;
+        vp.MaxDepth = 1.0f;
+        g_VP[i] = vp;
+    }
 }
 
 //===============================================================
@@ -339,7 +352,7 @@ int ClearBackBuffer(COLOR col)
 	g_CmdList->Reset(g_CmdAlloc, nullptr);
 
 	//장치 상태 재설정 ===> 과제의 멀티 뷰포트 todo ==> 오브젝트 그릴때 뷰포트 설정
-    g_CmdList->RSSetViewports(1, &g_VP);
+    //g_CmdList->RSSetViewports(1, &g_VP);
 	g_CmdList->RSSetScissorRects(1, &rc);
 
     //렌더타겟 상태 전환
@@ -366,6 +379,11 @@ int ClearBackBuffer(COLOR col)
 	return YN_OK;
 }
 
+int SetViewPort(int index)
+{
+	g_CmdList->RSSetViewports(1, &g_VP[index]);
+	return YN_OK;
+}
 
 
 //장치 - 스왑체인 전환 : 장면 그리기 완료시 꼭 호출
@@ -406,7 +424,7 @@ float GetEnginTime()
 {
 	static ULONGLONG oldTime = GetTickCount64();
 	ULONGLONG nowTime = GetTickCount64();
-	float dTime = (nowTime - oldTime) / 0.001f;
+	float dTime = (nowTime - oldTime) * 0.001f;
 	oldTime = nowTime;
 
 	return dTime;
@@ -690,7 +708,7 @@ int ynFontCreate(LPDEVICE pDev)
 		
 		//폰트 리소스 생성
 		g_pFontResDesc = new DescriptorHeap(pDev, 1);
-		g_pFontBatch = new SpriteBatch(pDev, resUpload, pd,&g_VP);
+		g_pFontBatch = new SpriteBatch(pDev, resUpload, pd,&g_VP[0]);
 		//g_pFontBatch->SetViewport(g_VP);
 
 		//Directx Toolkit : Sprite Font 객체 생성

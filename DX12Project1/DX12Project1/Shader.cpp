@@ -14,10 +14,20 @@ LPSHADER g_pVS = nullptr;
 LPSHADER g_pPS = nullptr;
 
 extern CONSTS g_Consts;
+extern CONSTS g_FixedConsts;
 extern LPCONSTBUFFER g_pCB;
+extern LPCONSTBUFFER g_pCBFix;
 
 extern COLANI g_ColAni;
+extern COLANI g_FixedColAni;
 extern LPCONSTBUFFER g_pCB2;
+extern LPCONSTBUFFER g_pCB2Fix;
+
+extern FLAGS g_blandFlags;
+extern FLAGS g_nonblandFlags;
+extern LPCONSTBUFFER g_pCB3;
+extern LPCONSTBUFFER g_pCB3Fix;
+
 
 //=============================================================================
 //셰이더 함수
@@ -53,6 +63,7 @@ void ShaderRelease()
 
 	SAFE_RELEASE(g_pCB);
 	SAFE_RELEASE(g_pCB2);
+	SAFE_RELEASE(g_pCB3);
 
 	RootSignatureRelease();
 }
@@ -95,7 +106,7 @@ int RootSignatureCreate() {
 	HRESULT hr = S_OK;
 
 	//루트 파라미터
-	#define PARAM_MAX 2
+	#define PARAM_MAX 3
 	D3D12_ROOT_PARAMETER params[PARAM_MAX] = {};
 	for (UINT i = 0; i < PARAM_MAX; i++)
 	{
@@ -152,7 +163,11 @@ void ShaderCreate() {
 
 	//상수 버퍼 생성
 	CreateConstantBuffer(g_pDevice, &g_Consts, sizeof(CONSTS), &g_pCB);
+	CreateConstantBuffer(g_pDevice, &g_FixedConsts, sizeof(CONSTS), &g_pCBFix);
 	CreateConstantBuffer(g_pDevice, &g_ColAni, sizeof(COLANI), &g_pCB2);
+	CreateConstantBuffer(g_pDevice, &g_FixedColAni, sizeof(COLANI), &g_pCB2Fix);
+	CreateConstantBuffer(g_pDevice, &g_blandFlags, sizeof(FLAGS), &g_pCB3);
+	CreateConstantBuffer(g_pDevice, &g_nonblandFlags, sizeof(FLAGS), &g_pCB3Fix);
 }
 
 
